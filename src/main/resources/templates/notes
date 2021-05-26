@@ -1,0 +1,18 @@
+password validation:
+<div class="invalid-feedback">
+    <ul>
+        <li>Must beat least 6 characters long</li>
+    </ul>
+</div>
+
+Username validation :
+<div class="invalid-feedback">
+    <ul>
+        <li>must start with letters or numbers</li>
+        <li>Must be 5-20 characters long</li>
+        <li>Must contain only letters, numbers, symbols(._-)</li>
+    </ul>
+</div>
+
+username validation pattern :
+pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$"
