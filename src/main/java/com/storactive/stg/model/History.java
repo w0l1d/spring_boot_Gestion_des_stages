@@ -3,6 +3,7 @@ package com.storactive.stg.model;
 
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,9 +26,9 @@ public class History {
     @NotBlank
     private String action;
 
-    @Column(nullable = false)
-    @ColumnDefault("current_timestamp()")
-    private Date date;
+    @Column(nullable = false, name = "created_at")
+    @CreatedDate
+    private Date createdAt;
 
 
 }

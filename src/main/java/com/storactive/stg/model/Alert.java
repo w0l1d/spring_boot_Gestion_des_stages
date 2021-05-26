@@ -2,12 +2,11 @@ package com.storactive.stg.model;
 
 
 import lombok.Data;
+import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -26,7 +25,8 @@ public class Alert {
     @Min(5)
     private String content;
 
-    @ColumnDefault("current_timestamp()")
+    @CreatedDate
+    @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
     @Column(nullable = false)
