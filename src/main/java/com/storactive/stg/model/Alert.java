@@ -7,8 +7,10 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
@@ -22,7 +24,7 @@ public class Alert {
 
     @Column(nullable = false)
     @NotBlank
-    @Min(5)
+    @Size(min = 5)
     private String content;
 
     @CreatedDate
