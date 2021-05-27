@@ -31,13 +31,13 @@ public class HomeController {
 
         model.addAttribute("name", "walid");
 
-        Employee employee = new Employee();
-        employee.setName("walid ah");
-        employee.setCin("VA145962");
-        employee.setEmail("walid@ah.com");
-        employee.setPassword("password");
-        employee.setUsername("admin");
-        userSer.create(employee);
+//        Employee employee = new Employee();
+//        employee.setName("walid ah");
+//        employee.setCin("VA145962");
+//        employee.setEmail("walid@ah.com");
+//        employee.setPassword("password");
+//        employee.setUsername("admin");
+//        userSer.create(employee);
 
         return "greeting";
     }

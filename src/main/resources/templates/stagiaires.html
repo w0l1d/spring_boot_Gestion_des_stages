@@ -68,14 +68,14 @@
                                     <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>CIN</th>
-                                            <th>Email</th>
-                                            <th>address</th>
-                                            <th>Gender</th>
-                                            <th>Phone</th>
-                                            <th>Is Enabled</th>
+                                            <th th:text="#{form.name}">Name</th>
+                                            <th th:text="#{form.username}">Username</th>
+                                            <th th:text="#{form.cin}">CIN</th>
+                                            <th th:text="#{form.email}">Email</th>
+                                            <th th:text="#{form.address}">address</th>
+                                            <th th:text="#{form.gender}">Gender</th>
+                                            <th th:text="#{form.phone}">Phone</th>
+                                            <th th:text="#{form.status}">Is Enabled</th>
                                             <th>Action</th>
                                         </tr>
 
@@ -83,14 +83,14 @@
                                     <tfoot>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>CIN</th>
-                                            <th>Email</th>
-                                            <th>address</th>
-                                            <th>Gender</th>
-                                            <th>Phone</th>
-                                            <th>Is Enabled</th>
+                                            <th th:text="#{form.name}">Name</th>
+                                            <th th:text="#{form.username}">Username</th>
+                                            <th th:text="#{form.cin}">CIN</th>
+                                            <th th:text="#{form.email}">Email</th>
+                                            <th th:text="#{form.address}">address</th>
+                                            <th th:text="#{form.gender}">Gender</th>
+                                            <th th:text="#{form.phone}">Phone</th>
+                                            <th th:text="#{form.status}">Is Enabled</th>
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
@@ -110,12 +110,16 @@
                                                        th:data-on="#{enabled}" th:data-off="#{disabled}">
                                             </td>
                                             <td>
-                                                <form th:action="@{/stagiaires/{id}/delete(id=${sat?.id})}" method="post">
+                                                <form th:action="@{/stagiaires/{id}/delete(id=${sat?.id})}"
+                                                      onsubmit="return confirm('confirm delete?');" method="post">
                                                     <button class="btn btn-danger btn-circle btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
-                                                <a th:href="@{/stagiaires/{id}(id=${sat?.id})}" class="btn btn-primary btn-circle btn-sm"><i class="fas fa-edit"></i></a>
+                                                <a th:href="@{/stagiaires/{id}(id=${sat?.id})}"
+                                                   class="btn btn-primary btn-circle btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     </tbody>
