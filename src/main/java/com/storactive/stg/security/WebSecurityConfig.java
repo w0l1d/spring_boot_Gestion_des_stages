@@ -48,7 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(authenticationFailureHandler())
                 .defaultSuccessUrl("/", true).permitAll()
                 .and()
-                .logout();
+                .logout()
+                .deleteCookies("JSESSIONID")
+                .and()
+                .rememberMe();
     }
 
     @Override

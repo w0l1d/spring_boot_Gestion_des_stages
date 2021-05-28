@@ -105,13 +105,15 @@
                                             <td th:text="${sat?.gender.getDisplayValue()}"></td>
                                             <td th:text="${sat?.phone}"></td>
                                             <td>
-                                                <input type="checkbox" th:checked="${sat?.isEnabled()}"
-                                                       data-toggle="toggle" data-onstyle="success" disabled
-                                                       th:data-on="#{enabled}" th:data-off="#{disabled}">
+                                                <div class="custom-control custom-switch">
+                                                    <input th:id="${sat?.username + '-enabled'}" type="checkbox" th:checked="${sat?.isEnabled()}"
+                                                           class="custom-control-input position-relative" disabled/>
+                                                    <label class="custom-control-label" th:for="${sat?.username + '-enabled'}"></label>
+                                                </div>
                                             </td>
                                             <td>
                                                 <form th:action="@{/stagiaires/{id}/delete(id=${sat?.id})}"
-                                                      onsubmit="return confirm('confirm delete?');" method="post">
+                                                      th:onsubmit="'return confirm(\''+#{msg.confirm_delete.stagiare}+'\');'" method="post">
                                                     <button class="btn btn-danger btn-circle btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </button>

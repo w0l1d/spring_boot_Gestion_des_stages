@@ -31,7 +31,19 @@
 			<div class="notfound-404">
 				<h1 th:text="${status}">Status</h1>
 			</div>
-			<p th:text="${message}">The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
+			<div>
+				<h3>Error</h3>
+				<p th:text="${error}"></p>
+			</div>
+			<div>
+				<h3>Message</h3>
+				<p th:text="${message}">The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
+			</div>
+			<div>
+				<ul>
+					<li th:each=" err : ${errors}" th:text="${err}"></li>
+				</ul>
+			</div>
 			<a href="/">home page</a>
 		</div>
 	</div>
