@@ -3,6 +3,7 @@ package com.storactive.stg.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -17,12 +18,13 @@ import java.util.Collection;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "cin", unique = true, nullable = false)
     @Size(min = 5, max = 10,
-            message = "1 or 2 Upper case characters + 4 to 8 numbers") @NotBlank
+            message = "1 or 2 Upper case characters + 4 to 8 numbers")
+    @NotBlank
     @Pattern(regexp = "^[A-Z]{1,2}[0-9]{4,8}$",
             message = "CIN examples : WX958696 X4585 A15825")
     private String cin;

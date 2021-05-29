@@ -11,4 +11,6 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
     Optional<User> findByCin(String cin);
 
+    Optional<User> findByUsernameIgnoreCaseOrCinIgnoreCase(String username, String cin);
+
 }

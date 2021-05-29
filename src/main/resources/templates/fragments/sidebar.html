@@ -30,26 +30,26 @@
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider" sec:authorize="hasRole('ROLE_ADMIN')">
 
     <!-- Heading -->
-    <div th:text="#{sidebare.title.man_users}" class="sidebar-heading">
+    <div th:text="#{sidebar.title.man_users}" sec:authorize="hasRole('ROLE_ADMIN')" class="sidebar-heading">
         users
     </div>
 
 
     <!-- Nav Item - Stagiaires -->
-    <li class="nav-item"  sec:authorize="hasRole('ROLE_ADMIN')">
+    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
         <a class="nav-link" href="/stagiaires">
             <i class="fa-fw fa-users fas"></i>
-            <span th:text="#{sidebare.stagiaires}">Stagiaire</span></a>
+            <span th:text="#{sidebar.stagiaires}">Stagiaire</span></a>
     </li>
 
     <!-- Nav Item - Users -->
     <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
         <a class="nav-link" href="/users">
             <i class="fa-fw fa-users-cog fas"></i>
-            <span th:text="#{sidebare.users}"></span></a>
+            <span th:text="#{sidebar.users}"></span></a>
     </li>
 
 

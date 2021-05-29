@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.storactive.stg.model.enums.Gender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -15,11 +16,11 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "tab_stagiaire")
-public class Stagiaire extends Employee {
+public class Stagiaire extends User {
 
     @Enumerated(EnumType.STRING)
     @NotNull
