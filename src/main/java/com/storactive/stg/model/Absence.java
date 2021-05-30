@@ -1,6 +1,7 @@
 package com.storactive.stg.model;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -18,9 +19,11 @@ public class Absence {
     private int id;
 
     @Column(nullable = false,name = "date_du")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startsAt;
 
     @Column(nullable = false,name = "date_au")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endsAt;
 
     @Column(nullable = false,name = "nombre_jours")

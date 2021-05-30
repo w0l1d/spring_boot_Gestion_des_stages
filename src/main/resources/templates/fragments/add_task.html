@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Custom styles for this template-->
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+
+</head>
+<body>
+
+<button id="add_task_modal_button" type="button"
+        class="btn btn-primary float-right px-4 d-inline-block"
+        data-toggle="modal" data-target="#add_task_modal"
+        th:text="#{action.add}">
+    Add
+</button>
+
+<form id="add_task_form" th:object="${task}" method="post" th:action="@{/tasks}" >
+    <div class="modal fade" id="add_task_modal" tabindex="-1" role="dialog"
+         aria-labelledby="add_task_modal_Title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add_task_modal_Title" th:text="#{title.add_task}">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="task" th:text="#{form.task}"></label>
+                        <input type="text" class="form-control"
+                               id="task" th:field="*{tache}" required>
+                    </div>
+                    <div class="form-group date">
+                        <label for="task_date" th:text="#{form.task}"></label>
+                        <input type="date" class="form-control"
+                               id="task_date" required
+                               th:field="*{dateTache}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button th:text="#{action.close}" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button th:text="#{action.add}" type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+</body>
+</html>

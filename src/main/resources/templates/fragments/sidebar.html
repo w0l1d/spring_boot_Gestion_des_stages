@@ -40,7 +40,7 @@
 
     <!-- Nav Item - Stagiaires -->
     <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-        <a class="nav-link" href="/stagiaires">
+        <a class="nav-link" href="/interners">
             <i class="fa-fw fa-users fas"></i>
             <span th:text="#{sidebar.stagiaires}">Stagiaire</span></a>
     </li>
@@ -63,9 +63,9 @@
 
     <!-- Nav Item - Internships -->
     <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-        <a class="nav-link" href="/interships">
+        <a class="nav-link" href="/internships">
             <i class="fa-fw fa-id-badge fas"></i>
-            <span th:text="#{sidebar.interships}"></span></a>
+            <span th:text="#{sidebar.internships}"></span></a>
     </li>
 
     <!-- Nav Item - Tasks -->

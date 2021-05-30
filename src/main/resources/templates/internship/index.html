@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +10,7 @@
     <meta name="author" content="w0l1d">
 
 
-    <title th:text="#{title.page.user}">Gestion des Utilisateurs - Users</title>
+    <title th:text="#{title.page.internship}">Gestion des Stages - Stages</title>
 
     <!-- replace with global stylesheets-->
     <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
@@ -43,20 +44,21 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800"
-                        th:text="#{sidebar.users}">Users</h1>
+                        th:text="#{sidebar.internships}">Stages</h1>
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
-                                <div th:if="${msg_updated}" th:text="#{msg.user_updated}"
+                                <div th:if="${msg_updated}" th:text="#{msg.stage_updated}"
                                      class="alert alert-success d-inline-block"></div>
 
-                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.user_deleted}"
+                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.stage_deleted}"
                                      class="alert alert-danger d-inline-block"></div>
                             </h6>
 
-                            <!-- Add interner Modal Button @#@-->
-                            <div th:replace="~{fragments/add_interner.html :: #add_stagiaire_modal_button}" id="add-interner-dialog-button" class="replace-fragment"></div>
+                            <!-- Add internship Modal Button @#@-->
+                            <div th:replace="~{fragments/add_internship.html :: #add_internship_modal_button}"
+                                 id="add-internship-dialog-button" class="replace-fragment"></div>
 
                         </div>
                         <div class="card-body">
@@ -66,42 +68,56 @@
                                 <thead>
                                     <tr>
                                         <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.email}">Email</th>
+                                        <th th:text="#{form.type}">Type</th>
+                                        <th th:text="#{form.starts_at}">Starts at</th>
+                                        <th th:text="#{form.ends_at}">Ends At</th>
+                                        <th th:text="#{form.duration}">Duration</th>
+                                        <th th:text="#{form.formation}">Formation</th>
+                                        <th th:text="#{form.etablissement}">Establishment</th>
+                                        <th th:text="#{form.project_title}">project title</th>
+                                        <th th:text="#{form.project_desc}">Description</th>
+                                        <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{action.action}">Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.email}">Email</th>
+                                        <th th:text="#{form.type}">Type</th>
+                                        <th th:text="#{form.starts_at}">Starts at</th>
+                                        <th th:text="#{form.ends_at}">Ends At</th>
+                                        <th th:text="#{form.duration}">Duration</th>
+                                        <th th:text="#{form.formation}">Formation</th>
+                                        <th th:text="#{form.etablissement}">Establishment</th>
+                                        <th th:text="#{form.project_title}">project title</th>
+                                        <th th:text="#{form.project_desc}">Description</th>
+                                        <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{action.action}">Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    <tr     th:each="sat : ${employees}">
+                                    <tr     th:each="sat : ${internships}">
                                         <td th:text="${sat?.id}"></td>
-                                        <td th:text="${sat?.name}"></td>
-                                        <td th:text="${sat?.username}"></td>
-                                        <td th:text="${sat?.cin}"></td>
-                                        <td th:text="${sat?.email}"></td>
+                                        <td th:text="${sat?.type}"></td>
+                                        <td th:text="${sat?.startsAt}"></td>
+                                        <td th:text="${sat?.endsAt}"></td>
+                                        <td th:text="${sat?.duration}"></td>
+                                        <td th:text="${sat?.formation}"></td>
+                                        <td th:text="${sat?.etablissement}"></td>
+                                        <td th:text="${sat?.project}"></td>
+                                        <td th:text="${sat?.desc}"></td>
+                                        <td th:text="${sat?.status}"></td>
                                         <td>
                                             <div class="row">
-                                                <div  class="col-lg m-auto">
-                                                    <a th:onclick="'return confirm(\''+#{msg.confirm_delete.user}+'\');'"
-                                                       th:href="@{/users/{id}/delete(id=${sat?.id})}"
-                                                       class="btn btn-danger btn-block btn-sm"
-                                                       th:hidden="${#strings.equalsIgnoreCase(sat?.username, #authentication.name)}">
+                                                <div class="col-5 col-lg m-auto">
+                                                    <a th:href="@{/internships/{id}/delete(id=${sat?.id})}"
+                                                       th:onclick="'return confirm(\''+#{msg.confirm_delete.stage}+'\');'"
+                                                       class="btn btn-danger btn-block btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </div>
-                                                <div class="col-lg m-auto">
-                                                    <a th:href="@{/users/{id}(id=${sat?.id})}"
+                                                <div class="col-5 col-lg m-auto">
+                                                    <a th:href="@{/internships/{id}(id=${sat?.id})}"
                                                        class="btn btn-primary btn-block btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
@@ -134,6 +150,13 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+
+    <!-- Logout Modal @#@-->
+    <div th:replace="~{fragments/logout_modal.html :: #logoutModal}" id="logout-dialog" class="replace-fragment"></div>
+
+
+    <!-- Add internship Modal @#@-->
+    <div th:replace="~{fragments/add_internship.html :: #add_internship_form}" id="add-internship-dialog" class="replace-fragment"></div>
 
 
     <!-- replace with global scripts @#@ -->

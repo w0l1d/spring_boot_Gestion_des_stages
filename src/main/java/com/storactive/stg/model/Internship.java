@@ -2,6 +2,7 @@ package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -11,19 +12,23 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "tab_stage")
-public class Stage {
+public class Internship {
 
     @Id
     @Column(name = "id_stage")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable = false)
     private String type;
 
     @Column(nullable = false,name = "date_du")
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startsAt;
 
     @Column(nullable = false,name = "date_au")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endsAt;
 
 
@@ -61,6 +66,6 @@ public class Stage {
 
     @OneToMany
     @JsonIgnore
-    private Collection<Tache> taches;
+    private Collection<Task> taches;
 
 }

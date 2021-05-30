@@ -10,7 +10,7 @@
   <meta name="author" content="w0l1d">
 
 
-  <title th:text="#{title.update_user}">Gestion des Stagiaires - Stagiares</title>
+  <title th:text="#{title.update_stagiaire}">Gestion des Stagiaires - Stagiares</title>
 
   <!-- replace with global stylesheets-->
   <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
@@ -45,9 +45,8 @@
       <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800"
-            th:text="${isProfile}? #{page.title.profile}:#{title.update_user}">Stagiaires</h1>
-        <form  id="add_user_form" th:object="${employee}"
+        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Stagiaires</h1>
+        <form  id="add_stagiaire_form" th:object="${interner}"
                method="post" th:action="@{${#httpServletRequest.requestURI}}">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -58,43 +57,21 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="name" th:text="#{form.name}">Name</label>
+                <label for="task" th:text="#{form.task}"></label>
                 <input type="text" class="form-control"
-                       id="name" th:field="*{name}" required>
+                       id="task" th:field="*{tache}" required>
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="cin" th:text="#{form.cin}">CIN</label>
-                  <input type="text" class="form-control"
-                         id="cin" required th:field="*{cin}"
-                         pattern="^[A-Za-z]{1,2}[0-9]{4,8}$">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="email" th:text="#{form.email}">Email</label>
-                  <input type="email" class="form-control"
-                         id="email" required th:field="*{email}">
-                </div>
+              <div class="form-group date">
+                <label for="task_date" th:text="#{form.task}"></label>
+                <input type="date" class="form-control"
+                       id="task_date" required
+                       th:field="*{dateTache}">
               </div>
-
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="username" th:text="#{form.username}">Username</label>
-                  <input type="text" class="form-control"
-                         id="username"  th:field="*{username}" disabled>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="password" th:text="#{form.password}">Password</label>
-                  <input type="password" th:field="*{password}"
-                         class="form-control" id="password"
-                         required/>
-                </div>
-              </div>
-
 
             </div>
 
             <div class="card-footer">
-              <button th:text="#{action.update}" type="submit" class="btn btn-primary btn-block">Update</button>
+              <button th:text="#{action.update}" type="submit" class="btn btn-primary btn-block">Add</button>
             </div>
           </div>
         </form>

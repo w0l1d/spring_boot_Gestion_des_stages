@@ -9,17 +9,20 @@
 </head>
 <body>
 
-<button id="add_satgiaire_modal_button" type="button" class="btn btn-primary float-right px-4 d-inline-block" data-toggle="modal" data-target="#add_satgiaire_modal">
+<button id="add_stagiaire_modal_button" type="button"
+        class="btn btn-primary float-right px-4 d-inline-block"
+        data-toggle="modal" data-target="#add_stagiaire_modal"
+        th:text="#{action.add}">
     Add
 </button>
 
-<form id="add_satgiaire_form" th:object="${stagiaire}" method="post" th:action="@{/stagiaires}" >
-    <div class="modal fade" id="add_satgiaire_modal" tabindex="-1" role="dialog"
-         aria-labelledby="add_satgiaire_modal_Title" aria-hidden="true">
+<form id="add_interner_form" th:object="${interner}" method="post" th:action="@{/interners}" >
+    <div class="modal fade" id="add_interner_modal" tabindex="-1" role="dialog"
+         aria-labelledby="add_interner_modal_Title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="add_satgiaire_modal_Title" th:text="#{title.add_stagiaire}">Modal title</h5>
+                    <h5 class="modal-title" id="add_interner_modal_Title" th:text="#{title.add_stagiaire}">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -5,7 +5,6 @@ import com.storactive.stg.model.enums.Gender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -20,7 +19,7 @@ import java.util.Collection;
 @Entity
 @NoArgsConstructor
 @Table(name = "tab_stagiaire")
-public class Stagiaire extends User {
+public class Interner extends User {
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -39,7 +38,7 @@ public class Stagiaire extends User {
 
     @OneToMany
     @JsonIgnore
-    Collection<Stage> stages;
+    Collection<Internship> internships;
 
 }
 

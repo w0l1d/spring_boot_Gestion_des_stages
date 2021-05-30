@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -45,6 +46,8 @@ public class EmployeeService {
         if (user.isEmpty()) {
             employee.setPassword(pwdEncoder.encode(employee.getPassword()));
             employee.setId(null);
+            employee.setCin(employee.getCin().toUpperCase());
+            employee.setUsername(employee.getUsername().toLowerCase());
             return employeeRepo.save(employee);
         }
         User user1 = user.orElse(null);

@@ -1,9 +1,9 @@
 package com.storactive.stg.repository;
 
-import com.storactive.stg.model.Tache;
+import com.storactive.stg.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TacheRepo extends JpaRepository<Tache, Integer> {
+public interface TaskRepo extends JpaRepository<Task, Integer> {
 }

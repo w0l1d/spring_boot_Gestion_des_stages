@@ -1,14 +1,13 @@
 package com.storactive.stg.service;
 
 import com.storactive.stg.exception.ValueAlreadyUsedException;
-import com.storactive.stg.model.Stagiaire;
+import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.User;
-import com.storactive.stg.repository.StagiaireRepo;
+import com.storactive.stg.repository.InternerRepo;
 import com.storactive.stg.repository.UserRepo;
-import com.storactive.stg.service.iService.IStagiaireService;
+import com.storactive.stg.service.iService.IInternerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,64 +16,64 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StagiaireService implements IStagiaireService {
+public class InternerService implements IInternerService {
 
-    final StagiaireRepo stagiaireRepo;
+    final InternerRepo internerRepo;
     final UserRepo userRepo;
     final BCryptPasswordEncoder pwdEncoder;
 
 
     @Autowired
-    public StagiaireService(StagiaireRepo stagiaireRepo,
-                             UserRepo userRepo,
-                             BCryptPasswordEncoder pwdEncoder) {
+    public InternerService(InternerRepo internerRepo,
+                           UserRepo userRepo,
+                           BCryptPasswordEncoder pwdEncoder) {
         this.userRepo = userRepo;
-        this.stagiaireRepo = stagiaireRepo;
+        this.internerRepo = internerRepo;
         this.pwdEncoder = pwdEncoder;
     }
 
 
     @Override
-    public List<Stagiaire> getAll() {
-        return stagiaireRepo.findAll();
+    public List<Interner> getAll() {
+        return internerRepo.findAll();
     }
 
     @Override
-    public Stagiaire create(Stagiaire stagiaire) {
+    public Interner create(Interner interner) {
         Optional<User> user = userRepo
                 .findByUsernameIgnoreCaseOrCinIgnoreCase
-                        (stagiaire.getUsername(), stagiaire.getCin());
+                        (interner.getUsername(), interner.getCin());
         if (user.isEmpty()) {
-            stagiaire.setPassword(pwdEncoder.encode(stagiaire.getPassword()));
-            return stagiaireRepo.save(stagiaire);
+            interner.setPassword(pwdEncoder.encode(interner.getPassword()));
+            return internerRepo.save(interner);
         }
         User user1 = user.orElse(null);
-        if (user1.getCin().equals(stagiaire.getCin()))
+        if (user1.getCin().equals(interner.getCin()))
             throw new ValueAlreadyUsedException("cin '"+user1.getCin()+"' Already Exists");
         throw new ValueAlreadyUsedException("Username '"+user1.getUsername()+"' Already Exists");
     }
 
 
     @Override
-    public Stagiaire update(Stagiaire stagiaire) {
-        if (!stagiaireRepo.existsById(stagiaire.getId()))
+    public Interner update(Interner interner) {
+        if (!internerRepo.existsById(interner.getId()))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        stagiaire.setPassword(pwdEncoder.encode(stagiaire.getPassword()));
-        return stagiaireRepo.save(stagiaire);
+        interner.setPassword(pwdEncoder.encode(interner.getPassword()));
+        return internerRepo.save(interner);
     }
 
 
     @Override
     public void delete(Integer id) {
-        if (!stagiaireRepo.existsById(id))
+        if (!internerRepo.existsById(id))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        stagiaireRepo.deleteById(id);
+        internerRepo.deleteById(id);
     }
 
 
     @Override
-    public Stagiaire findById(int id) {
-        return stagiaireRepo.findById(id).orElseThrow(
+    public Interner findById(int id) {
+        return internerRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

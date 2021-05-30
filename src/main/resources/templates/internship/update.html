@@ -46,7 +46,7 @@
 
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_stagiaire}">Stagiaires</h1>
-        <form  id="add_satgiaire_form" th:object="${stagiaire}"
+        <form  id="add_stagiaire_form" th:object="${interner}"
                method="post" th:action="@{${#httpServletRequest.requestURI}}">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -66,7 +66,7 @@
                   <label for="cin" th:text="#{form.cin}">CIN</label>
                   <input type="text" class="form-control"
                          id="cin" required th:field="*{cin}"
-                         pattern="^[A-Z]{1,2}[0-9]{4,8}$">
+                         pattern="^[A-Za-z]{1,2}[0-9]{4,8}$">
                 </div>
                 <div class="form-group col-md-4 col-sm-4">
                   <label for="gender" th:text="#{form.gender}">Gender</label>

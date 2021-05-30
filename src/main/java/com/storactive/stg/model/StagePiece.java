@@ -2,6 +2,7 @@ package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,10 +13,12 @@ import java.util.Date;
 public class StagePiece {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_stage_piece")
     private int id;
 
     @Column(name = "date_saisie")
+    @CreatedDate
     private Date dateSaisie;
 
 
@@ -25,7 +28,7 @@ public class StagePiece {
 
     @ManyToOne(optional = false)
     @JsonIgnore
-    Stage stage;
+    Internship internship;
 
     @OneToOne
     PieceJoint pieceJoint;

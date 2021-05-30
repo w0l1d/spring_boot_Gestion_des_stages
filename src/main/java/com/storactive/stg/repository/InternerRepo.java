@@ -1,10 +1,10 @@
 package com.storactive.stg.repository;
 
-import com.storactive.stg.model.Stagiaire;
+import com.storactive.stg.model.Interner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StagiaireRepo extends JpaRepository<Stagiaire, Integer> {
+public interface InternerRepo extends JpaRepository<Interner, Integer> {
 
 }

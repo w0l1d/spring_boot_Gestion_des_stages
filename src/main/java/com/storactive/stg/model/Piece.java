@@ -13,6 +13,7 @@ public class Piece {
 
     @Id
     @Column(name = "id_piece")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)

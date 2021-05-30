@@ -2,10 +2,7 @@ package com.storactive.stg.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -15,6 +12,7 @@ public class PieceJoint {
 
     @Id
     @Column(name = "id_piece_jointe")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotBlank

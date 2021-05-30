@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +10,7 @@
     <meta name="author" content="w0l1d">
 
 
-    <title th:text="#{title.page.user}">Gestion des Utilisateurs - Users</title>
+    <title th:text="#{title.page.task}">Gestion des Stagiaires - Stagiares</title>
 
     <!-- replace with global stylesheets-->
     <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
@@ -43,20 +44,20 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800"
-                        th:text="#{sidebar.users}">Users</h1>
+                        th:text="#{sidebar.tasks}">Tasks</h1>
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
-                                <div th:if="${msg_updated}" th:text="#{msg.user_updated}"
+                                <div th:if="${msg_updated}" th:text="#{msg.task_updated}"
                                      class="alert alert-success d-inline-block"></div>
 
-                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.user_deleted}"
+                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.task_deleted}"
                                      class="alert alert-danger d-inline-block"></div>
                             </h6>
 
-                            <!-- Add interner Modal Button @#@-->
-                            <div th:replace="~{fragments/add_interner.html :: #add_stagiaire_modal_button}" id="add-interner-dialog-button" class="replace-fragment"></div>
+                            <!-- Add task Modal Button @#@-->
+<!--                            <div th:replace="~{fragments/add_task.html :: #add_task_modal_button}" id="add-task-dialog-button" class="replace-fragment"></div>-->
 
                         </div>
                         <div class="card-body">
@@ -66,42 +67,38 @@
                                 <thead>
                                     <tr>
                                         <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.email}">Email</th>
+                                        <th th:text="#{form.task}">Name</th>
+                                        <th th:text="#{form.task_date}">Username</th>
+                                        <th th:text="#{form.internship}"></th>
                                         <th th:text="#{action.action}">Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.email}">Email</th>
+                                        <th th:text="#{form.task}">Name</th>
+                                        <th th:text="#{form.task_date}">Username</th>
+                                        <th th:text="#{form.internship}"></th>
                                         <th th:text="#{action.action}">Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    <tr     th:each="sat : ${employees}">
+                                    <tr     th:each="sat : ${tasks}">
                                         <td th:text="${sat?.id}"></td>
-                                        <td th:text="${sat?.name}"></td>
-                                        <td th:text="${sat?.username}"></td>
-                                        <td th:text="${sat?.cin}"></td>
-                                        <td th:text="${sat?.email}"></td>
+                                        <td th:text="${sat?.tache}"></td>
+                                        <td th:text="${#dates.format(sat?.dateTache, 'EEE dd MMM yyyy')}"></td>
+                                        <td th:text="${sat?.internship}"></td>
                                         <td>
                                             <div class="row">
-                                                <div  class="col-lg m-auto">
-                                                    <a th:onclick="'return confirm(\''+#{msg.confirm_delete.user}+'\');'"
-                                                       th:href="@{/users/{id}/delete(id=${sat?.id})}"
-                                                       class="btn btn-danger btn-block btn-sm"
-                                                       th:hidden="${#strings.equalsIgnoreCase(sat?.username, #authentication.name)}">
+                                                <div class="col-5 col-lg m-auto">
+                                                    <a th:href="@{/tasks/{id}/delete(id=${sat?.id})}"
+                                                       th:onclick="'return confirm(\''+#{msg.confirm_delete.task}+'\');'"
+                                                       class="btn btn-danger btn-block btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </div>
-                                                <div class="col-lg m-auto">
-                                                    <a th:href="@{/users/{id}(id=${sat?.id})}"
+                                                <div class="col-5 col-lg m-auto">
+                                                    <a th:href="@{/tasks/{id}(id=${sat?.id})}"
                                                        class="btn btn-primary btn-block btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
@@ -135,6 +132,13 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- Logout Modal @#@-->
+    <div th:replace="~{fragments/logout_modal.html :: #logoutModal}" id="logout-dialog" class="replace-fragment"></div>
+
+
+    <!-- Add task Modal @#@-->
+<!--    <div th:replace="~{fragments/add_task.html :: #add_task_form}" id="add-task-dialog" class="replace-fragment"></div>-->
+
 
     <!-- replace with global scripts @#@ -->
     <div th:replace="~{fragments/all_assets.html :: script}" class="replace-fragment"></div>
@@ -142,8 +146,6 @@
 
     <!-- replace with page scripts @#@ -->
     <div th:replace="~{fragments/local_assets.html :: #datatable/script}" class="replace-fragment"></div>
-
-
 
 </body>
 
