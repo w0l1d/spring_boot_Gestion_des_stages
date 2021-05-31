@@ -74,10 +74,21 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="duration" th:text="#{form.duration}">duration</label>
-                <input class="form-control" id="duration"
-                       required th:field="*{duration}" type="text">
+              <div class="form-row row-cols-2 row-cols-sm-1">
+                <div class="form-group">
+                  <label for="duration" th:text="#{form.duration}">duration</label>
+                  <input class="form-control" id="duration"
+                         required th:field="*{duration}" type="text">
+                </div>
+                <div class="form-group">
+                  <label for="status" th:text="#{form.status}"></label>
+                  <select class="custom-select" id="status" required th:field="*{status}">
+                    <option selected th:text="#{form.status.in_progress}" value="1"></option>
+                    <option th:text="#{form.status.saved}" value="2"></option>
+                    <option th:text="#{form.status.finished}" value="3"></option>
+                    <option th:text="#{form.status.canceled}" value="3"></option>
+                  </select>
+                </div>
               </div>
 
               <div class="form-group">

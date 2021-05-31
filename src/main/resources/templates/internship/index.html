@@ -114,7 +114,10 @@
                                     <td th:text="${sat?.etablissement}"></td>
                                     <td th:text="${sat?.project}"></td>
                                     <td th:text="${sat?.desc}"></td>
-                                    <td th:text="${sat?.status}"></td>
+                                    <td th:if="${sat?.status} == 1" th:text="#{form.status.in_progress}"></td>
+                                    <td th:if="${sat?.status} == 2" th:text="#{form.status.saved}"></td>
+                                    <td th:if="${sat?.status} == 3" th:text="#{form.status.finished}"></td>
+                                    <td th:if="${sat?.status} == 4" th:text="#{form.status.canceled}"></td>
                                     <td>
                                         <a class="btn btn-circle btn-outline-info btn-sm"
                                            th:href="@{/internships/{id}/tasks(id=${sat?.id})}">
