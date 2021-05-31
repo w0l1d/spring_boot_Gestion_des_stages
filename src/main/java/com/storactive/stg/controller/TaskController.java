@@ -40,7 +40,7 @@ public class TaskController {
     }
 
 
-    @GetMapping({"/{id}"})
+    @GetMapping("/{id}")
     public String getUpdateTask(@PathVariable Integer id, Model model) {
         Task task = taskSer.findById(id);
         model.addAttribute("task", task);
@@ -48,7 +48,7 @@ public class TaskController {
     }
 
 
-    @PostMapping({"/{id}"})
+    @PostMapping("/{id}")
     public String putUpdateTask(@NotNull @Positive @PathVariable Integer id,
                                     @ModelAttribute @Valid Task task,
                                     Model model) {
@@ -60,12 +60,12 @@ public class TaskController {
         return "task/index";
     }
 
-    @GetMapping({"/{id}/delete"})
+    @GetMapping("/{id}/delete")
     public String deleteTask(@PathVariable Integer id,
                                  Model model) {
         taskSer.delete(id);
         model.addAttribute("msg_deleted", true);
-        return "redirect:/task?deleted";
+        return "redirect:/tasks?deleted";
     }
 
 }

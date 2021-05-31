@@ -5,8 +5,6 @@ import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Task;
 import com.storactive.stg.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +35,15 @@ public class DashboardController {
         redirectAttributes.addAttribute("msg_deleted", true);
         model.addAttribute("internship", new Internship());
         return "fragments/add_internship";
+    }
+
+
+    @GetMapping("test2")
+    public String getTest2(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("task", new Task());
+        return "fragments/add_task";
     }
 
 

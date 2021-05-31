@@ -16,7 +16,7 @@
     Add
 </button>
 
-<form id="add_task_form" th:object="${task}" method="post" th:action="@{/tasks}" >
+<form id="add_task_form" method="post" th:action="@{${#httpServletRequest.requestURI}}" th:object="${task}">
     <div class="modal fade" id="add_task_modal" tabindex="-1" role="dialog"
          aria-labelledby="add_task_modal_Title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -32,13 +32,13 @@
                     <div class="form-group">
                         <label for="task" th:text="#{form.task}"></label>
                         <input type="text" class="form-control"
-                               id="task" th:field="*{tache}" required>
+                               id="task" required th:field="*{txtTask}">
                     </div>
                     <div class="form-group date">
                         <label for="task_date" th:text="#{form.task}"></label>
                         <input type="date" class="form-control"
                                id="task_date" required
-                               th:field="*{dateTache}">
+                               th:field="*{dateTask}">
                     </div>
                 </div>
                 <div class="modal-footer">

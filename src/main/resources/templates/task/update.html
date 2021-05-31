@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <head>
   <meta charset="UTF-8">
@@ -46,8 +46,8 @@
 
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Stagiaires</h1>
-        <form  id="add_stagiaire_form" th:object="${interner}"
-               method="post" th:action="@{${#httpServletRequest.requestURI}}">
+        <form id="add_stagiaire_form" th:object="${task}"
+              method="post" th:action="@{${#httpServletRequest.requestURI}}">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="d-inline m-0 font-weight-bold text-primary">

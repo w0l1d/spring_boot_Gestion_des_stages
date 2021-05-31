@@ -2,9 +2,7 @@ package com.storactive.stg.service;
 
 import com.storactive.stg.exception.ValueAlreadyUsedException;
 import com.storactive.stg.model.Employee;
-import com.storactive.stg.model.Employee;
 import com.storactive.stg.model.User;
-import com.storactive.stg.repository.EmployeeRepo;
 import com.storactive.stg.repository.EmployeeRepo;
 import com.storactive.stg.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -59,7 +56,7 @@ public class EmployeeService {
 
     public Employee update(Employee employee) {
         if (!employeeRepo.existsById(employee.getId()))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee Not Found");
         employee.setPassword(pwdEncoder.encode(employee.getPassword()));
         return employeeRepo.save(employee);
     }
@@ -67,20 +64,20 @@ public class EmployeeService {
 
     public void delete(Integer id) {
         if (!employeeRepo.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee Not Found");
         employeeRepo.deleteById(id);
     }
 
 
     public Employee findById(int id) {
         return employeeRepo.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee Not Found"));
     }
 
 
     public Employee findByUsername(String username) {
         return employeeRepo.findByUsername(username).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee Not Found"));
     }
 
 }

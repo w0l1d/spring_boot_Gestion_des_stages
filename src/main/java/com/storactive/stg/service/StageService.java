@@ -31,19 +31,19 @@ public class StageService {
 
     public Internship update(Internship internship) {
         if (!stageRepo.existsById(internship.getId()))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Internship Not Found");
         return stageRepo.save(internship);
     }
 
     public void delete(Integer id) {
-        if (stageRepo.existsById(id))
-            stageRepo.deleteById(id);
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (!stageRepo.existsById(id))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Internship Not Found");
+        stageRepo.deleteById(id);
     }
 
     public Internship findById(int id) {
         return stageRepo.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Internship Not Found"));
     }
 
 

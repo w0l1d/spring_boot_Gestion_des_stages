@@ -2,6 +2,7 @@ package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -24,13 +25,16 @@ public class StagePiece {
 
     @ManyToOne(optional = false)
     @JsonIgnore
+    @ToString.Exclude
     Piece piece;
 
     @ManyToOne(optional = false)
     @JsonIgnore
+    @ToString.Exclude
     Internship internship;
 
     @OneToOne
+    @ToString.Exclude
     PieceJoint pieceJoint;
 
 }

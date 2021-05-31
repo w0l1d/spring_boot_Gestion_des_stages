@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <head>
     <meta charset="UTF-8">
@@ -83,21 +83,24 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    <tr     th:each="sat : ${tasks}">
-                                        <td th:text="${sat?.id}"></td>
-                                        <td th:text="${sat?.tache}"></td>
-                                        <td th:text="${#dates.format(sat?.dateTache, 'EEE dd MMM yyyy')}"></td>
-                                        <td th:text="${sat?.internship}"></td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-5 col-lg m-auto">
-                                                    <a th:href="@{/tasks/{id}/delete(id=${sat?.id})}"
-                                                       th:onclick="'return confirm(\''+#{msg.confirm_delete.task}+'\');'"
-                                                       class="btn btn-danger btn-block btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="col-5 col-lg m-auto">
+                                <tr th:each="sat : ${tasks}" th:with="format=#{form.date_format}">
+                                    <td th:text="${sat?.id}"></td>
+                                    <td th:text="${sat?.txtTask}"></td>
+                                    <td th:text="${#dates.format(sat?.getDateTask, format)}"></td>
+                                    <td>
+                                        <a th:href="@{/internships/{id}(id=${sat?.internship.id})}"
+                                           th:text="${sat?.internship.project}"></a>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-5 col-lg m-auto">
+                                                <a th:href="@{/tasks/{id}/delete(id=${sat?.id})}"
+                                                   th:onclick="'return confirm(\''+#{msg.confirm_delete.task}+'\');'"
+                                                   class="btn btn-danger btn-block btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-5 col-lg m-auto">
                                                     <a th:href="@{/tasks/{id}(id=${sat?.id})}"
                                                        class="btn btn-primary btn-block btn-sm">
                                                         <i class="fas fa-edit"></i>

@@ -34,12 +34,7 @@
                         <input type="text" class="form-control"
                                id="type" th:field="*{type}" required>
                     </div>
-                    <div class="form-row row-cols-lg-3">
-                        <div class="form-group">
-                            <label for="duration" th:text="#{form.duration}">duration</label>
-                            <input type="text" class="form-control"
-                                   id="duration" required th:field="*{duration}">
-                        </div>
+                    <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
                         <div class="form-group">
                             <label for="start" th:text="#{form.starts_at}">starts at</label>
                             <input type="date" class="form-control"
@@ -48,8 +43,14 @@
                         <div class="form-group">
                             <label for="ends" th:text="#{form.ends_at}">ends at</label>
                             <input type="date" class="form-control"
-                                   id="ends"  required th:field="*{endsAt}">
+                                   id="ends" required th:field="*{endsAt}">
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration" th:text="#{form.duration}">duration</label>
+                        <input class="form-control" id="duration"
+                               required th:field="*{duration}" type="text">
                     </div>
 
                     <div class="form-group">
@@ -66,7 +67,7 @@
 
                     <div class="form-group">
                         <label for="intitul_poject" th:text="#{form.project_title}">project title</label>
-                        <input type="text" class="form-control" th:field="*{formation}"
+                        <input class="form-control" th:field="*{project}" type="text"
                                id="intitul_poject" required>
                     </div>
 

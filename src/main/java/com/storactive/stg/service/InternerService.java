@@ -57,7 +57,7 @@ public class InternerService implements IInternerService {
     @Override
     public Interner update(Interner interner) {
         if (!internerRepo.existsById(interner.getId()))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found");
         interner.setPassword(pwdEncoder.encode(interner.getPassword()));
         return internerRepo.save(interner);
     }
@@ -66,7 +66,7 @@ public class InternerService implements IInternerService {
     @Override
     public void delete(Integer id) {
         if (!internerRepo.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found");
         internerRepo.deleteById(id);
     }
 
@@ -74,7 +74,7 @@ public class InternerService implements IInternerService {
     @Override
     public Interner findById(int id) {
         return internerRepo.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found"));
     }
 
 }

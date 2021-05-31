@@ -2,10 +2,11 @@ package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Date;
 
@@ -33,8 +34,8 @@ public class Internship {
 
 
     @Column(name = "duree")
-    @Min(1)
-    private int duration;
+    @NotBlank
+    private String duration;
 
     private String formation;
 
@@ -54,18 +55,22 @@ public class Internship {
 
     @OneToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Absence> absences;
 
     @OneToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<StagePiece> stagePieces;
 
     @OneToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<Alert> alerts;
 
     @OneToMany
     @JsonIgnore
-    private Collection<Task> taches;
+    @ToString.Exclude
+    private Collection<Task> tasks;
 
 }

@@ -54,5 +54,6 @@ public abstract class User {
 
     @OneToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<History> histories;
 }

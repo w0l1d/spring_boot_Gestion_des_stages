@@ -2,6 +2,7 @@ package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -22,6 +23,7 @@ public class Piece {
 
     @OneToMany
     @JsonIgnore
+    @ToString.Exclude
     private Collection<StagePiece> stagePieces;
 
 }

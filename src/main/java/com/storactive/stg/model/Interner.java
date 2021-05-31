@@ -5,6 +5,7 @@ import com.storactive.stg.model.enums.Gender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -38,6 +39,7 @@ public class Interner extends User {
 
     @OneToMany
     @JsonIgnore
+    @ToString.Exclude
     Collection<Internship> internships;
 
 }

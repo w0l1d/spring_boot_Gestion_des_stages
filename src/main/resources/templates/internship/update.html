@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <head>
   <meta charset="UTF-8">
@@ -10,7 +10,7 @@
   <meta name="author" content="w0l1d">
 
 
-  <title th:text="#{title.update_stagiaire}">Gestion des Stagiaires - Stagiares</title>
+  <title th:text="#{title.update_internship}">Gestion des Stagiaires - Stagiares</title>
 
   <!-- replace with global stylesheets-->
   <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
@@ -45,9 +45,9 @@
       <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_stagiaire}">Stagiaires</h1>
-        <form  id="add_stagiaire_form" th:object="${interner}"
-               method="post" th:action="@{${#httpServletRequest.requestURI}}">
+        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_internship}">Stages</h1>
+        <form id="add_internship_form" th:object="${internship}"
+              method="post" th:action="@{${#httpServletRequest.requestURI}}">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="d-inline m-0 font-weight-bold text-primary">
@@ -57,72 +57,59 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="name" th:text="#{form.name}">Name</label>
+                <label for="type" th:text="#{form.type}">type</label>
                 <input type="text" class="form-control"
-                       id="name" th:field="*{name}" required>
+                       id="type" required th:field="*{type}">
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-8 col-sm-8">
-                  <label for="cin" th:text="#{form.cin}">CIN</label>
-                  <input type="text" class="form-control"
-                         id="cin" required th:field="*{cin}"
-                         pattern="^[A-Za-z]{1,2}[0-9]{4,8}$">
+              <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
+                <div class="form-group">
+                  <label for="start" th:text="#{form.starts_at}">starts at</label>
+                  <input class="form-control" id="start"
+                         required th:field="*{startsAt}" type="date">
                 </div>
-                <div class="form-group col-md-4 col-sm-4">
-                  <label for="gender" th:text="#{form.gender}">Gender</label>
-                  <select id="gender" name="gender"
-                          class="form-control"
-                          th:field="*{gender}" required>
-                    <option th:each="genders : ${T(com.storactive.stg.model.enums.Gender).values()}"
-                            th:value="${genders}" th:text="${genders.displayValue}"></option>
-                  </select>
+                <div class="form-group">
+                  <label for="ends" th:text="#{form.ends_at}">ends at</label>
+                  <input class="form-control" id="ends"
+                         required th:field="*{endsAt}" type="date">
                 </div>
               </div>
 
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="username" th:text="#{form.username}">Username</label>
-                  <input type="text" class="form-control"
-                         id="username"  th:field="*{username}">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="password" th:text="#{form.password}">Password</label>
-                  <input type="password" th:field="*{password}"
-                         class="form-control" id="password" required>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="email" th:text="#{form.email}">Email</label>
-                  <input type="email" class="form-control"
-                         id="email" required th:field="*{email}">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="phone" th:text="#{form.phone}">Phone</label>
-                  <input type="text" class="form-control"
-                         id="phone" required th:field="*{phone}"
-                         pattern="^(\+[0-9]{1,3}|0)([ \-_/]*)(\d[ \-_/]*){9}$">
-                </div>
-              </div>
               <div class="form-group">
-                <label for="address" th:text="#{form.address}">Address</label>
-                <input type="text" class="form-control" th:field="*{address}"
-                       id="address" placeholder="1234 Main St">
+                <label for="duration" th:text="#{form.duration}">duration</label>
+                <input class="form-control" id="duration"
+                       required th:field="*{duration}" type="text">
               </div>
 
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                       id="enabled" th:field="*{enabled}">
-                <label th:text="#{form.enable_checkbox}" class="form-check-label" for="enabled">
-                  Account Enabled
-                </label>
+              <div class="form-group">
+                <label for="formation" th:text="#{form.formation}">formation</label>
+                <input class="form-control" id="formation" placeholder="Software Engineering"
+                       th:field="*{formation}" type="text">
+              </div>
+
+              <div class="form-group">
+                <label for="etab" th:text="#{form.etablissement}">establishment</label>
+                <input class="form-control" id="etab" th:field="*{etablissement}"
+                       type="text">
+              </div>
+
+              <div class="form-group">
+                <label for="intitul_poject" th:text="#{form.project_title}">project title</label>
+                <input class="form-control" id="intitul_poject" required
+                       th:field="*{project}" type="text">
+              </div>
+
+              <div class="form-group">
+                <label for="desc_poject" th:text="#{form.project_desc}">project title</label>
+                <input class="form-control" id="desc_poject" th:field="*{desc}"
+                       type="text">
               </div>
 
             </div>
 
             <div class="card-footer">
-              <button th:text="#{action.update}" type="submit" class="btn btn-primary btn-block">Add</button>
+              <button class="btn btn-primary btn-block" th:text="#{action.update}"
+                      type="submit">Update
+              </button>
             </div>
           </div>
         </form>
