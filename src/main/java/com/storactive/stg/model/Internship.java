@@ -6,6 +6,8 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Date;
@@ -49,6 +51,8 @@ public class Internship {
     private String desc;
 
     @Column(nullable = false)
+    @Min(1)
+    @Max(4)
     private int status;
 
 

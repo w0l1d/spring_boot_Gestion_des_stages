@@ -2,8 +2,6 @@ package com.storactive.stg.model;
 
 
 import lombok.Data;
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -33,7 +31,9 @@ public class Alert {
     private Date createdAt;
 
     @Column(nullable = false)
-    private short status;
+    @Min(0)
+    @Max(1)
+    private byte status;
 
 
 }

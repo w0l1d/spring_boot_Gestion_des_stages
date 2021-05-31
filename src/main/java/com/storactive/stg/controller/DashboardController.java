@@ -1,10 +1,9 @@
 package com.storactive.stg.controller;
 
-import com.storactive.stg.model.Absence;
-import com.storactive.stg.model.Employee;
-import com.storactive.stg.model.Internship;
-import com.storactive.stg.model.Task;
+import com.storactive.stg.model.*;
+import com.storactive.stg.model.enums.Gender;
 import com.storactive.stg.service.EmployeeService;
+import com.storactive.stg.service.InternerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,15 +18,40 @@ import java.security.Principal;
 public class DashboardController {
 
     final EmployeeService employeeSer;
+    final InternerService internerSer;
 
     @Autowired
-    public DashboardController(EmployeeService employeeSer) {
+    public DashboardController(EmployeeService employeeSer, InternerService internerSer) {
         this.employeeSer = employeeSer;
+        this.internerSer = internerSer;
     }
 
     @GetMapping("blank")
     public String getBlank(Model model) {
         return "blank";
+    }
+
+    @GetMapping("insert")
+    public String getInsert() {
+        Employee employee = new Employee();
+        employee.setName("walid ah");
+        employee.setCin("VA145962");
+        employee.setEmail("walid@ah.com");
+        employee.setPassword("password");
+        employee.setUsername("admin");
+        employeeSer.create(employee);
+
+        Interner interner = new Interner();
+        interner.setName("walid ah");
+        interner.setCin("VA148862");
+        interner.setEmail("walid@ah.com");
+        interner.setPassword("password");
+        interner.setUsername("admin2");
+        interner.setGender(Gender.F);
+        interner.setAddress("dsfsdfsdfsdgs s gsgdg");
+        interner.setPhone("0606695961");
+        internerSer.create(interner);
+        return "greeting";
     }
 
     @GetMapping("test")
