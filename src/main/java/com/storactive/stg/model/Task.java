@@ -19,7 +19,9 @@ public class Task {
     @Column(name = "task", nullable = false)
     private String txtTask;
 
-    @Column(name = "date_task", nullable = false)
+    @Column(name = "date_task",
+            nullable = false)
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateTask;
 

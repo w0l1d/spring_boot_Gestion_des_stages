@@ -1,5 +1,6 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.model.Absence;
 import com.storactive.stg.model.Employee;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Task;
@@ -46,6 +47,14 @@ public class DashboardController {
         return "fragments/add_task";
     }
 
+
+    @GetMapping("test3")
+    public String getTest3(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("absence", new Absence());
+        return "fragments/add_absence";
+    }
 
     @GetMapping("profile")
     public String getProfile(Principal principal, Model model) {

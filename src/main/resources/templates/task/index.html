@@ -86,7 +86,7 @@
                                 <tr th:each="sat : ${tasks}" th:with="format=#{form.date_format}">
                                     <td th:text="${sat?.id}"></td>
                                     <td th:text="${sat?.txtTask}"></td>
-                                    <td th:text="${#dates.format(sat?.getDateTask, format)}"></td>
+                                    <td th:text="${#dates.format(sat?.dateTask, format)}"></td>
                                     <td>
                                         <a th:href="@{/internships/{id}(id=${sat?.internship.id})}"
                                            th:text="${sat?.internship.project}"></a>

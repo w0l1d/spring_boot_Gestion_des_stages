@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+
+
+    <title th:text="#{title.update_stagiaire}">Gestion des Stagiaires - Stagiares</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Stagiaires</h1>
+                <form id="add_stagiaire_form" method="post"
+                      th:action="@{${#httpServletRequest.requestURI}}" th:object="${task}">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="d-inline m-0 font-weight-bold text-primary">
+                            </h6>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="task" th:text="#{form.task}"></label>
+                                <input class="form-control" id="task"
+                                       required th:field="*{tache}" type="text">
+                            </div>
+                            <div class="form-group date">
+                                <label for="task_date" th:text="#{form.task}"></label>
+                                <input class="form-control" id="task_date"
+                                       required th:field="*{dateTache}"
+                                       type="date">
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block" th:text="#{action.update}" type="submit">Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+</body>
+
+</html>

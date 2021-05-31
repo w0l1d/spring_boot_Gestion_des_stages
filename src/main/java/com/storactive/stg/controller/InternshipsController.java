@@ -1,12 +1,15 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.model.Absence;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Task;
+import com.storactive.stg.service.AbsenceService;
 import com.storactive.stg.service.StageService;
 import com.storactive.stg.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +22,15 @@ public class InternshipsController {
 
     final StageService stageSer;
     final TaskService taskSer;
+    final AbsenceService absenceSer;
 
     @Autowired
-    public InternshipsController(StageService stageSer, TaskService taskSer) {
+    public InternshipsController(StageService stageSer,
+                                 TaskService taskSer,
+                                 AbsenceService absenceSer) {
         this.stageSer = stageSer;
         this.taskSer = taskSer;
+        this.absenceSer = absenceSer;
     }
 
     @GetMapping({"/", ""})
@@ -107,4 +114,41 @@ public class InternshipsController {
     }
 
 
+    @GetMapping("/{id}/absences")
+    public String getInternshipAbsences(@PathVariable Integer id,
+                                        Model model) {
+        Internship internship = stageSer.findById(id);
+        model.addAttribute("internship", internship);
+        model.addAttribute("absence", new Absence());
+        model.addAttribute("absences", internship.getAbsences());
+        return "internship/absences";
+    }
+
+
+    @PostMapping("/{id}/absences")
+    @Transactional
+    public String postInternshipAbsences(@PathVariable Integer id,
+                                         @ModelAttribute @Valid Absence absence,
+                                         Model model) {
+        Internship internship = stageSer.findById(id);
+        absence.setInternship(internship);
+        absence = absenceSer.create(absence);
+        internship.getAbsences().add(absence);
+        internship = stageSer.update(internship);
+        model.addAttribute("internship", internship);
+        model.addAttribute("absence", new Absence());
+        model.addAttribute("absences", internship.getAbsences());
+        model.addAttribute("msg_inserted", true);
+        return "internship/absences";
+    }
+
+
+    @GetMapping("/{id}/absences/{absence_id}/delete")
+    public String deleteAbsence(@PathVariable("id") Integer id,
+                                @PathVariable("absence_id") Integer absId,
+                                Model model) {
+        absenceSer.delete(absId);
+        model.addAttribute("msg_deleted", true);
+        return "redirect:/internships/" + id + "/absences?deleted";
+    }
 }

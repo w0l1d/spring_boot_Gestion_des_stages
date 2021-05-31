@@ -1,6 +1,7 @@
 package com.storactive.stg.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,21 +17,25 @@ public class Absence {
     @Id
     @Column(name = "id_absence")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false,name = "date_du")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startsAt;
 
-    @Column(nullable = false,name = "date_au")
+    @Column(nullable = false, name = "date_au")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endsAt;
 
-    @Column(nullable = false,name = "nombre_jours")
+    @Column(nullable = false, name = "nombre_jours")
     @Min(1)
     private int nbrDays;
 
     private String cause;
+
+    @ManyToOne(optional = false)
+    @ToString.Exclude
+    private Internship internship;
 
 
 }

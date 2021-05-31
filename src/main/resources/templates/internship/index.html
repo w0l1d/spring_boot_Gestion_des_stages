@@ -78,8 +78,9 @@
                                         <th th:text="#{form.project_desc}">Description</th>
                                         <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{form.task}">Tasks</th>
-                                        <th th:text="#{form.alert}">Alerts</th>
+                                        <th th:text="#{form.absence}">Absences</th>
                                         <th th:text="#{form.piece_joint}">Piece Joint</th>
+                                        <th th:text="#{form.alert}">Alerts</th>
                                         <th th:text="#{action.action}">Action</th>
                                     </tr>
                                 </thead>
@@ -96,8 +97,9 @@
                                         <th th:text="#{form.project_desc}">Description</th>
                                         <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{form.task}">Tasks</th>
-                                        <th th:text="#{form.alert}">Alerts</th>
+                                        <th th:text="#{form.absence}">Absences</th>
                                         <th th:text="#{form.piece_joint}">Piece Joint</th>
+                                        <th th:text="#{form.alert}">Alerts</th>
                                         <th th:text="#{action.action}">Action</th>
                                     </tr>
                                 </tfoot>
@@ -121,13 +123,19 @@
                                     </td>
                                     <td>
                                         <a class="btn btn-circle btn-outline-info btn-sm"
-                                           th:href="@{/internships/{id}/alerts(id=${sat?.id})}">
+                                           th:href="@{/internships/{id}/absences(id=${sat?.id})}">
                                             <i class="fas fa-share"></i>
                                         </a>
                                     </td>
                                     <td>
                                         <a class="btn btn-circle btn-outline-info btn-sm"
                                            th:href="@{/internships/{id}/files(id=${sat?.id})}">
+                                            <i class="fas fa-share"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-circle btn-outline-info btn-sm"
+                                           th:href="@{/internships/{id}/alerts(id=${sat?.id})}">
                                             <i class="fas fa-share"></i>
                                         </a>
                                     </td>
