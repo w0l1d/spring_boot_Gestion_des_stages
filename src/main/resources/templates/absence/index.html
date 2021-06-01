@@ -89,7 +89,7 @@
                             <tbody>
                             <tr th:each="sat : ${absences}" th:with="format=#{form.date_format}">
                                 <td th:text="${sat?.id}"></td>
-                                <td th:text="${sat?.nbrDays}"></td>
+                                <td th:text="${sat?.nbrDays}+' '+#{form.days}"></td>
                                 <td th:text="${#dates.format(sat?.startsAt, format)}"></td>
                                 <td th:text="${#dates.format(sat?.endsAt, format)}"></td>
                                 <td th:text="${sat?.cause}"></td>
