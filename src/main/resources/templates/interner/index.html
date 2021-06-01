@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <head>
     <meta charset="UTF-8">
@@ -112,14 +112,14 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-5 col-lg m-auto">
-                                                    <a th:href="@{/stagiaires/{id}/delete(id=${sat?.id})}"
+                                                    <a th:href="@{/interners/{id}/delete(id=${sat?.id})}"
                                                        th:onclick="'return confirm(\''+#{msg.confirm_delete.stagiare}+'\');'"
                                                        class="btn btn-danger btn-block btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </div>
                                                 <div class="col-5 col-lg m-auto">
-                                                    <a th:href="@{/stagiaires/{id}(id=${sat?.id})}"
+                                                    <a th:href="@{/interners/{id}(id=${sat?.id})}"
                                                        class="btn btn-primary btn-block btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>

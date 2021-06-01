@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <head>
   <meta charset="UTF-8">
@@ -83,7 +83,7 @@
                 <div class="form-group col-md-6">
                   <label for="username" th:text="#{form.username}">Username</label>
                   <input type="text" class="form-control"
-                         id="username"  th:field="*{username}" disabled>
+                         id="username" readonly th:field="*{username}">
                 </div>
                 <div class="form-group col-md-6">
                   <label for="password" th:text="#{form.password}">Password</label>

@@ -3,6 +3,7 @@ package com.storactive.stg.controller;
 import com.storactive.stg.model.Absence;
 import com.storactive.stg.service.AbsenceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class AbsenceController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getUpdateAbsence(@NotNull @Positive @PathVariable Integer id,
                                    Model model) {
         Absence absence = absenceSer.findById(id);
@@ -50,6 +52,7 @@ public class AbsenceController {
 
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateAbsence(@NotNull @Positive @PathVariable Integer id,
                                    @ModelAttribute @Valid Absence absence,
                                    Model model) {
@@ -62,6 +65,7 @@ public class AbsenceController {
     }
 
     @GetMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteAbsence(@PathVariable Integer id,
                                 Model model) {
         absenceSer.delete(id);

@@ -2,7 +2,6 @@ package com.storactive.stg.controller;
 
 import com.storactive.stg.model.Interner;
 import com.storactive.stg.service.InternerService;
-import com.storactive.stg.service.iService.IInternerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -98,9 +98,11 @@
                                         <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{form.task}">Tasks</th>
                                         <th th:text="#{form.absence}">Absences</th>
-                                        <th th:text="#{form.piece_joint}">Piece Joint</th>
-                                        <th th:text="#{form.alert}">Alerts</th>
-                                        <th th:text="#{action.action}">Action</th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.piece_joint}">Piece
+                                            Joint
+                                        </th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.alert}">Alerts</th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -130,19 +132,19 @@
                                             <i class="fas fa-share"></i>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="btn btn-circle btn-outline-info btn-sm"
                                            th:href="@{/internships/{id}/files(id=${sat?.id})}">
                                             <i class="fas fa-share"></i>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="btn btn-circle btn-outline-info btn-sm"
                                            th:href="@{/internships/{id}/alerts(id=${sat?.id})}">
                                             <i class="fas fa-share"></i>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                                         <div class="row">
                                             <div class="col-5 col-lg m-auto">
                                                 <a th:href="@{/internships/{id}/delete(id=${sat?.id})}"
@@ -152,7 +154,7 @@
                                                 </a>
                                             </div>
                                             <div class="col-5 col-lg m-auto">
-                                                    <a th:href="@{/internships/{id}(id=${sat?.id})}"
+                                                <a th:href="@{/internships/{id}(id=${sat?.id})}"
                                                        class="btn btn-primary btn-block btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>

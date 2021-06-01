@@ -3,6 +3,7 @@ package com.storactive.stg.controller;
 import com.storactive.stg.model.Task;
 import com.storactive.stg.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class TaskController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getUpdateTask(@PathVariable Integer id, Model model) {
         Task task = taskSer.findById(id);
         model.addAttribute("task", task);
@@ -49,6 +51,7 @@ public class TaskController {
 
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateTask(@NotNull @Positive @PathVariable Integer id,
                                     @ModelAttribute @Valid Task task,
                                     Model model) {
@@ -61,6 +64,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteTask(@PathVariable Integer id,
                                  Model model) {
         taskSer.delete(id);
