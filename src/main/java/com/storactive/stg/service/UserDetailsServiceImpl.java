@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new DisabledException("account is disabled");
         return org.springframework.security.core.userdetails
                 .User.withUsername(username).password(user.getPassword())
-                .roles(user instanceof Interner ?"STAGIAIRE":"ADMIN").build();
+                .roles(user instanceof Interner ? "INTERNER" : "ADMIN").build();
     }
 
     public boolean isStagiaire(User user) {

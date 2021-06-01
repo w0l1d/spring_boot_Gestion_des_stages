@@ -56,6 +56,10 @@ public class Internship {
     private int status;
 
 
+    @ManyToOne
+    @JsonIgnore
+    @ToString.Exclude
+    private Interner interner;
 
     @OneToMany
     @JsonIgnore

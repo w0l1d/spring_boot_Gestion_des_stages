@@ -52,13 +52,17 @@
                                 <div th:if="${msg_updated}" th:text="#{msg.stage_updated}"
                                      class="alert alert-success d-inline-block"></div>
 
+                                <div class="alert alert-success d-inline-block" th:if="${msg_inserted}"
+                                     th:text="#{msg.stage_inserted}"></div>
+
                                 <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.stage_deleted}"
                                      class="alert alert-danger d-inline-block"></div>
                             </h6>
 
                             <!-- Add internship Modal Button @#@-->
-                            <div th:replace="~{fragments/add_internship.html :: #add_internship_modal_button}"
-                                 id="add-internship-dialog-button" class="replace-fragment"></div>
+                            <!--                            <div th:replace="~{fragments/add_internship.html :: #add_internship_modal_button}"-->
+                            <!--                                 id="add-internship-dialog-button" class="replace-fragment"-->
+                            <!--                                 sec:authorize="hasRole('ROLE_ADMIN')" ></div>-->
 
                         </div>
                         <div class="card-body">
@@ -79,9 +83,11 @@
                                         <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{form.task}">Tasks</th>
                                         <th th:text="#{form.absence}">Absences</th>
-                                        <th th:text="#{form.piece_joint}">Piece Joint</th>
-                                        <th th:text="#{form.alert}">Alerts</th>
-                                        <th th:text="#{action.action}">Action</th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.piece_joint}">
+                                            Piece Joint
+                                        </th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.alert}">Alerts</th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -98,8 +104,8 @@
                                         <th th:text="#{form.status}">Status</th>
                                         <th th:text="#{form.task}">Tasks</th>
                                         <th th:text="#{form.absence}">Absences</th>
-                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.piece_joint}">Piece
-                                            Joint
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.piece_joint}">
+                                            Piece Joint
                                         </th>
                                         <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{form.alert}">Alerts</th>
                                         <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
@@ -193,7 +199,7 @@
 
 
     <!-- Add internship Modal @#@-->
-    <div th:replace="~{fragments/add_internship.html :: #add_internship_form}" id="add-internship-dialog" class="replace-fragment"></div>
+    <!--    <div th:replace="~{fragments/add_internship.html :: #add_internship_form}" sec:authorize="hasRole('ROLE_ADMIN')" id="add-internship-dialog" class="replace-fragment"></div>-->
 
 
     <!-- replace with global scripts @#@ -->

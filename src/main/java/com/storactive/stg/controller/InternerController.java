@@ -1,10 +1,13 @@
 package com.storactive.stg.controller;
 
 import com.storactive.stg.model.Interner;
+import com.storactive.stg.model.Internship;
 import com.storactive.stg.service.InternerService;
+import com.storactive.stg.service.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +19,12 @@ import javax.validation.Valid;
 public class InternerController {
 
     final InternerService internerSer;
+    final StageService stageSer;
 
     @Autowired
-    public InternerController(InternerService internerSer) {
+    public InternerController(InternerService internerSer, StageService stageSer) {
         this.internerSer = internerSer;
+        this.stageSer = stageSer;
     }
 
     @GetMapping({"/", ""})
@@ -28,6 +33,7 @@ public class InternerController {
         model.addAttribute("interners", internerSer.getAll());
         return "interner/index";
     }
+
 
 
     @PostMapping({"/", ""})
@@ -59,10 +65,30 @@ public class InternerController {
 
     @GetMapping({"/{id}/delete"})
     public String deleteInterner(@PathVariable Integer id,
-                                  Model model) {
+                                 Model model) {
         internerSer.delete(id);
         model.addAttribute("msg_deleted", true);
         return "redirect:/interners?deleted";
     }
+
+    @GetMapping("/{id}/internship")
+    public String getAddInternship(@PathVariable Integer id,
+                                   Model model) {
+        model.addAttribute("internship", new Internship());
+        return "interner/add_internship";
+    }
+
+    @PostMapping("/{id}/internship")
+    @Transactional
+    public String postAddInternship(@PathVariable Integer id,
+                                    @ModelAttribute @Valid Internship internship) {
+        Interner interner = internerSer.findById(id);
+        internship.setInterner(interner);
+        internship = stageSer.create(internship);
+
+        interner.getInternships().add(internship);
+        return "redirect:/internships?inserted";
+    }
+
 
 }

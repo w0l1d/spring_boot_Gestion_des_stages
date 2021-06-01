@@ -67,7 +67,7 @@ public class EmployeeController {
                                   Model model) {
         employeeSer.delete(id);
         model.addAttribute("msg_deleted", true);
-        return "redirect:/employee?deleted";
+        return "redirect:/internships?inserted";
     }
 
 }

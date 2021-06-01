@@ -27,6 +27,7 @@ public class AbsenceService {
         return absenceRepo.findAll();
     }
 
+
     public Absence create(Absence absence) {
         absence.setId(null);
         return absenceRepo.save(absence);

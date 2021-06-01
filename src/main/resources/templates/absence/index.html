@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -72,7 +72,7 @@
                                 <th th:text="#{form.end}"></th>
                                 <th th:text="#{form.cause}"></th>
                                 <th th:text="#{form.internship}"></th>
-                                <th th:text="#{action.action}">Action</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -83,7 +83,7 @@
                                 <th th:text="#{form.end}"></th>
                                 <th th:text="#{form.cause}"></th>
                                 <th th:text="#{form.internship}"></th>
-                                <th th:text="#{action.action}">Action</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
                             </tr>
                             </tfoot>
                             <tbody>
@@ -93,11 +93,14 @@
                                 <td th:text="${#dates.format(sat?.startsAt, format)}"></td>
                                 <td th:text="${#dates.format(sat?.endsAt, format)}"></td>
                                 <td th:text="${sat?.cause}"></td>
-                                <td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
                                     <a th:href="@{/internships/{id}(id=${sat?.internship.id})}"
                                        th:text="${sat?.internship.project}"></a>
                                 </td>
-                                <td>
+                                <td sec:authorize="hasRole('ROLE_INTERNER')"
+                                    th:text="${sat?.internship.project}"></td>
+
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
                                     <div class="row">
                                         <div class="col-5 col-lg m-auto">
                                             <a class="btn btn-danger btn-block btn-sm"

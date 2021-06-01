@@ -76,6 +76,7 @@
                                         <th th:text="#{form.email}">Email</th>
                                         <th th:text="#{form.address}">address</th>
                                         <th th:text="#{action.action}">Action</th>
+                                        <th th:text="#{internship}">internship</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -90,6 +91,7 @@
                                         <th th:text="#{form.email}">Email</th>
                                         <th th:text="#{form.address}">address</th>
                                         <th th:text="#{action.action}">Action</th>
+                                        <th th:text="#{internship}">internship</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -125,6 +127,12 @@
                                                     </a>
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary btn-block btn-sm"
+                                               th:href="@{/interners/{id}/internship(id=${sat?.id})}">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>

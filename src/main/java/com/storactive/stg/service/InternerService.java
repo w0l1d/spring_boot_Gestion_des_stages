@@ -1,8 +1,7 @@
 package com.storactive.stg.service;
 
 import com.storactive.stg.exception.ValueAlreadyUsedException;
-import com.storactive.stg.model.Interner;
-import com.storactive.stg.model.User;
+import com.storactive.stg.model.*;
 import com.storactive.stg.repository.InternerRepo;
 import com.storactive.stg.repository.UserRepo;
 import com.storactive.stg.service.iService.IInternerService;
@@ -12,8 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Vector;
 
 @Service
 public class InternerService implements IInternerService {
@@ -36,6 +37,25 @@ public class InternerService implements IInternerService {
     @Override
     public List<Interner> getAll() {
         return internerRepo.findAll();
+    }
+
+    public List<Task> getUserTasks(String username) {
+        Interner interner = findByUsername(username);
+        List<Task> tasks = new Vector<>();
+        interner.getInternships().forEach(internship -> tasks.addAll(internship.getTasks()));
+        return tasks;
+    }
+
+
+    public List<Absence> getUserAbsences(String username) {
+        Interner interner = findByUsername(username);
+        List<Absence> absences = new Vector<>();
+        interner.getInternships().forEach(internship -> absences.addAll(internship.getAbsences()));
+        return absences;
+    }
+
+    public Collection<Internship> getUserInternships(String username) {
+        return findByUsername(username).getInternships();
     }
 
     @Override
@@ -77,4 +97,9 @@ public class InternerService implements IInternerService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found"));
     }
 
+
+    public Interner findByUsername(String username) {
+        return internerRepo.findByUsername(username).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found"));
+    }
 }
