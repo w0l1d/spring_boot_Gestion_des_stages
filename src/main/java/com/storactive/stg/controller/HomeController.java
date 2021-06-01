@@ -30,7 +30,7 @@ public class HomeController {
     @GetMapping({"", "home"})
     public String home(Model model) {
         if (Utils.isAuthenticated())
-            return "dashboard";
+            return "index_Dashboard";
         return "greeting";
     }
 
