@@ -80,6 +80,14 @@ public class DashboardController {
         return "fragments/add_absence";
     }
 
+    @GetMapping("test4")
+    public String getTest4(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("user", new Employee());
+        return "fragments/add_employee";
+    }
+
     @GetMapping("profile")
     public String getProfile(Principal principal, Model model) {
         String username = principal.getName();
