@@ -93,21 +93,21 @@
                                     <td th:text="${sat?.email}"></td>
                                     <td>
                                         <div class="row">
-                                            <div class="col-lg m-auto">
+                                            <div class="col-lg m-auto"
+                                                 th:if="${not #strings.equalsIgnoreCase(sat?.username, #authentication.name)}">
                                                 <a class="btn btn-danger btn-block btn-sm"
-                                                   th:if="${not #strings.equalsIgnoreCase(sat?.username, #authentication.name)}"
                                                    th:href="@{/users/{id}/delete(id=${sat?.id})}"
                                                    th:onclick="'return confirm(\''+#{msg.confirm_delete.user}+'\');'">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </div>
-                                                <div class="col-lg m-auto">
-                                                    <a th:href="@{/users/{id}(id=${sat?.id})}"
-                                                       class="btn btn-primary btn-block btn-sm">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                </div>
+                                            <div class="col-lg m-auto">
+                                                <a class="btn btn-primary btn-block btn-sm"
+                                                   th:href="@{/users/{id}(id=${sat?.id})}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
                                             </div>
+                                        </div>
                                         </td>
                                     </tr>
                                 </tbody>

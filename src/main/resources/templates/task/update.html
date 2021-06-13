@@ -45,8 +45,8 @@
       <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Stagiaires</h1>
-        <form id="add_stagiaire_form" th:object="${task}"
+        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Add Task</h1>
+        <form id="add_task_form" th:object="${task}"
               method="post" th:action="@{${#httpServletRequest.requestURI}}">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -59,13 +59,13 @@
               <div class="form-group">
                 <label for="task" th:text="#{form.task}"></label>
                 <input type="text" class="form-control"
-                       id="task" th:field="*{tache}" required>
+                       id="task" required th:field="*{txtTask}">
               </div>
               <div class="form-group date">
                 <label for="task_date" th:text="#{form.task}"></label>
                 <input type="date" class="form-control"
                        id="task_date" required
-                       th:field="*{dateTache}">
+                       th:field="*{dateTask}">
               </div>
 
             </div>
