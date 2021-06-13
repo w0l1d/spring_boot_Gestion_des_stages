@@ -27,8 +27,8 @@ public class EmployeeController {
 
     @GetMapping({"/", ""})
     public String getIndex(Model model) {
-        model.addAttribute("user", new Employee());
-        model.addAttribute("users", employeeSer.getAll());
+        model.addAttribute("employee", new Employee());
+        model.addAttribute("employees", employeeSer.getAll());
         return "employee/index";
     }
 

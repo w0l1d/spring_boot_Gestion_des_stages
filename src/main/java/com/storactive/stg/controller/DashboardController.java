@@ -84,7 +84,7 @@ public class DashboardController {
     public String getTest4(RedirectAttributes redirectAttributes,
                            Model model) {
         redirectAttributes.addAttribute("msg_deleted", true);
-        model.addAttribute("user", new Employee());
+        model.addAttribute("employee", new Employee());
         return "fragments/add_employee";
     }
 
