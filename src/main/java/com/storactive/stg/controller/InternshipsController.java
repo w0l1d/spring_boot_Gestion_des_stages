@@ -103,7 +103,7 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         if (!request.isUserInRole("ROLE_ADMIN")
-                && isAuthorizedToInternship(internship.getId(), principal.getName()))
+                && !isAuthorizedToInternship(internship.getInterner(), principal.getName()))
             throw new AuthorizationServiceException("Not Authorized to this Resource");
 
         model.addAttribute("internship", internship);
@@ -122,7 +122,7 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         if (!request.isUserInRole("ROLE_ADMIN")
-                && isAuthorizedToInternship(internship.getId(), principal.getName()))
+                && !isAuthorizedToInternship(internship.getInterner(), principal.getName()))
             throw new AuthorizationServiceException("Not Authorized to this Resource");
 
         task.setInternship(internship);
@@ -156,7 +156,7 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         if (!request.isUserInRole("ROLE_ADMIN")
-                && isAuthorizedToInternship(internship.getId(), principal.getName()))
+                && !isAuthorizedToInternship(internship.getInterner(), principal.getName()))
             throw new AuthorizationServiceException("Not Authorized to this Resource");
 
         model.addAttribute("internship", internship);
@@ -173,7 +173,7 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         if (!request.isUserInRole("ROLE_ADMIN")
-                && isAuthorizedToInternship(internship.getId(), principal.getName()))
+                && !isAuthorizedToInternship(internship.getInterner(), principal.getName()))
             throw new AuthorizationServiceException("Not Authorized to this Resource");
 
         model.addAttribute("internship", internship);
@@ -235,7 +235,7 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         if (!request.isUserInRole("ROLE_ADMIN")
-                && isAuthorizedToInternship(internship.getId(), principal.getName()))
+                && !isAuthorizedToInternship(internship.getInterner(), principal.getName()))
             throw new AuthorizationServiceException("Not Authorized to this Resource");
 
         absenceSer.delete(absId);
@@ -244,8 +244,8 @@ public class InternshipsController {
     }
 
 
-    private boolean isAuthorizedToInternship(Integer internshipId, String username) {
-        Interner interner = internerSer.findByUsername(username);
-        return !internshipId.equals(interner.getId());
+    private boolean isAuthorizedToInternship(Interner owner, String username) {
+        Interner loggedInterner = internerSer.findByUsername(username);
+        return owner.getId().equals(loggedInterner.getId());
     }
 }
