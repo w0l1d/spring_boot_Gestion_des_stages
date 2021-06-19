@@ -2,6 +2,7 @@ package com.storactive.stg.model;
 
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -12,7 +13,6 @@ import java.util.Date;
 @Entity
 @Table(name = "tab_history")
 public class History {
-
 
     @Id
     @Column(name = "id_history")
@@ -25,6 +25,7 @@ public class History {
 
     @Column(nullable = false, name = "created_at")
     @CreatedDate
+    @CreationTimestamp
     private Date createdAt;
 
 

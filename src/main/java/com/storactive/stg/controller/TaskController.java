@@ -47,15 +47,6 @@ public class TaskController {
     }
 
 
-    @PostMapping({"/", ""})
-    public String postAddTask(@ModelAttribute @Valid Task task,
-                              Model model) {
-        taskSer.create(task);
-
-        model.addAttribute("tasks", taskSer.getAll());
-        return "task/index";
-    }
-
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

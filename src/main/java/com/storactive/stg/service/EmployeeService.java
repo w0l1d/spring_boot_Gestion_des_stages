@@ -17,15 +17,19 @@ import java.util.Optional;
 @Service
 public class EmployeeService {
 
+    final String OBJ = "Employee";
     final EmployeeRepo employeeRepo;
+    final HistoryService historySer;
     final UserRepo userRepo;
+
     final BCryptPasswordEncoder pwdEncoder;
 
 
     @Autowired
     public EmployeeService(EmployeeRepo employeeRepo,
-                            UserRepo userRepo,
-                            BCryptPasswordEncoder pwdEncoder) {
+                           HistoryService historySer, UserRepo userRepo,
+                           BCryptPasswordEncoder pwdEncoder) {
+        this.historySer = historySer;
         this.userRepo = userRepo;
         this.employeeRepo = employeeRepo;
         this.pwdEncoder = pwdEncoder;
@@ -45,7 +49,9 @@ public class EmployeeService {
             employee.setId(null);
             employee.setCin(employee.getCin().toUpperCase());
             employee.setUsername(employee.getUsername().toLowerCase());
-            return employeeRepo.save(employee);
+            Employee employee1 = employeeRepo.save(employee);
+            historySer.objetCreated(OBJ, employee1.getId());
+            return employee1;
         }
         User user1 = user.orElse(null);
         if (user1.getCin().equals(employee.getCin()))
@@ -58,7 +64,9 @@ public class EmployeeService {
         if (!employeeRepo.existsById(employee.getId()))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee Not Found");
         employee.setPassword(pwdEncoder.encode(employee.getPassword()));
-        return employeeRepo.save(employee);
+        Employee employee1 = employeeRepo.save(employee);
+        historySer.objetUpdated(OBJ, employee1.getId());
+        return employee1;
     }
 
 
@@ -66,6 +74,7 @@ public class EmployeeService {
         if (!employeeRepo.existsById(id))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee Not Found");
         employeeRepo.deleteById(id);
+        historySer.objetDeleted(OBJ, id);
     }
 
 

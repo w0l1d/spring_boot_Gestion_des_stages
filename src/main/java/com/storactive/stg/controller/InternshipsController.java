@@ -176,7 +176,6 @@ public class InternshipsController {
                 && isAuthorizedToInternship(internship.getId(), principal.getName()))
             throw new AuthorizationServiceException("Not Authorized to this Resource");
 
-
         model.addAttribute("internship", internship);
         model.addAttribute("pieces", pieceSer.getAll());
         model.addAttribute("file", new StagePiece());

@@ -21,7 +21,6 @@ public class Task {
 
     @Column(name = "date_task",
             nullable = false)
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateTask;
 

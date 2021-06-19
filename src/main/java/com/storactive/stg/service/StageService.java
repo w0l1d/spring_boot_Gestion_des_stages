@@ -12,11 +12,15 @@ import java.util.List;
 @Service
 public class StageService {
 
+    final String OBJ = "Stage";
+
     final StageRepo stageRepo;
+    final HistoryService historySer;
 
     @Autowired
-    public StageService(StageRepo stageRepo) {
+    public StageService(StageRepo stageRepo, HistoryService historySer) {
         this.stageRepo = stageRepo;
+        this.historySer = historySer;
     }
 
 
@@ -26,19 +30,24 @@ public class StageService {
 
     public Internship create(Internship internship) {
         internship.setId(null);
-        return stageRepo.save(internship);
+        Internship internship1 = stageRepo.save(internship);
+        historySer.objetCreated(OBJ, internship1.getId());
+        return internship1;
     }
 
     public Internship update(Internship internship) {
         if (!stageRepo.existsById(internship.getId()))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Internship Not Found");
-        return stageRepo.save(internship);
+        Internship internship1 = stageRepo.save(internship);
+        historySer.objetUpdated(OBJ, internship1.getId());
+        return internship1;
     }
 
     public void delete(Integer id) {
         if (!stageRepo.existsById(id))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Internship Not Found");
         stageRepo.deleteById(id);
+        historySer.objetDeleted(OBJ, id);
     }
 
     public Internship findById(int id) {

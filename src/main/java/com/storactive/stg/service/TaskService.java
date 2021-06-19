@@ -13,13 +13,17 @@ import java.util.List;
 @Service
 public class TaskService {
 
+    final String OBJ = "Tache";
+
     final TaskRepo taskRepo;
     final StageService internshipSer;
+    final HistoryService historySer;
 
     @Autowired
-    public TaskService(TaskRepo taskRepo, StageService internshipSer) {
+    public TaskService(TaskRepo taskRepo, StageService internshipSer, HistoryService historySer) {
         this.taskRepo = taskRepo;
         this.internshipSer = internshipSer;
+        this.historySer = historySer;
     }
 
     public List<Task> getAll() {
@@ -28,7 +32,9 @@ public class TaskService {
 
     public Task create(Task task) {
         task.setId(null);
-        return taskRepo.save(task);
+        Task task1 = taskRepo.save(task);
+        historySer.objetCreated(OBJ, task1.getId());
+        return task1;
     }
 
     public Task update(Task task) {
@@ -36,7 +42,9 @@ public class TaskService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found")
         );
         task.setInternship(task1.getInternship());
-        return taskRepo.save(task);
+        Task task2 = taskRepo.save(task);
+        historySer.objetUpdated(OBJ, task2.getId());
+        return task2;
     }
 
     public void delete(Integer id) {
@@ -45,6 +53,7 @@ public class TaskService {
         internship.getTasks().remove(task);
         internshipSer.update(internship);
         taskRepo.deleteById(id);
+        historySer.objetDeleted(OBJ, id);
     }
 
 

@@ -13,12 +13,16 @@ import java.util.List;
 @Service
 public class AttachmentService {
 
-    AttachmentRepo attachmentRepo;
+    final String OBJ = "Piece Joint";
+
+    final AttachmentRepo attachmentRepo;
+    final HistoryService historySer;
 
 
     @Autowired
-    public AttachmentService(AttachmentRepo attachmentRepo) {
+    public AttachmentService(AttachmentRepo attachmentRepo, HistoryService historySer) {
         this.attachmentRepo = attachmentRepo;
+        this.historySer = historySer;
     }
 
     public List<Attachment> getAll() {
@@ -28,18 +32,24 @@ public class AttachmentService {
 
     public Attachment create(Attachment attachment) {
         attachment.setId(null);
-        return attachmentRepo.save(attachment);
+        Attachment attachment1 = attachmentRepo.save(attachment);
+        historySer.objetCreated(OBJ, attachment1.getId());
+        return attachment1;
     }
 
     @Transactional
     public Attachment update(Attachment attachment) {
         findById(attachment.getId());
-        return attachmentRepo.save(attachment);
+        Attachment attachment1 = attachmentRepo.save(attachment);
+        historySer.objetUpdated(OBJ, attachment1.getId());
+        return attachment1;
     }
 
     @Transactional
     public void delete(Integer id) {
         attachmentRepo.deleteById(id);
+        historySer.create("La piece joint " + id + "est Supprimée");
+        historySer.objetDeleted(OBJ, id);
     }
 
 

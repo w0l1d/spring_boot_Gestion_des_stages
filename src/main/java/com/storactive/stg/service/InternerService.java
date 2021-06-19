@@ -19,17 +19,21 @@ import java.util.Vector;
 @Service
 public class InternerService implements IInternerService {
 
+    final String OBJ = "Stagiaire";
     final InternerRepo internerRepo;
     final UserRepo userRepo;
+    final HistoryService historySer;
+
     final BCryptPasswordEncoder pwdEncoder;
 
 
     @Autowired
     public InternerService(InternerRepo internerRepo,
                            UserRepo userRepo,
-                           BCryptPasswordEncoder pwdEncoder) {
+                           HistoryService historySer, BCryptPasswordEncoder pwdEncoder) {
         this.userRepo = userRepo;
         this.internerRepo = internerRepo;
+        this.historySer = historySer;
         this.pwdEncoder = pwdEncoder;
     }
 
@@ -72,7 +76,9 @@ public class InternerService implements IInternerService {
                         (interner.getUsername(), interner.getCin());
         if (user.isEmpty()) {
             interner.setPassword(pwdEncoder.encode(interner.getPassword()));
-            return internerRepo.save(interner);
+            Interner interner1 = internerRepo.save(interner);
+            historySer.objetCreated(OBJ, interner1.getId());
+            return interner1;
         }
         User user1 = user.orElse(null);
         if (user1.getCin().equals(interner.getCin()))
@@ -86,7 +92,9 @@ public class InternerService implements IInternerService {
         if (!internerRepo.existsById(interner.getId()))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found");
         interner.setPassword(pwdEncoder.encode(interner.getPassword()));
-        return internerRepo.save(interner);
+        Interner interner1 = internerRepo.save(interner);
+        historySer.objetUpdated(OBJ, interner1.getId());
+        return interner1;
     }
 
 
@@ -95,6 +103,7 @@ public class InternerService implements IInternerService {
         if (!internerRepo.existsById(id))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interner Not Found");
         internerRepo.deleteById(id);
+        historySer.objetDeleted(OBJ, id);
     }
 
 

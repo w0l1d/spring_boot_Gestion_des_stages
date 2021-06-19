@@ -14,13 +14,16 @@ import java.util.List;
 @Service
 public class AbsenceService {
 
+    final String OBJ = "Absence";
     final AbsenceRepo absenceRepo;
     final StageService internshipSer;
+    final HistoryService historySer;
 
     @Autowired
-    public AbsenceService(AbsenceRepo absenceRepo, StageService internshipSer) {
+    public AbsenceService(AbsenceRepo absenceRepo, StageService internshipSer, HistoryService historySer) {
         this.absenceRepo = absenceRepo;
         this.internshipSer = internshipSer;
+        this.historySer = historySer;
     }
 
     public List<Absence> getAll() {
@@ -30,14 +33,18 @@ public class AbsenceService {
 
     public Absence create(Absence absence) {
         absence.setId(null);
-        return absenceRepo.save(absence);
+        Absence absence1 = absenceRepo.save(absence);
+        historySer.objetCreated(OBJ, absence1.getId());
+        return absence1;
     }
 
     @Transactional
     public Absence update(Absence absence) {
         Absence absence1 = findById(absence.getId());
         absence.setInternship(absence1.getInternship());
-        return absenceRepo.save(absence);
+        Absence absence2 = absenceRepo.save(absence);
+        historySer.objetUpdated(OBJ, absence2.getId());
+        return absence2;
     }
 
     @Transactional
@@ -47,6 +54,7 @@ public class AbsenceService {
         internship.getAbsences().remove(absence);
         internshipSer.update(internship);
         absenceRepo.deleteById(id);
+        historySer.objetDeleted(OBJ, id);
     }
 
 

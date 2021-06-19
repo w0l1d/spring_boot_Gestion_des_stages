@@ -17,8 +17,11 @@ import java.util.List;
 
 @Service
 public class StagePieceService {
+    final String OBJ = "Stage Piece";
+
     final StagePieceRepo stagePieceRepo;
 
+    final HistoryService historySer;
     final StageService internshipSer;
     final AttachmentService attachmentSer;
     final FileStorageService storageSer;
@@ -27,11 +30,12 @@ public class StagePieceService {
 
     @Autowired
     public StagePieceService(StagePieceRepo stagePieceRepo,
-                             PieceService pieceSer,
+                             HistoryService historySer, PieceService pieceSer,
                              AttachmentService attachmentSer,
                              FileStorageService storageSer,
                              StageService internshipSer) {
         this.stagePieceRepo = stagePieceRepo;
+        this.historySer = historySer;
         this.internshipSer = internshipSer;
         this.attachmentSer = attachmentSer;
         this.storageSer = storageSer;
@@ -71,7 +75,7 @@ public class StagePieceService {
         //relate piece to StagePiece
         piece.getStagePieces().add(stagePiece);
 
-
+        historySer.objetCreated(OBJ, stagePiece.getId());
         return stagePiece;
     }
 
@@ -99,7 +103,11 @@ public class StagePieceService {
         stagePiece.setAttachment(newAttachment);
 
         //finally create stagePiece
-        return stagePieceRepo.save(stagePiece);
+        StagePiece updatedStagePiece = stagePieceRepo.save(stagePiece);
+
+        historySer.objetUpdated(OBJ, updatedStagePiece.getId());
+
+        return updatedStagePiece;
     }
 
     @Transactional
@@ -127,6 +135,8 @@ public class StagePieceService {
 
         //delete stagePiece
         stagePieceRepo.deleteById(id);
+
+        historySer.objetDeleted(OBJ, id);
     }
 
 

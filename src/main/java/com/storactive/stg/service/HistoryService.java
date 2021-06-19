@@ -26,6 +26,25 @@ public class HistoryService {
         return historyRepo.findAll();
     }
 
+    public void create(String action) {
+        History history = new History();
+        history.setAction(action);
+        historyRepo.save(history);
+    }
+
+    public void objetCreated(String obj, int objId) {
+        create(obj + " '" + objId + "' est créé");
+    }
+
+    public void objetDeleted(String obj, int objId) {
+        create(obj + " '" + objId + "' est supprimé");
+    }
+
+    public void objetUpdated(String obj, int objId) {
+        create(obj + " '" + objId + "' est modifié");
+    }
+
+
     public void deleteAll() {
         historyRepo.deleteAll();
     }
