@@ -97,6 +97,23 @@ public class DashboardController {
         return "fragments/add_interner";
     }
 
+
+    @GetMapping("test6")
+    public String getTest6(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("pieces", new Piece[10]);
+        return "fragments/add_file";
+    }
+
+    @GetMapping("test7")
+    public String getTest7(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("file", new Piece());
+        return "fragments/add_piece";
+    }
+
     @GetMapping("profile")
     public String getProfile(Principal principal, Model model) {
         String username = principal.getName();

@@ -86,15 +86,20 @@
     <!-- End of Footer -->
 
   </div>
-  <!-- End of Content Wrapper -->
+    <!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
-  <i class="fas fa-angle-up"></i>
+    <i class="fas fa-angle-up"></i>
 </a>
+
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
 
 <!-- replace with global scripts @#@ -->
 <div th:replace="~{fragments/all_assets.html :: script}" class="replace-fragment"></div>

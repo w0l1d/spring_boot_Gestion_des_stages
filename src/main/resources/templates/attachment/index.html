@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+
+
+    <title th:text="#{title.page.document}">Gestion des Stagiaires - Stagiares</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/link}"></div>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800"
+                    th:text="#{sidebar.documents}">Documents</h1>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="d-inline m-0 font-weight-bold text-primary">
+                            <div class="alert alert-success d-inline-block" th:if="${msg_updated}"
+                                 th:text="#{msg.document_updated}"></div>
+
+                            <div class="alert alert-danger d-inline-block" th:if="${msg_deleted} or ${param.deleted}"
+                                 th:text="#{msg.document_deleted}"></div>
+                        </h6>
+
+                        <!-- Add document Modal Button @#@-->
+                        <!--                            <div th:replace="~{fragments/add_document.html :: #add_document_modal_button}" id="add-document-dialog-button" class="replace-fragment"></div>-->
+
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.file}">File</th>
+                                <th th:text="#{form.type}">type</th>
+                                <th th:text="#{form.piece}"></th>
+                                <th th:text="#{form.created_at}">Created at</th>
+                                <th th:text="#{form.internship}"></th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}"></th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.file}">File</th>
+                                <th th:text="#{form.type}">type</th>
+                                <th th:text="#{form.piece}"></th>
+                                <th th:text="#{form.created_at}">Created at</th>
+                                <th th:text="#{form.internship}"></th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}"></th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr th:each="sat : ${files}" th:with="format=#{form.full_date_format}">
+                                <td th:text="${sat?.id}"></td>
+                                <td>
+                                    <a target="_blank" th:href="@{/documents/{id}/download(id=${sat?.attachment.id})}"
+                                       th:text="${sat?.attachment.pieceJoint}"></a>
+                                </td>
+                                <td th:text="${sat?.attachment.type}"></td>
+                                <td th:text="${sat?.piece.label}"></td>
+                                <td th:text="${#dates.format(sat?.dateSaisie, format)}"></td>
+                                <td>
+                                    <a th:href="@{/internships/{id}(id=${sat?.internship.id})}"
+                                       th:text="${sat?.internship.project}"></a>
+                                </td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div class="row">
+                                        <div class="col-5 col-lg m-auto">
+                                            <a class="btn btn-danger btn-block btn-sm"
+                                               th:href="@{/documents/{id}/delete(id=${sat?.id})}"
+                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.piece}+'\');'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-5 col-lg m-auto">
+                                            <a class="btn btn-primary btn-block btn-sm"
+                                               th:href="@{/documents/{id}(id=${sat?.id})}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
+
+<!-- Add document Modal @#@-->
+<!--    <div th:replace="~{fragments/add_document.html :: #add_document_form}" id="add-document-dialog" class="replace-fragment"></div>-->
+
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+
+<!-- replace with page scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+</body>
+
+</html>

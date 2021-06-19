@@ -2,7 +2,6 @@ package com.storactive.stg.model;
 
 
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -18,7 +17,7 @@ public class History {
     @Id
     @Column(name = "id_history")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     @NotBlank

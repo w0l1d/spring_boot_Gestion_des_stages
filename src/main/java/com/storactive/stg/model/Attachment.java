@@ -8,12 +8,12 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Entity
 @Table(name = "tab_piece_jointe")
-public class PieceJoint {
+public class Attachment {
 
     @Id
     @Column(name = "id_piece_jointe")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @NotBlank
     @Column(nullable = false, name = "piece_jointe")
@@ -26,8 +26,6 @@ public class PieceJoint {
     @NotBlank
     @Column(nullable = false)
     private String path;
-
-    
 
 
 }

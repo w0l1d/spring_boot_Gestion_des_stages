@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.min.css}">
+
+</head>
+<body>
+
+<button class="btn btn-primary float-right px-4 d-inline-block" data-target="#add_file_modal"
+        data-toggle="modal"
+        id="add_file_modal_button" th:text="#{action.add}"
+        type="button">
+    Add
+</button>
+
+<form enctype="multipart/form-data" id="add_file_form"
+      method="post"
+      th:action="@{${#httpServletRequest.requestURI}+'?'+ ${_csrf.parameterName}+'='+${_csrf.token}}">
+    <div aria-hidden="true" aria-labelledby="add_file_modal_Title" class="modal fade" id="add_file_modal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add_file_modal_Title" th:text="#{title.add_file}">Modal title</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <select class="custom-select" name="piece">
+                            <option selected th:text="#{form.select_piece}">Select Pieces</option>
+                            <option th:each="p : ${pieces}"
+                                    th:text="${p.label}" th:value="${p.id}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group date">
+                        <label for="file" th:text="#{form.file}"></label>
+                        <input class="form-control" id="file"
+                               name="file" required
+                               type="file">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" th:text="#{action.close}" type="button">
+                        Close
+                    </button>
+                    <button class="btn btn-primary" th:text="#{action.add}" type="submit">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+</body>
+</html>

@@ -13,10 +13,9 @@ import java.util.Date;
 @Table(name = "tab_stage_piece")
 public class StagePiece {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_stage_piece")
-    private int id;
+    @OneToOne
+    @ToString.Exclude
+    Attachment attachment;
 
     @Column(name = "date_saisie")
     @CreatedDate
@@ -32,9 +31,9 @@ public class StagePiece {
     @JsonIgnore
     @ToString.Exclude
     Internship internship;
-
-    @OneToOne
-    @ToString.Exclude
-    PieceJoint pieceJoint;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_stage_piece")
+    private Integer id;
 
 }

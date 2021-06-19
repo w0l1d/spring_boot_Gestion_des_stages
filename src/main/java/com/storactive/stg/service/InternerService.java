@@ -54,6 +54,13 @@ public class InternerService implements IInternerService {
         return absences;
     }
 
+    public List<StagePiece> getUserFiles(String username) {
+        Interner interner = findByUsername(username);
+        List<StagePiece> stagePieces = new Vector<>();
+        interner.getInternships().forEach(internship -> stagePieces.addAll(internship.getStagePieces()));
+        return stagePieces;
+    }
+
     public Collection<Internship> getUserInternships(String username) {
         return findByUsername(username).getInternships();
     }

@@ -19,7 +19,7 @@ public class Alert {
     @Id
     @Column(name = "id_alert")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     @NotBlank

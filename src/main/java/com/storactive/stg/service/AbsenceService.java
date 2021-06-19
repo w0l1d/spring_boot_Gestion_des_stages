@@ -33,10 +33,9 @@ public class AbsenceService {
         return absenceRepo.save(absence);
     }
 
+    @Transactional
     public Absence update(Absence absence) {
-        Absence absence1 = absenceRepo.findById(absence.getId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Absence Not Found")
-        );
+        Absence absence1 = findById(absence.getId());
         absence.setInternship(absence1.getInternship());
         return absenceRepo.save(absence);
     }

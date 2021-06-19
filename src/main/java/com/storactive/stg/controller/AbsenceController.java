@@ -35,26 +35,18 @@ public class AbsenceController {
     public String getIndex(Principal principal,
                            Model model,
                            HttpServletRequest request) {
-        List<Absence> absences;
 
-        if (request.isUserInRole("ROLE_INTERNER"))
-            absences = internerSer.getUserAbsences(principal.getName());
-        else
-            absences = absenceSer.getAll();
-
-        model.addAttribute("absences", absences);
+        model.addAttribute("absences", getAbsences(request, principal.getName()));
         model.addAttribute("absence", new Absence());
         return "absence/index";
     }
 
-
-//    @PostMapping({"/", ""})
-//    public String postAddAbsence(@ModelAttribute @Valid Absence absence, Model model) {
-//        absenceSer.create(absence);
-//
-//        model.addAttribute("absences", absenceSer.getAll());
-//        return "absence/index";
-//    }
+    private List<Absence> getAbsences(HttpServletRequest request, String username) {
+        if (!request.isUserInRole("ROLE_ADMIN"))
+            return internerSer.getUserAbsences(username);
+        else
+            return absenceSer.getAll();
+    }
 
 
     @GetMapping("/{id}")
@@ -71,12 +63,14 @@ public class AbsenceController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateAbsence(@NotNull @Positive @PathVariable Integer id,
                                    @ModelAttribute @Valid Absence absence,
+                                   HttpServletRequest request,
+                                   Principal principal,
                                    Model model) {
         absence.setId(id);
         absenceSer.update(absence);
 
         model.addAttribute("msg_updated", true);
-        model.addAttribute("absences", absenceSer.getAll());
+        model.addAttribute("absences", getAbsences(request, principal.getName()));
         return "absence/index";
     }
 

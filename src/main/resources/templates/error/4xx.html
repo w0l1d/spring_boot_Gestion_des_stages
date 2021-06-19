@@ -27,25 +27,16 @@
 <body>
 
 <div id="notfound">
-	<div class="notfound">
-		<div class="notfound-404">
-			<h1 th:text="${status}">Status</h1>
-		</div>
-		<div>
-			<h3>Error</h3>
-			<p th:text="${error}"></p>
-		</div>
-		<div>
-			<h3>Message</h3>
-			<p th:text="${message}">The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
-		</div>
-		<div>
-			<ul>
-				<li th:each=" err : ${errors}" th:text="${err}"></li>
-			</ul>
-		</div>
-		<a href="/">home page</a>
-	</div>
+    <div class="notfound" style="color: white">
+        <div class="notfound-404">
+            <h1 th:text="${status}">Status</h1>
+        </div>
+        <h6 th:text="'time:'+${timestamp}"></h6>
+        <h6 th:text="'Error prompt:'+${error}"></h6>
+        <h6 th:text="'Exception object:'+${exception}"></h6>
+        <h6 th:text="'Abnormal information:'+${message}"></h6>
+        <a href="/">home page</a>
+    </div>
 </div>
 
 </body>

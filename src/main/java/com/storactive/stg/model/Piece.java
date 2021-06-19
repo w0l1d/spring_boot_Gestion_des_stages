@@ -15,7 +15,7 @@ public class Piece {
     @Id
     @Column(name = "id_piece")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String label;

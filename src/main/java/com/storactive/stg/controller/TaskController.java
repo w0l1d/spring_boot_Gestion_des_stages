@@ -36,7 +36,7 @@ public class TaskController {
                            Model model,
                            HttpServletRequest request) {
         List<Task> tasks;
-        if (request.isUserInRole("ROLE_INTERNER"))
+        if (!request.isUserInRole("ROLE_ADMIN"))
             tasks = internerSer.getUserTasks(principal.getName());
         else
             tasks = taskSer.getAll();
