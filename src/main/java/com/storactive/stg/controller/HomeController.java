@@ -31,7 +31,7 @@ public class HomeController {
     public String home(Model model) {
         if (Utils.isAuthenticated())
             return "index_Dashboard";
-        return "greeting";
+        return "redirect:/login";
     }
 
 

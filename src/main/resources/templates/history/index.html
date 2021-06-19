@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+
+
+    <title th:text="#{title.page.history}">Gestion des Stagiaires - Stagiares</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/link}"></div>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800"
+                    th:text="#{sidebar.history}">Histories</h1>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="d-inline m-0 font-weight-bold text-primary">
+
+                            <div class="alert alert-danger d-inline-block" th:if="${log_deleted}"
+                                 th:text="#{msg.history_deleted}"></div>
+                        </h6>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{action.action}">Action</th>
+                                <th th:text="#{form.created_at}">Created At</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{action.action}">Action</th>
+                                <th th:text="#{form.created_at}">Created At</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr th:each="sat : ${actions}" th:with="format=#{form.full_date_format}">
+                                <td th:text="${sat?.id}"></td>
+                                <td th:text="${sat?.action}"></td>
+                                <td th:text="${#dates.format(sat?.createdAt, format)}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+
+<!-- replace with page scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+</body>
+
+</html>
