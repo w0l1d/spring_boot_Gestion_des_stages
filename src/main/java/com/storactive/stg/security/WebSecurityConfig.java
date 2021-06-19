@@ -36,12 +36,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(
                 new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
 
-        http    .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/", "/home").permitAll()
                 .antMatchers("/vendor/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/img/**").permitAll()
+                .antMatchers("/insert").permitAll()
                 .antMatchers("/login").not().authenticated()
                 .anyRequest().authenticated()
                 .and()
