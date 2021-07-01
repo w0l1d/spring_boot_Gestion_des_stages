@@ -43,30 +43,27 @@ public class InternerService implements IInternerService {
         return internerRepo.findAll();
     }
 
-    public List<Task> getUserTasks(String username) {
-        Interner interner = findByUsername(username);
+    public List<Task> getUserTasks(Interner interner) {
         List<Task> tasks = new Vector<>();
         interner.getInternships().forEach(internship -> tasks.addAll(internship.getTasks()));
         return tasks;
     }
 
 
-    public List<Absence> getUserAbsences(String username) {
-        Interner interner = findByUsername(username);
+    public List<Absence> getUserAbsences(Interner interner) {
         List<Absence> absences = new Vector<>();
         interner.getInternships().forEach(internship -> absences.addAll(internship.getAbsences()));
         return absences;
     }
 
-    public List<StagePiece> getUserFiles(String username) {
-        Interner interner = findByUsername(username);
+    public List<StagePiece> getUserFiles(Interner interner) {
         List<StagePiece> stagePieces = new Vector<>();
         interner.getInternships().forEach(internship -> stagePieces.addAll(internship.getStagePieces()));
         return stagePieces;
     }
 
-    public Collection<Internship> getUserInternships(String username) {
-        return findByUsername(username).getInternships();
+    public Collection<Internship> getUserInternships(Interner interner) {
+        return interner.getInternships();
     }
 
     @Override

@@ -18,6 +18,7 @@
 
 <form id="add_piece_form" method="post"
       th:action="@{${#httpServletRequest.requestURI}}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
       th:object="${piece}">
     <div aria-hidden="true" aria-labelledby="add_piece_modal_Title" class="modal fade" id="add_piece_modal"
          role="dialog" tabindex="-1">
@@ -35,8 +36,12 @@
                     <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
                         <div class="form-group">
                             <label for="label" th:text="#{form.label}">Label</label>
-                            <input class="form-control" id="label"
-                                   required th:field="*{label}" type="text">
+                            <input id="label"
+                                   required th:class="'form-control ' + ${#fields.hasErrors('label') ? 'is-invalid':''}"
+                                   th:field="*{label}" type="text">
+                            <div class="invalid-feedback"
+                                 th:errors="*{label}"
+                                 th:if="${#fields.hasErrors('label')}"></div>
                         </div>
                     </div>
 
@@ -51,6 +56,12 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function () {
+            if ($('#add_piece_form').hasClass('was-validated'))
+                $("#add_piece_modal_button").click()
+        });
+    </script>
 </form>
 
 

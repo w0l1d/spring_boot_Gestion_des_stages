@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      th:lang="${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -39,6 +39,12 @@
             <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
             <!-- End of Topbar -->
 
+
+            <!-- Alerts -->
+            <div class="replace-fragment" id="alerts"
+                 th:replace="~{fragments/alerts.html :: #internship-absences-alerts}"></div>
+
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
@@ -48,18 +54,8 @@
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="d-inline m-0 font-weight-bold text-primary">
-                            <div class="alert alert-success d-inline-block" th:if="${msg_inserted}"
-                                 th:text="#{msg.absence_inserted}"></div>
 
-                            <div class="alert alert-success d-inline-block" th:if="${msg_updated}"
-                                 th:text="#{msg.absence_updated}"></div>
-
-                            <div class="alert alert-danger d-inline-block" th:if="${msg_deleted} or ${param.deleted}"
-                                 th:text="#{msg.absence_deleted}"></div>
-                        </h6>
-
-                        <!-- Add internship Modal Button @#@-->
+                        <!-- Add Absence Modal Button @#@-->
                         <div class="replace-fragment"
                              id="add-absence-dialog-button"
                              th:replace="~{fragments/add_absence.html :: #add_absence_modal_button}"></div>
@@ -76,7 +72,7 @@
                                 <th th:text="#{form.start}">Username</th>
                                 <th th:text="#{form.end}"></th>
                                 <th th:text="#{form.cause}"></th>
-                                <th th:text="#{action.action}">Action</th>
+                                <th class="all" th:text="#{action.action}">Action</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -86,7 +82,7 @@
                                 <th th:text="#{form.start}">Username</th>
                                 <th th:text="#{form.end}"></th>
                                 <th th:text="#{form.cause}"></th>
-                                <th th:text="#{action.action}">Action</th>
+                                <th class="all" th:text="#{action.action}">Action</th>
                             </tr>
                             </tfoot>
                             <tbody>
@@ -99,14 +95,14 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-danger btn-block btn-sm"
+                                            <a class="btn btn-danger btn-circle btn-sm"
                                                th:href="@{{curr}/{id}/delete(id=${sat?.id}, curr=${#httpServletRequest.requestURI})}"
                                                th:onclick="'return confirm(\''+#{msg.confirm_delete.absence}+'\');'">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>
                                         <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-primary btn-block btn-sm"
+                                            <a class="btn btn-primary btn-circle btn-sm"
                                                th:href="@{/absences/{id}(id=${sat?.id})}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -143,11 +139,6 @@
 <div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
 
 
-<!-- Add internship Modal @#@-->
-<div class="replace-fragment" id="add-absence-dialog"
-     th:replace="~{fragments/add_absence.html :: #add_absence_form}"></div>
-
-
 <!-- replace with global scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
 
@@ -155,6 +146,9 @@
 <!-- replace with page scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
 
+<!-- Add internship Modal @#@-->
+<div class="replace-fragment" id="add-absence-dialog"
+     th:replace="~{fragments/add_absence.html :: #add_absence_form}"></div>
 
 </body>
 

@@ -31,7 +31,9 @@ public class StageService {
     public Internship create(Internship internship) {
         internship.setId(null);
         Internship internship1 = stageRepo.save(internship);
+
         historySer.objetCreated(OBJ, internship1.getId());
+
         return internship1;
     }
 

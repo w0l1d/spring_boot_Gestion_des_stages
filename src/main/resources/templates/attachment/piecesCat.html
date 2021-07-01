@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:lang="${#locale.language}"
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -39,6 +40,12 @@
             <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
             <!-- End of Topbar -->
 
+
+            <!-- Alerts -->
+            <div class="replace-fragment" id="alerts"
+                 th:replace="~{fragments/alerts.html :: #piece-category-alerts}"></div>
+
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
@@ -49,11 +56,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="d-inline m-0 font-weight-bold text-primary">
-                            <div class="alert alert-success d-inline-block" th:if="${msg_updated}"
-                                 th:text="#{msg.piece_updated}"></div>
 
-                            <div class="alert alert-danger d-inline-block" th:if="${msg_deleted} or ${param.deleted}"
-                                 th:text="#{msg.piece_deleted}"></div>
                         </h6>
 
                         <!-- Add piece Modal Button @#@-->
@@ -70,7 +73,7 @@
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.label}">Label</th>
                                 <th th:text="#{form.files_number}">Files Number</th>
-                                <th th:text="#{action.action}"></th>
+                                <th class="all" th:text="#{action.action}"></th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -78,7 +81,7 @@
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.label}">Label</th>
                                 <th th:text="#{form.files_number}">Files Number</th>
-                                <th th:text="#{action.action}"></th>
+                                <th class="all" th:text="#{action.action}"></th>
                             </tr>
                             </tfoot>
                             <tbody>
@@ -89,14 +92,14 @@
                                 <td sec:authorize="hasRole('ROLE_ADMIN')">
                                     <div class="row">
                                         <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-danger btn-block btn-sm"
+                                            <a class="btn btn-danger btn-circle btn-sm"
                                                th:href="@{/documents/categories/{id}/delete(id=${sat?.id})}"
                                                th:onclick="'return confirm(\''+#{msg.confirm_delete.piece}+'\');'">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>
                                         <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-primary btn-block btn-sm"
+                                            <a class="btn btn-primary btn-circle btn-sm"
                                                th:href="@{/documents/categories/{id}(id=${sat?.id})}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -134,16 +137,17 @@
 <div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
 
 
-<!-- Add piece Modal @#@-->
-<div class="replace-fragment" id="add-piece-dialog" th:replace="~{fragments/add_piece.html :: #add_piece_form}"></div>
-
-
 <!-- replace with global scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
 
 
 <!-- replace with page scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+
+<!-- Add piece Modal @#@-->
+<div class="replace-fragment" id="add-piece-dialog" th:replace="~{fragments/add_piece.html :: #add_piece_form}"></div>
+
 
 </body>
 

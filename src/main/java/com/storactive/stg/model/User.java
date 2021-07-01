@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,7 +17,7 @@ import java.util.Collection;
 @Entity
 @Table(name = "tab_user")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public abstract class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +25,14 @@ public abstract class User {
 
     @Column(name = "cin", unique = true, nullable = false)
     @Size(min = 5, max = 10,
-            message = "1 or 2 Upper case characters + 4 to 8 numbers")
+            message = "1-2 Upper case characters + 4-8 numbers")
     @NotBlank
     @Pattern(regexp = "^[A-Za-z]{1,2}[0-9]{4,8}$",
-            message = "CIN examples : WX958696 X4585 A15825")
+            message = "1-2 Upper case characters + 4-8 numbers : AB95869696 A4585 A1582589")
     private String cin;
 
     @NotBlank
-    @Size(min = 2,
+    @Size(min = 4,
             message = "must be at least 2 characters length")
     private String name;
 
@@ -47,12 +48,13 @@ public abstract class User {
     private String username;
 
     @Column(name = "mot_de_passe", nullable = false)
-    @Size(min = 6, message = "must be at least 6 characters length") @NotBlank
+    @Size(min = 8, message = "must be at least 8 characters length")
+    @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     @ToString.Exclude
     private Collection<History> histories;

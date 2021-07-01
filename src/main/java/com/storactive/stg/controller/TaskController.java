@@ -1,5 +1,6 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Task;
 import com.storactive.stg.service.InternerService;
 import com.storactive.stg.service.TaskService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,9 +38,11 @@ public class TaskController {
                            Model model,
                            HttpServletRequest request) {
         List<Task> tasks;
-        if (!request.isUserInRole("ROLE_ADMIN"))
-            tasks = internerSer.getUserTasks(principal.getName());
-        else
+
+        if (!request.isUserInRole("ROLE_ADMIN")) {
+            Interner interner = (Interner) principal;
+            tasks = internerSer.getUserTasks(interner);
+        } else
             tasks = taskSer.getAll();
 
         model.addAttribute("tasks", tasks);
@@ -60,13 +64,16 @@ public class TaskController {
     @PostMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateTask(@NotNull @Positive @PathVariable Integer id,
-                                    @ModelAttribute @Valid Task task,
-                                    Model model) {
+                                @ModelAttribute @Valid Task task,
+                                BindingResult bindingResult,
+                                Model model) {
+        if (bindingResult.hasErrors())
+            return "task/update";
+
         task.setId(id);
         taskSer.update(task);
-
-        model.addAttribute("msg_updated", true);
-        model.addAttribute("tasks", taskSer.getAll());
+        model.addAttribute("msg_updated", true)
+                .addAttribute("tasks", taskSer.getAll());
         return "task/index";
     }
 

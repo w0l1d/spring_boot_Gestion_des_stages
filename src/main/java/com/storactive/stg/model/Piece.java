@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Data
@@ -18,10 +21,14 @@ public class Piece {
     private Integer id;
 
     @Column(nullable = false)
+    @NotNull
+    @NotEmpty
+    @NotBlank
     private String label;
 
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "piece")
     @JsonIgnore
     @ToString.Exclude
     private Collection<StagePiece> stagePieces;

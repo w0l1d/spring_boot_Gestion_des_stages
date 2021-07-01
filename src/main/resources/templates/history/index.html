@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      th:lang="${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -62,14 +62,14 @@
                             <thead>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
-                                <th th:text="#{action.action}">Action</th>
+                                <th class="all" th:text="#{action.action}">Action</th>
                                 <th th:text="#{form.created_at}">Created At</th>
                             </tr>
                             </thead>
                             <tfoot>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
-                                <th th:text="#{action.action}">Action</th>
+                                <th class="all" th:text="#{action.action}">Action</th>
                                 <th th:text="#{form.created_at}">Created At</th>
                             </tr>
                             </tfoot>

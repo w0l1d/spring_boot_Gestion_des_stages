@@ -1,5 +1,10 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
+    let langUrl = '/js/json/' + $('html').attr('lang') + '.json'
     $('#dataTable')
-        .DataTable();
+        .DataTable({
+            language: {
+                url: langUrl
+            }
+        });
 });

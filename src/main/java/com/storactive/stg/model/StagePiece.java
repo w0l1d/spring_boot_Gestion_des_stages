@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "tab_stage_piece")
 public class StagePiece {
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     Attachment attachment;
 

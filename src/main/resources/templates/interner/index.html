@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      th:lang="${#locale.language}">
 
 <head>
     <meta charset="UTF-8">
@@ -39,6 +39,12 @@
                 <div th:replace="~{fragments/navbar.html :: #navbar}" id="navbar" class="replace-fragment"></div>
                 <!-- End of Topbar -->
 
+
+                <!-- Alerts -->
+                <div class="replace-fragment" id="alerts"
+                     th:replace="~{fragments/alerts.html :: #interner-alerts}"></div>
+
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
@@ -49,11 +55,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
-                                <div th:if="${msg_updated}" th:text="#{msg.stagiaire_updated}"
-                                     class="alert alert-success d-inline-block"></div>
 
-                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.stagiaire_deleted}"
-                                     class="alert alert-danger d-inline-block"></div>
                             </h6>
 
                             <!-- Add interner Modal Button @#@-->
@@ -76,7 +78,7 @@
                                         <th th:text="#{form.status}">Is Enabled</th>
                                         <th th:text="#{form.email}">Email</th>
                                         <th th:text="#{form.address}">address</th>
-                                        <th th:text="#{action.action}">Action</th>
+                                        <th class="all" th:text="#{action.action}">Action</th>
                                         <th th:text="#{internship}">internship</th>
                                     </tr>
                                 </thead>
@@ -91,7 +93,7 @@
                                         <th th:text="#{form.status}">Is Enabled</th>
                                         <th th:text="#{form.email}">Email</th>
                                         <th th:text="#{form.address}">address</th>
-                                        <th th:text="#{action.action}">Action</th>
+                                        <th class="all" th:text="#{action.action}">Action</th>
                                         <th th:text="#{internship}">internship</th>
                                     </tr>
                                 </tfoot>
@@ -117,20 +119,20 @@
                                                 <div class="col-5 col-lg m-auto">
                                                     <a th:href="@{/interners/{id}/delete(id=${sat?.id})}"
                                                        th:onclick="'return confirm(\''+#{msg.confirm_delete.stagiare}+'\');'"
-                                                       class="btn btn-danger btn-block btn-sm">
+                                                       class="btn btn-danger btn-circle btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </div>
                                                 <div class="col-5 col-lg m-auto">
                                                     <a th:href="@{/interners/{id}(id=${sat?.id})}"
-                                                       class="btn btn-primary btn-block btn-sm">
+                                                       class="btn btn-primary btn-circle btn-sm">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <a class="btn btn-primary btn-block btn-sm"
+                                            <a class="btn btn-primary btn-circle btn-sm"
                                                th:href="@{/interners/{id}/internship(id=${sat?.id})}">
                                                 <i class="fas fa-plus"></i>
                                             </a>
@@ -166,10 +168,6 @@
     <div th:replace="~{fragments/logout_modal.html :: #logoutModal}" id="logout-dialog" class="replace-fragment"></div>
 
 
-    <!-- Add interner Modal @#@-->
-    <div th:replace="~{fragments/add_interner.html :: #add_interner_form}" id="add-interner-dialog" class="replace-fragment"></div>
-
-
     <!-- replace with global scripts @#@ -->
     <div th:replace="~{fragments/all_assets.html :: script}" class="replace-fragment"></div>
 
@@ -177,6 +175,9 @@
     <!-- replace with page scripts @#@ -->
     <div th:replace="~{fragments/local_assets.html :: #datatable/script}" class="replace-fragment"></div>
 
+    <!-- Add interner Modal @#@-->
+    <div class="replace-fragment" id="add-interner-dialog"
+         th:replace="~{fragments/add_interner.html :: #add_interner_form}"></div>
 
 
 </body>

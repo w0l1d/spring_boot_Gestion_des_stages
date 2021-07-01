@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      th:lang="${#locale.language}">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="w0l1d">
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
 
 
-  <title th:text="#{title.update_stagiaire}">Gestion des Stagiaires - Stagiares</title>
+    <title th:text="#{title.update_stagiaire}">Gestion des Stagiaires - Stagiares</title>
 
-  <!-- replace with global stylesheets-->
-  <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
-
-
-
+    <!-- replace with global stylesheets-->
+    <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
 
 
 </head>
@@ -42,40 +39,54 @@
       <!-- End of Topbar -->
 
       <!-- Begin Page Content -->
-      <div class="container-fluid">
+        <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Add Task</h1>
-        <form id="add_task_form" th:object="${task}"
-              method="post" th:action="@{${#httpServletRequest.requestURI}}">
-          <div class="card shadow mb-4">
-            <div class="card-header py-3">
-              <h6 class="d-inline m-0 font-weight-bold text-primary">
-              </h6>
+            <!-- Page Heading -->
+            <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_task}">Add Task</h1>
+            <form id="add_task_form" method="post"
+                  th:action="@{${#httpServletRequest.requestURI}}"
+                  th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+                  th:object="${task}">
 
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="d-inline m-0 font-weight-bold text-primary">
+                        </h6>
+                    </div>
 
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="task" th:text="#{form.task}"></label>
-                <input type="text" class="form-control"
-                       id="task" required th:field="*{txtTask}">
-              </div>
-              <div class="form-group date">
-                <label for="task_date" th:text="#{form.task}"></label>
-                <input type="date" class="form-control"
-                       id="task_date" required
-                       th:field="*{dateTask}">
-              </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="task" th:text="#{form.task}"></label>
+                            <input id="task"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('txtTask') ? 'is-invalid':''}"
+                                   th:field="*{txtTask}" type="text">
+                            <div class="invalid-feedback"
+                                 th:errors="*{txtTask}"
+                                 th:if="${#fields.hasErrors('txtTask')}"></div>
+                        </div>
+                        <div class="form-group date">
+                            <label for="task_date" th:text="#{form.task_date}"></label>
+                            <input id="task_date"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('dateTask') ? 'is-invalid':''}"
+                                   th:field="*{dateTask}"
+                                   th:min="${#dates.createToday()}"
+                                   type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{dateTask}"
+                                 th:if="${#fields.hasErrors('dateTask')}"></div>
+                        </div>
 
-            </div>
+                    </div>
 
-            <div class="card-footer">
-              <button th:text="#{action.update}" type="submit" class="btn btn-primary btn-block">Add</button>
-            </div>
-          </div>
-        </form>
-      </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary btn-block" th:text="#{action.update}" type="submit">Update
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
       <!-- /.container-fluid -->
 
     </div>

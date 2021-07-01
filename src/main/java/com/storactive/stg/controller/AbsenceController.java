@@ -1,12 +1,14 @@
 package com.storactive.stg.controller;
 
 import com.storactive.stg.model.Absence;
+import com.storactive.stg.model.Interner;
 import com.storactive.stg.service.AbsenceService;
 import com.storactive.stg.service.InternerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,16 +37,16 @@ public class AbsenceController {
     public String getIndex(Principal principal,
                            Model model,
                            HttpServletRequest request) {
-
-        model.addAttribute("absences", getAbsences(request, principal.getName()));
+        model.addAttribute("absences", getAbsences(request, principal));
         model.addAttribute("absence", new Absence());
         return "absence/index";
     }
 
-    private List<Absence> getAbsences(HttpServletRequest request, String username) {
-        if (!request.isUserInRole("ROLE_ADMIN"))
-            return internerSer.getUserAbsences(username);
-        else
+    private List<Absence> getAbsences(HttpServletRequest request, Principal principal) {
+        if (!request.isUserInRole("ROLE_ADMIN")) {
+            Interner interner = (Interner) principal;
+            return internerSer.getUserAbsences(interner);
+        } else
             return absenceSer.getAll();
     }
 
@@ -63,14 +65,18 @@ public class AbsenceController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateAbsence(@NotNull @Positive @PathVariable Integer id,
                                    @ModelAttribute @Valid Absence absence,
+                                   BindingResult bindingResult,
                                    HttpServletRequest request,
                                    Principal principal,
                                    Model model) {
+        if (bindingResult.hasErrors())
+            return "absence/update";
+
         absence.setId(id);
         absenceSer.update(absence);
 
         model.addAttribute("msg_updated", true);
-        model.addAttribute("absences", getAbsences(request, principal.getName()));
+        model.addAttribute("absences", getAbsences(request, principal));
         return "absence/index";
     }
 

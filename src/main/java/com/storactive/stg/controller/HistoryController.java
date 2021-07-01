@@ -36,7 +36,7 @@ public class HistoryController {
     @GetMapping("/mine")
     public String getMyLog(Model model,
                            Principal principal) {
-        Employee employee = employeeSer.findByUsername(principal.getName());
+        Employee employee = (Employee) principal;
         model.addAttribute("actions", employee.getHistories());
         model.addAttribute("myLog", true);
         return "history/index";
@@ -53,7 +53,7 @@ public class HistoryController {
     @GetMapping("/mine/delete")
     public String deleteMyLog(Model model,
                               Principal principal) {
-        Employee employee = employeeSer.findByUsername(principal.getName());
+        Employee employee = (Employee) principal;
         historySer.deleteAllSpecified(employee.getHistories());
         model.addAttribute("actions", historySer.getAll());
         model.addAttribute("my_log_deleted", true);

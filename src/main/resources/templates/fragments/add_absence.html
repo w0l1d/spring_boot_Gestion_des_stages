@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:lang="${#locale.language}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -18,6 +19,7 @@
 
 <form id="add_absence_form" method="post"
       th:action="@{${#httpServletRequest.requestURI}}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
       th:object="${absence}">
     <div aria-hidden="true" aria-labelledby="add_absence_modal_Title" class="modal fade" id="add_absence_modal"
          role="dialog" tabindex="-1">
@@ -35,33 +37,54 @@
                     <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
                         <div class="form-group">
                             <label for="start" th:text="#{form.starts_at}">starts at</label>
-                            <input class="form-control" id="start"
-                                   required th:field="*{startsAt}" type="date">
+                            <input id="start"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('startsAt') ? 'is-invalid':''}"
+                                   th:field="*{startsAt}" type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{startsAt}"
+                                 th:if="${#fields.hasErrors('startsAt')}"></div>
                         </div>
                         <div class="form-group">
                             <label for="ends" th:text="#{form.ends_at}">ends at</label>
-                            <input class="form-control" id="ends"
-                                   required th:field="*{endsAt}" type="date">
+                            <input id="ends"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('endsAt') ? 'is-invalid':''}"
+                                   th:field="*{endsAt}" type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{endsAt}"
+                                 th:if="${#fields.hasErrors('endsAt')}"></div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="absence" th:text="#{form.nbr_jours}"></label>
+                        <label for="nbr_jours" th:text="#{form.nbr_jours}"></label>
                         <div class="input-group">
-                            <input class="form-control" id="absence" min="1"
+                            <input id="nbr_jours"
+                                   min="1"
+                                   th:class="'form-control ' + ${#fields.hasErrors('nbrDays') ? 'is-invalid':''}"
                                    required th:field="*{nbrDays}" type="number">
                             <div class="input-group-append">
-                                <span class="input-group-text"
-                                      id="basic-addon2" th:text="#{form.days}">Days</span>
+                                        <span class="input-group-text"
+                                              id="basic-addon2"
+                                              th:text="#{form.days}">Days</span>
                             </div>
+                            <div class="invalid-feedback"
+                                 th:errors="*{nbrDays}"
+                                 th:if="${#fields.hasErrors('nbrDays')}"></div>
                         </div>
 
                     </div>
-                    <div class="form-group date">
-                        <label for="absence_date" th:text="#{form.cause}"></label>
-                        <input class="form-control" id="absence_date"
-                               required th:field="*{cause}"
+                    <div class="form-group">
+                        <label for="absence_cause" th:text="#{form.cause}"></label>
+                        <input id="absence_cause"
+                               required th:class="'form-control ' + ${#fields.hasErrors('cause') ? 'is-invalid':''}"
+                               th:field="*{cause}"
                                type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{cause}"
+                             th:if="${#fields.hasErrors('cause')}"></div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal" th:text="#{action.close}" type="button">
@@ -72,6 +95,13 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            if ($('#add_absence_form').hasClass('was-validated'))
+                $("#add_absence_modal_button").click()
+        });
+    </script>
 
 </form>
 

@@ -16,7 +16,10 @@
     Add
 </button>
 
-<form id="add_task_form" method="post" th:action="@{${#httpServletRequest.requestURI}}" th:object="${task}">
+<form id="add_task_form" method="post"
+      th:action="@{${#httpServletRequest.requestURI}}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+      th:object="${task}">
     <div class="modal fade" id="add_task_modal" tabindex="-1" role="dialog"
          aria-labelledby="add_task_modal_Title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -31,14 +34,23 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="task" th:text="#{form.task}"></label>
-                        <input type="text" class="form-control"
+                        <input th:class="'form-control ' + ${#fields.hasErrors('txtTask') ? 'is-invalid':''}"
+                               type="text"
                                id="task" required th:field="*{txtTask}">
+                        <div class="invalid-feedback"
+                             th:errors="*{txtTask}"
+                             th:if="${#fields.hasErrors('txtTask')}"></div>
                     </div>
                     <div class="form-group date">
-                        <label for="task_date" th:text="#{form.task}"></label>
-                        <input type="date" class="form-control"
+                        <label for="task_date" th:text="#{form.task_date}"></label>
+                        <input th:class="'form-control ' + ${#fields.hasErrors('dateTask') ? 'is-invalid':''}"
+                               th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
                                id="task_date" required
+                               type="date"
                                th:field="*{dateTask}">
+                        <div class="invalid-feedback"
+                             th:errors="*{dateTask}"
+                             th:if="${#fields.hasErrors('dateTask')}"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
->
+      th:lang="${#locale.language}">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="w0l1d">
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
 
 
-  <title th:text="#{title.update_user}">Gestion des Stagiaires - Stagiares</title>
+    <title th:text="#{title.update_user}">Gestion des Stagiaires - Stagiares</title>
 
-  <!-- replace with global stylesheets-->
-  <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
-
-
-
+    <!-- replace with global stylesheets-->
+    <div th:replace="~{fragments/all_assets.html :: link}" class="replace-fragment"></div>
 
 
 </head>
@@ -42,53 +39,73 @@
       <!-- End of Topbar -->
 
       <!-- Begin Page Content -->
-      <div class="container-fluid">
+        <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800"
-            th:text="${isProfile}? #{page.title.profile}:#{title.update_user}">Stagiaires</h1>
-        <form  id="add_user_form" th:object="${employee}"
-               method="post" th:action="@{${#httpServletRequest.requestURI}}">
-          <div class="card shadow mb-4">
-            <div class="card-header py-3">
-              <h6 class="d-inline m-0 font-weight-bold text-primary">
-              </h6>
+            <!-- Page Heading -->
+            <h1 class="h3 mb-4 text-gray-800"
+                th:text="${isProfile}? #{page.title.profile}:#{title.update_user}">Stagiaires</h1>
+            <form id="add_user_form" method="post"
+                  th:action="@{${#httpServletRequest.requestURI}}"
+                  th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+                  th:object="${user}">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="d-inline m-0 font-weight-bold text-primary">
+                        </h6>
 
 
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="name" th:text="#{form.name}">Name</label>
-                <input type="text" class="form-control"
-                       id="name" th:field="*{name}" required>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="cin" th:text="#{form.cin}">CIN</label>
-                  <input type="text" class="form-control"
-                         id="cin" required th:field="*{cin}"
-                         pattern="^[A-Za-z]{1,2}[0-9]{4,8}$">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="email" th:text="#{form.email}">Email</label>
-                  <input type="email" class="form-control"
-                         id="email" required th:field="*{email}">
-                </div>
-              </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="name" th:text="#{form.name}">Name</label>
+                            <input id="name" min="4"
+                                   required th:class="'form-control ' + ${#fields.hasErrors('name') ? 'is-invalid':''}"
+                                   th:field="*{name}" type="text">
+                            <div class="invalid-feedback"
+                                 th:errors="*{name}"
+                                 th:if="${#fields.hasErrors('name')}"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="cin" th:text="#{form.cin}">CIN</label>
+                                <input id="cin" pattern="^[A-Za-z]{1,2}[0-9]{4,8}$"
+                                       placeholder="AB12345678 A1234 A12345678" required
+                                       th:class="'form-control ' + ${#fields.hasErrors('cin') ? 'is-invalid':''}"
+                                       th:field="*{cin}"
+                                       type="text">
+                                <small class="form-text text-muted text-gray-500">1-2 letters + 4 to 8 digits</small>
+                                <div class="invalid-feedback"
+                                     th:errors="*{cin}"
+                                     th:if="${#fields.hasErrors('cin')}"></div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email" th:text="#{form.email}">Email</label>
+                                <input id="email" required
+                                       th:class="'form-control ' + ${#fields.hasErrors('email') ? 'is-invalid':''}"
+                                       th:field="*{email}" type="email">
+                                <div class="invalid-feedback"
+                                     th:errors="*{email}"
+                                     th:if="${#fields.hasErrors('email')}"></div>
+                            </div>
+                        </div>
 
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="username" th:text="#{form.username}">Username</label>
-                  <input type="text" class="form-control"
-                         id="username" readonly th:field="*{username}">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="password" th:text="#{form.password}">Password</label>
-                  <input type="password" th:field="*{password}"
-                         class="form-control" id="password"
-                         required/>
-                </div>
-              </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="username" th:text="#{form.username}">Username</label>
+                                <input type="text" class="form-control"
+                                       id="username" readonly th:field="*{username}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="password" th:text="#{form.password}">Password</label>
+                                <input id="password" min="8" required
+                                       th:class="'form-control ' + ${#fields.hasErrors('password') ? 'is-invalid':''}"
+                                       th:field="*{password}"
+                                       type="password"/>
+                                <div class="invalid-feedback"
+                                     th:errors="*{password}"
+                                     th:if="${#fields.hasErrors('password')}"></div>
+                            </div>
+                        </div>
 
 
             </div>

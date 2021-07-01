@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,10 +36,13 @@ public class InternerController {
     }
 
 
-
     @PostMapping({"/", ""})
-    public String postAddInterner(@ModelAttribute @Valid Interner interner, Model model) {
-        internerSer.create(interner);
+    public String postAddInterner(@ModelAttribute @Valid Interner interner,
+                                  Model model,
+                                  BindingResult bindingResult) {
+
+        if (!bindingResult.hasErrors())
+            internerSer.create(interner);
 
         model.addAttribute("interners", internerSer.getAll());
         return "interner/index";
@@ -54,12 +58,16 @@ public class InternerController {
 
     @PostMapping({"/{id}"})
     public String putUpdateInterner(@PathVariable Integer id,
-                                     @ModelAttribute @Valid Interner interner,
-                                     Model model) {
+                                    @ModelAttribute @Valid Interner interner,
+                                    Model model, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "interner/update";
+
         interner.setId(id);
         internerSer.update(interner);
-        model.addAttribute("msg_updated", true);
-        model.addAttribute("interners", internerSer.getAll());
+
+        model.addAttribute("interners", internerSer.getAll())
+                .addAttribute("msg_updated", true);
         return "interner/index";
     }
 
@@ -72,8 +80,7 @@ public class InternerController {
     }
 
     @GetMapping("/{id}/internship")
-    public String getAddInternship(@PathVariable Integer id,
-                                   Model model) {
+    public String getAddInternship(Model model, @PathVariable Integer id) {
         model.addAttribute("internship", new Internship());
         return "interner/add_internship";
     }
@@ -81,12 +88,20 @@ public class InternerController {
     @PostMapping("/{id}/internship")
     @Transactional
     public String postAddInternship(@PathVariable Integer id,
-                                    @ModelAttribute @Valid Internship internship) {
+                                    @ModelAttribute @Valid Internship internship,
+                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "interner/add_internship";
+
         Interner interner = internerSer.findById(id);
-        internship.setInterner(interner);
+
         internship = stageSer.create(internship);
 
+        internship.setInterner(interner);
+
         interner.getInternships().add(internship);
+
+
         return "redirect:/internships?inserted";
     }
 

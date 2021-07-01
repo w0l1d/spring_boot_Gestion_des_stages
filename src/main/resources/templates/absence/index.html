@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
@@ -39,6 +40,11 @@
             <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
             <!-- End of Topbar -->
 
+
+            <!-- Alerts -->
+            <div class="replace-fragment" id="alerts" th:replace="~{fragments/alerts.html :: #absence-alerts}"></div>
+
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
@@ -49,11 +55,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="d-inline m-0 font-weight-bold text-primary">
-                            <div class="alert alert-success d-inline-block" th:if="${msg_updated}"
-                                 th:text="#{msg.absence_updated}"></div>
 
-                            <div class="alert alert-danger d-inline-block" th:if="${msg_deleted} or ${param.deleted}"
-                                 th:text="#{msg.absence_deleted}"></div>
                         </h6>
 
                         <!-- Add absence Modal Button @#@-->
@@ -72,7 +74,10 @@
                                 <th th:text="#{form.end}"></th>
                                 <th th:text="#{form.cause}"></th>
                                 <th th:text="#{form.internship}"></th>
-                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
+                                <th class="all"
+                                    sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{action.action}">Action
+                                </th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -103,14 +108,14 @@
                                 <td sec:authorize="hasRole('ROLE_ADMIN')">
                                     <div class="row">
                                         <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-danger btn-block btn-sm"
+                                            <a class="btn btn-danger btn-circle btn-sm"
                                                th:href="@{/absences/{id}/delete(id=${sat?.id})}"
                                                th:onclick="'return confirm(\''+#{msg.confirm_delete.absence}+'\');'">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>
                                         <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-primary btn-block btn-sm"
+                                            <a class="btn btn-primary btn-circle btn-sm"
                                                th:href="@{/absences/{id}(id=${sat?.id})}">
                                                 <i class="fas fa-edit"></i>
                                             </a>

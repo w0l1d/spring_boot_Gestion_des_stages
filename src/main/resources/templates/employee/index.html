@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale.language}"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -38,6 +39,12 @@
                 <div th:replace="~{fragments/navbar.html :: #navbar}" id="navbar" class="replace-fragment"></div>
                 <!-- End of Topbar -->
 
+
+                <!-- Alerts -->
+                <div class="replace-fragment" id="alerts"
+                     th:replace="~{fragments/alerts.html :: #employee-alerts}"></div>
+
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
@@ -48,11 +55,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
-                                <div th:if="${msg_updated}" th:text="#{msg.user_updated}"
-                                     class="alert alert-success d-inline-block"></div>
 
-                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.user_deleted}"
-                                     class="alert alert-danger d-inline-block"></div>
                             </h6>
 
                             <!-- Add User Modal Button @#@-->
@@ -67,11 +70,11 @@
                                 <thead>
                                     <tr>
                                         <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
+                                        <th class="all" th:text="#{form.name}">Name</th>
                                         <th th:text="#{form.username}">Username</th>
                                         <th th:text="#{form.cin}">CIN</th>
                                         <th th:text="#{form.email}">Email</th>
-                                        <th th:text="#{action.action}">Action</th>
+                                        <th class="all" th:text="#{action.action}">Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -81,7 +84,7 @@
                                         <th th:text="#{form.username}">Username</th>
                                         <th th:text="#{form.cin}">CIN</th>
                                         <th th:text="#{form.email}">Email</th>
-                                        <th th:text="#{action.action}">Action</th>
+                                        <th class="all" th:text="#{action.action}">Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -95,14 +98,14 @@
                                         <div class="row">
                                             <div class="col-lg m-auto"
                                                  th:if="${not #strings.equalsIgnoreCase(sat?.username, #authentication.name)}">
-                                                <a class="btn btn-danger btn-block btn-sm"
+                                                <a class="btn btn-danger btn-circle btn-sm"
                                                    th:href="@{/users/{id}/delete(id=${sat?.id})}"
                                                    th:onclick="'return confirm(\''+#{msg.confirm_delete.user}+'\');'">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </div>
                                             <div class="col-lg m-auto">
-                                                <a class="btn btn-primary btn-block btn-sm"
+                                                <a class="btn btn-primary btn-circle btn-sm"
                                                    th:href="@{/users/{id}(id=${sat?.id})}">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
@@ -140,17 +143,17 @@
     <div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
 
 
-    <!-- Add user Modal @#@-->
-    <div class="replace-fragment" id="add-user-dialog"
-         th:replace="~{fragments/add_employee.html :: #add_user_form}"></div>
-
-
     <!-- replace with global scripts @#@ -->
     <div th:replace="~{fragments/all_assets.html :: script}" class="replace-fragment"></div>
 
 
     <!-- replace with page scripts @#@ -->
     <div th:replace="~{fragments/local_assets.html :: #datatable/script}" class="replace-fragment"></div>
+
+
+    <!-- Add user Modal @#@-->
+    <div class="replace-fragment" id="add-user-dialog"
+         th:replace="~{fragments/add_employee.html :: #add_user_form}"></div>
 
 
 </body>

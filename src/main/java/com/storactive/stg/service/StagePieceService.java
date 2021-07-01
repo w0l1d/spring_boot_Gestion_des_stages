@@ -75,6 +75,7 @@ public class StagePieceService {
         //relate piece to StagePiece
         piece.getStagePieces().add(stagePiece);
 
+
         historySer.objetCreated(OBJ, stagePiece.getId());
         return stagePiece;
     }

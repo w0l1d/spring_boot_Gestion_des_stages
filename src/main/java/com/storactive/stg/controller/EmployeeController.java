@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,10 +35,18 @@ public class EmployeeController {
 
 
     @PostMapping({"/", ""})
-    public String postAddEmployee(@ModelAttribute @Valid Employee employee, Model model) {
-        employeeSer.create(employee);
+    public String postAddEmployee(@ModelAttribute @Valid Employee employee,
+                                  BindingResult bindingResult,
+                                  Model model) {
+
+        if (!bindingResult.hasErrors()) {
+            employeeSer.create(employee);
+            model.addAttribute("msg_inserted", true)
+                    .addAttribute("employee", new Employee());
+        }
 
         model.addAttribute("employees", employeeSer.getAll());
+
         return "employee/index";
     }
 
@@ -52,8 +61,12 @@ public class EmployeeController {
 
     @PostMapping({"/{id}"})
     public String putUpdateEmployee(@NotNull @Positive @PathVariable Integer id,
-                                     @ModelAttribute @Valid Employee employee,
-                                     Model model) {
+                                    @ModelAttribute @Valid Employee employee,
+                                    BindingResult bindingResult,
+                                    Model model) {
+        if (bindingResult.hasErrors())
+            return "employee/update";
+
         employee.setId(id);
         employeeSer.update(employee);
 

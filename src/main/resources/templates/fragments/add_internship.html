@@ -18,11 +18,13 @@
 
 <form id="add_internship_form" th:object="${internship}" method="post" th:action="@{/internships}" >
     <div class="modal fade" id="add_internship_modal" tabindex="-1" role="dialog"
-         aria-labelledby="add_internship_modal_Title" aria-hidden="true">
+         aria-hidden="true" aria-labelledby="add_internship_modal_Title"
+         th:class="${#fields.hasAnyErrors()? 'was-validated':''}">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="add_internship_modal_Title" th:text="#{title.add_internship}">Modal title</h5>
+                    <h5 class="modal-title" id="add_internship_modal_Title" th:text="#{title.add_internship}">Modal
+                        title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -31,72 +33,121 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="type" th:text="#{form.type}">type</label>
-                        <input type="text" class="form-control"
-                               id="type" th:field="*{type}" required>
+                        <input id="type" required
+                               th:class="'form-control ' + ${#fields.hasErrors('type') ? 'is-invalid':''}"
+                               th:field="*{type}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{type}"
+                             th:if="${#fields.hasErrors('type')}"></div>
                     </div>
                     <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
                         <div class="form-group">
                             <label for="start" th:text="#{form.starts_at}">starts at</label>
-                            <input type="date" class="form-control"
-                                   id="start" required th:field="*{startsAt}">
+                            <input id="start"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('startsAt') ? 'is-invalid':''}"
+                                   th:field="*{startsAt}" type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{startsAt}"
+                                 th:if="${#fields.hasErrors('startsAt')}"></div>
                         </div>
                         <div class="form-group">
                             <label for="ends" th:text="#{form.ends_at}">ends at</label>
-                            <input type="date" class="form-control"
-                                   id="ends" required th:field="*{endsAt}">
+                            <input id="ends"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('endsAt') ? 'is-invalid':''}"
+                                   th:field="*{endsAt}" type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{endsAt}"
+                                 th:if="${#fields.hasErrors('endsAt')}"></div>
                         </div>
                     </div>
 
                     <div class="form-row row-cols-2 row-cols-sm-1">
                         <div class="form-group">
                             <label for="duration" th:text="#{form.duration}">duration</label>
-                            <input class="form-control" id="duration"
-                                   required th:field="*{duration}" type="text">
+                            <input id="duration"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('duration') ? 'is-invalid':''}"
+                                   th:field="*{duration}" type="text">
+                            <div class="invalid-feedback"
+                                 th:errors="*{duration}"
+                                 th:if="${#fields.hasErrors('duration')}"></div>
                         </div>
                         <div class="form-group">
                             <label for="status" th:text="#{form.status}"></label>
-                            <select class="custom-select" id="status" required th:field="*{status}">
+                            <select id="status"
+                                    required
+                                    th:class="'form-control ' + ${#fields.hasErrors('status') ? 'is-invalid':''}"
+                                    th:field="*{status}">
                                 <option selected th:text="#{form.status.in_progress}" value="1"></option>
                                 <option th:text="#{form.status.saved}" value="2"></option>
                                 <option th:text="#{form.status.finished}" value="3"></option>
                                 <option th:text="#{form.status.canceled}" value="3"></option>
                             </select>
+                            <div class="invalid-feedback"
+                                 th:errors="*{status}"
+                                 th:if="${#fields.hasErrors('status')}"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="formation" th:text="#{form.formation}">formation</label>
-                        <input type="text" class="form-control" th:field="*{formation}"
-                               id="formation" placeholder="Software Engineering">
+                        <input id="formation"
+                               th:class="'form-control ' + ${#fields.hasErrors('formation') ? 'is-invalid':''}"
+                               th:field="*{formation}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{formation}"
+                             th:if="${#fields.hasErrors('formation')}"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="etab" th:text="#{form.etablissement}">establishment</label>
-                        <input type="text" class="form-control" th:field="*{etablissement}"
-                               id="etab">
+                        <input id="etab"
+                               th:class="'form-control ' + ${#fields.hasErrors('etablissement') ? 'is-invalid':''}"
+                               th:field="*{etablissement}"
+                               type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{etablissement}"
+                             th:if="${#fields.hasErrors('etablissement')}"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="intitul_poject" th:text="#{form.project_title}">project title</label>
-                        <input class="form-control" th:field="*{project}" type="text"
-                               id="intitul_poject" required>
+                        <input class="form-control" id="intitul_poject" required
+                               th:field="*{project}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{etablissement}"
+                             th:if="${#fields.hasErrors('etablissement')}"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="desc_poject" th:text="#{form.project_desc}">project title</label>
-                        <input type="text" class="form-control" th:field="*{desc}"
-                               id="desc_poject">
+                        <label for="desc_poject" th:text="#{form.project_desc}">project Description</label>
+                        <input id="desc_poject"
+                               th:class="'form-control ' + ${#fields.hasErrors('desc') ? 'is-invalid':''}"
+                               th:field="*{desc}"
+                               type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{desc}"
+                             th:if="${#fields.hasErrors('desc')}"></div>
                     </div>
 
                 </div>
                 <div class="modal-footer">
-                    <button th:text="#{action.close}" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" th:text="#{action.close}" type="button">
+                        Close
+                    </button>
                     <button th:text="#{action.add}" type="submit" class="btn btn-primary">Add</button>
                 </div>
             </div>
         </div>
     </div>
-
+    <script>
+        $(document).ready(function () {
+            if ($('#add_interner_form').hasClass('was-validated'))
+                $("#add_interner_modal_button").click()
+        });
+    </script>
 </form>
 
 

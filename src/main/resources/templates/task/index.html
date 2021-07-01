@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
@@ -39,6 +40,11 @@
                 <div th:replace="~{fragments/navbar.html :: #navbar}" id="navbar" class="replace-fragment"></div>
                 <!-- End of Topbar -->
 
+
+                <!-- Alerts -->
+                <div class="replace-fragment" id="alerts" th:replace="~{fragments/alerts.html :: #task-alerts}"></div>
+
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
@@ -49,11 +55,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
-                                <div th:if="${msg_updated}" th:text="#{msg.task_updated}"
-                                     class="alert alert-success d-inline-block"></div>
 
-                                <div th:if="${msg_deleted} or ${param.deleted}" th:text="#{msg.task_deleted}"
-                                     class="alert alert-danger d-inline-block"></div>
                             </h6>
 
                             <!-- Add task Modal Button @#@-->
@@ -65,13 +67,16 @@
                                     style="width:100%; font-size: calc(0.5em + 1vmin);"
                                     id="dataTable">
                                 <thead>
-                                    <tr>
-                                        <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.task}">Name</th>
-                                        <th th:text="#{form.task_date}">Username</th>
-                                        <th th:text="#{form.internship}"></th>
-                                        <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
-                                    </tr>
+                                <tr>
+                                    <th th:text="#{form.id}">Id</th>
+                                    <th th:text="#{form.task}">Name</th>
+                                    <th th:text="#{form.task_date}">Username</th>
+                                    <th th:text="#{form.internship}"></th>
+                                    <th class="all"
+                                        sec:authorize="hasRole('ROLE_ADMIN')"
+                                        th:text="#{action.action}">Action
+                                    </th>
+                                </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
@@ -99,13 +104,13 @@
                                             <div class="col-5 col-lg m-auto">
                                                 <a th:href="@{/tasks/{id}/delete(id=${sat?.id})}"
                                                    th:onclick="'return confirm(\''+#{msg.confirm_delete.task}+'\');'"
-                                                   class="btn btn-danger btn-sm">
+                                                   class="btn btn-danger btn-circle btn-sm">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </div>
                                             <div class="col-5 col-lg m-auto">
                                                 <a th:href="@{/tasks/{id}(id=${sat?.id})}"
-                                                   class="btn btn-primary btn-sm">
+                                                   class="btn btn-primary btn-circle btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 </div>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -27,7 +28,7 @@ public class DashboardController {
     }
 
     @GetMapping("blank")
-    public String getBlank(Model model) {
+    public String getBlank() {
         return "blank";
     }
 
@@ -115,13 +116,18 @@ public class DashboardController {
     }
 
     @GetMapping("profile")
-    public String getProfile(Principal principal, Model model) {
-        String username = principal.getName();
-        Employee employee = employeeSer.findByUsername(username);
+    public String getProfile(HttpServletRequest request, Principal principal, Model model) {
         model.addAttribute("isProfile", true);
-        model.addAttribute("employee", employee);
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            model.addAttribute("user", (Employee) principal);
+            return "employee/update";
+        }
 
-        return "employee/update";
+        Interner interner = (Interner) principal;
+        model.addAttribute("user", interner);
+        return "interner/update";
+
+
     }
 
 

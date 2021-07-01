@@ -1,5 +1,6 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Piece;
 import com.storactive.stg.model.StagePiece;
 import com.storactive.stg.service.*;
@@ -11,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -48,7 +51,7 @@ public class DocumentController {
                            Principal principal,
                            HttpServletRequest request) {
 
-        model.addAttribute("files", getStagePieces(request, principal.getName()));
+        model.addAttribute("files", getStagePieces(request, principal));
         model.addAttribute("file", new StagePiece());
         return "attachment/index";
     }
@@ -120,33 +123,34 @@ public class DocumentController {
 
     @PostMapping("/categories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String postCategorie(@ModelAttribute Piece piece,
-                                Model model) {
-        pieceSer.create(piece);
+    public String postCategory(@ModelAttribute @Valid Piece piece,
+                               Model model,
+                               BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            pieceSer.create(piece);
+            model.addAttribute("piece", new Piece());
+            model.addAttribute("msg_inserted", true);
+        }
         model.addAttribute("pieces", pieceSer.getAll());
-        model.addAttribute("piece", new Piece());
-        model.addAttribute("updated", true);
-
         return "attachment/piecesCat";
     }
 
 
-    @GetMapping("/categories/delete")
+    @GetMapping("/categories/{id}/delete")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String deleteCategorie(@PathVariable int pieceId,
+    public String deleteCategorie(@PathVariable("id") int pieceId,
                                   Model model) {
         pieceSer.delete(pieceId);
         model.addAttribute("pieces", pieceSer.getAll());
         model.addAttribute("piece", new Piece());
-        model.addAttribute("deleted", true);
-
-        return "attachment/piecesCat";
+        model.addAttribute("msg_deleted", true);
+        return "redirect:/documents/categories?deleted";
     }
 
 
-    private List<StagePiece> getStagePieces(HttpServletRequest request, String username) {
-        if (!request.isUserInRole("ROLE_ADMIN"))
-            return internerSer.getUserFiles(username);
+    private List<StagePiece> getStagePieces(HttpServletRequest request, Principal principal) {
+        if (request.isUserInRole("ROLE_INTERNER"))
+            return internerSer.getUserFiles((Interner) principal);
         return stagePieceSer.getAll();
     }
 }
