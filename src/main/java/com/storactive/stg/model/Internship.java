@@ -1,6 +1,7 @@
 package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,7 +17,7 @@ import java.util.Date;
 public class Internship {
 
     @Id
-    @Column(name = "id_stage")
+    @Column(name = "id_stage", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -58,36 +59,50 @@ public class Internship {
     @Min(1)
     @Max(4)
     private int status;
+    @ManyToOne(optional = false)
+    @JsonIgnoreProperties(value = {
+            Interner_.INTERNSHIPS,
+            Interner_.ADDRESS,
+            Interner_.CIN,
+            Interner_.EMAIL,
+            Interner_.ENABLED,
+            Interner_.GENDER,
+            Interner_.HISTORIES,
+            Interner_.PHONE,
+            Interner_.PASSWORD,
+            Interner_.USERNAME
+    })
+    @ToString.Exclude
+    private Interner interner;
+
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")
     @JsonIgnore
     @ToString.Exclude
     private Collection<Absence> absences;
 
+    @AssertTrue
+    public boolean isValidRange() {
+        return endsAt.compareTo(startsAt) > 0;
+    }
 
-    @ManyToOne
-    @JsonIgnore
-    @ToString.Exclude
-    private Interner interner;
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")
     @JsonIgnore
     @ToString.Exclude
     private Collection<StagePiece> stagePieces;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     @ToString.Exclude
     private Collection<Alert> alerts;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")
     @JsonIgnore
     @ToString.Exclude
     private Collection<Task> tasks;
-
-    @AssertTrue
-    public boolean isValidRange() {
-        return endsAt.compareTo(startsAt) > 0;
-    }
 
 
 }

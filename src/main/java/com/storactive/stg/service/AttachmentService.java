@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 public class AttachmentService {
 
@@ -23,10 +21,6 @@ public class AttachmentService {
     public AttachmentService(AttachmentRepo attachmentRepo, HistoryService historySer) {
         this.attachmentRepo = attachmentRepo;
         this.historySer = historySer;
-    }
-
-    public List<Attachment> getAll() {
-        return attachmentRepo.findAll();
     }
 
 

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+    <title th:text="#{title.page.internship}">Gestion des Stagiaires - Stagiares</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/link}"></div>
+
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid row">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800 col-12"></h1>
+
+                <!-- Start Internship Details Card-->
+                <div class="card shadow mb-4 col-12">
+                    <div class="card-header py-3">
+                        <h4 class="d-inline m-0 font-weight-bold text-primary"
+                            th:text="#{internship}">
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row row-cols-4 internship-details"
+                            th:object="${internship}"
+                            th:with="format=#{form.date.simple_format}">
+                            <dt class="col-4">
+                                <div class="col d-inline pl-0" th:text="#{form.project_title}">
+                                </div>
+                                <div class="bg-gray-200 col d-inline text-info text-uppercase text-xs">
+                                    <small class="font-italic font-weight-bolder"
+                                           th:if="*{status == 1}"
+                                           th:text="#{form.status.in_progress}"></small>
+                                    <small class="font-italic font-weight-bolder"
+                                           th:if="*{status == 2}"
+                                           th:text="#{form.status.saved}"></small>
+                                    <small class="font-italic font-weight-bolder"
+                                           th:if="*{status == 3}"
+                                           th:text="#{form.status.finished}"></small>
+                                    <small class="font-italic font-weight-bolder"
+                                           th:if="*{status == 4}"
+                                           th:text="#{form.status.canceled}"></small>
+                                </div>
+                            </dt>
+                            <dd class="col-8 d-inline-block" th:text="*{project}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.project_desc}"></dt>
+                            <dd class="col-8" th:text="*{desc}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{internshiper}"></dt>
+                            <dd class="col-8">
+                                <p>
+                                    <a th:href="@{/interners/{id}(id=${interner?.id})}"
+                                       th:text="${interner?.id} + ', ' + ${interner?.name}">
+                                    </a>
+                                    <output th:text="',  ' + ${interner?.phone} + ', '"></output>
+                                    <a th:href="'mailto:' + ${interner?.email}" th:text="${interner?.email}"></a>
+                                </p>
+                            </dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.duration}"></dt>
+                            <dd class="col-3" th:text="*{duration}"></dd>
+                            <dd class="col-5"
+                                th:text="${#dates.format(internship.startsAt, format) + ' ~ ' + #dates.format(internship.endsAt, format)}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.type}"></dt>
+                            <dd class="col-8" th:text="*{type}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.formation}"></dt>
+                            <dd class="col-8" th:text="*{formation}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.etablissement}"></dt>
+                            <dd class="col-8" th:text="*{etablissement}"></dd>
+                        </dl>
+                    </div>
+
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+                <!-- End Internship Details Card-->
+
+                <!-- Start Task Table Card-->
+                <div class="card shadow mb-4 col-auto mx-auto">
+                    <div class="card-header py-3">
+                        <h4 class="d-inline m-0 font-weight-bold text-primary"
+                            th:text="#{sidebar.tasks}">
+                        </h4>
+                        <!-- Add Tasks Modal Button @#@-->
+                        <div class="replace-fragment"
+                             id="add-task-dialog-button"
+                             th:replace="~{fragments/add_task.html :: #add_task_modal_button}"></div>
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="tasks-dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th class="all" th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.task}">task text</th>
+                                <th th:text="#{form.task_date}">task date</th>
+                                <th class="all" th:text="#{action.action}">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sat : ${internship.tasks}" th:with="format=#{form.date_format}">
+                                <td th:text="${sat?.id}"></td>
+                                <td th:text="${sat?.txtTask}"></td>
+                                <td th:text="${#dates.format(sat?.getDateTask, format)}"></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-auto col-lg">
+                                            <a class="btn btn-danger btn-circle btn-sm"
+                                               th:href="@{{curr}/{id}/delete(id=${sat?.id}, curr=${#httpServletRequest.requestURI})}"
+                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.task}+'\');'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-auto col-lg">
+                                            <a class="btn btn-primary btn-circle btn-sm"
+                                               th:href="@{/tasks/{id}(id=${sat?.id})}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+                <!-- End Task Table Card-->
+
+                <!-- Start Absence Table Card-->
+                <div class="card shadow mb-4 col-auto mx-auto">
+                    <div class="card-header py-3">
+                        <h4 class="d-inline m-0 font-weight-bold text-primary"
+                            th:text="#{sidebar.absences}">
+                        </h4>
+
+                        <!-- Add Absence Modal Button @#@-->
+                        <div class="replace-fragment"
+                             id="add-absence-dialog-button"
+                             th:replace="~{fragments/add_absence.html :: #add_absence_modal_button}"></div>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="absences-dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.duration}">Name</th>
+                                <th th:text="#{form.start}">Username</th>
+                                <th th:text="#{form.end}"></th>
+                                <th th:text="#{form.cause}"></th>
+                                <th class="all"
+                                    sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{action.action}">Action
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sat : ${internship.absences}" th:with="format=#{form.date_format}">
+                                <td th:text="${sat?.id}"></td>
+                                <td th:text="${sat?.nbrDays} + ' ' + #{form.days}"></td>
+                                <td th:text="${#dates.format(sat?.startsAt, format)}"></td>
+                                <td th:text="${#dates.format(sat?.endsAt, format)}"></td>
+                                <td th:text="${sat?.cause}"></td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div class="row">
+                                        <div class="col-auto col-lg">
+                                            <a class="btn btn-danger btn-circle btn-sm"
+                                               th:href="@{{curr}/{id}/delete(id=${sat?.id}, curr=${#httpServletRequest.requestURI})}"
+                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.absence}+'\');'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-auto col-lg">
+                                            <a class="btn btn-primary btn-circle btn-sm"
+                                               th:href="@{/absences/{id}(id=${sat?.id})}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+                <!-- End Absence Table Card-->
+
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+<!-- replace with page scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+<!-- Add Task Modal @#@-->
+<div class="replace-fragment" id="add-task-dialog" th:replace="~{fragments/add_task.html :: #add_task_form}"></div>
+
+
+<!-- Add Absence Modal @#@-->
+<div class="replace-fragment" id="add-absence-dialog"
+     th:replace="~{fragments/add_absence.html :: #add_absence_form}"></div>
+
+<script>
+    // Call the dataTables jQuery plugin
+    $(document).ready(function () {
+        let langUrl = '/js/json/' + $('html').attr('lang') + '.json'
+        $('#tasks-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+            });
+
+        $('#absences-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+            });
+    });
+</script>
+
+</body>
+
+</html>

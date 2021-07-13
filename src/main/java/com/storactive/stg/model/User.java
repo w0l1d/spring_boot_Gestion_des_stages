@@ -1,7 +1,9 @@
 package com.storactive.stg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.storactive.stg.Utils;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,15 +19,16 @@ import java.util.Collection;
 @Entity
 @Table(name = "tab_user")
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties({"authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
 public abstract class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private Integer id;
 
     @Column(name = "cin", unique = true, nullable = false)
-    @Size(min = 5, max = 10,
-            message = "1-2 Upper case characters + 4-8 numbers")
+    @Size(min = 5, max = 10, message = "1-2 Upper case characters + 4-8 numbers")
     @NotBlank
     @Pattern(regexp = "^[A-Za-z]{1,2}[0-9]{4,8}$",
             message = "1-2 Upper case characters + 4-8 numbers : AB95869696 A4585 A1582589")
@@ -52,10 +55,15 @@ public abstract class User implements UserDetails {
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "createdBy")
     @JsonIgnore
     @ToString.Exclude
     private Collection<History> histories;
+
+    public short getUserNature() {
+        return Utils.getUserNature(this);
+    }
+
+
 }

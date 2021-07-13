@@ -17,7 +17,7 @@
 </button>
 
 <form id="add_task_form" method="post"
-      th:action="@{${#httpServletRequest.requestURI}}"
+      th:action="@{${#httpServletRequest.requestURI + '/tasks'}}"
       th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
       th:object="${task}">
     <div class="modal fade" id="add_task_modal" tabindex="-1" role="dialog"

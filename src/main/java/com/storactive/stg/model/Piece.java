@@ -16,7 +16,7 @@ import java.util.Collection;
 public class Piece {
 
     @Id
-    @Column(name = "id_piece")
+    @Column(name = "id_piece", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -27,10 +27,16 @@ public class Piece {
     private String label;
 
 
+    public int getSpcCount() {
+        return stagePieces.size();
+    }
+
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "piece")
     @JsonIgnore
     @ToString.Exclude
     private Collection<StagePiece> stagePieces;
+
 
 }

@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 public class TaskService {
 
@@ -24,10 +22,6 @@ public class TaskService {
         this.taskRepo = taskRepo;
         this.internshipSer = internshipSer;
         this.historySer = historySer;
-    }
-
-    public List<Task> getAll() {
-        return taskRepo.findAll();
     }
 
     public Task create(Task task) {

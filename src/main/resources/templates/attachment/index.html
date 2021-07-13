@@ -9,6 +9,9 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="" name="description">
     <meta content="w0l1d" name="author">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 
     <title th:text="#{title.page.document}">Gestion des Stagiaires - Stagiares</title>
@@ -64,64 +67,22 @@
                     </div>
                     <div class="card-body">
                         <table class="display responsive nowrap"
-                               id="dataTable"
+                               id="serverSide-dataTable"
                                style="width:100%; font-size: calc(0.5em + 1vmin);">
                             <thead>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.file}">File</th>
                                 <th th:text="#{form.type}">type</th>
-                                <th th:text="#{form.piece}"></th>
+                                <th th:text="#{form.piece}">piece</th>
                                 <th th:text="#{form.created_at}">Created at</th>
-                                <th th:text="#{form.internship}"></th>
-                                <th class="all"
+                                <th th:text="#{form.internship}">internship</th>
+                                <th class="all" id="actions-head"
                                     sec:authorize="hasRole('ROLE_ADMIN')"
                                     th:text="#{action.action}"></th>
                             </tr>
                             </thead>
-                            <tfoot>
-                            <tr>
-                                <th th:text="#{form.id}">Id</th>
-                                <th th:text="#{form.file}">File</th>
-                                <th th:text="#{form.type}">type</th>
-                                <th th:text="#{form.piece}"></th>
-                                <th th:text="#{form.created_at}">Created at</th>
-                                <th th:text="#{form.internship}"></th>
-                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}"></th>
-                            </tr>
-                            </tfoot>
                             <tbody>
-                            <tr th:each="sat : ${files}" th:with="format=#{form.full_date_format}">
-                                <td th:text="${sat?.id}"></td>
-                                <td>
-                                    <a target="_blank" th:href="@{/documents/{id}/download(id=${sat?.attachment.id})}"
-                                       th:text="${sat?.attachment.pieceJoint}"></a>
-                                </td>
-                                <td th:text="${sat?.attachment.type}"></td>
-                                <td th:text="${sat?.piece.label}"></td>
-                                <td th:text="${#dates.format(sat?.dateSaisie, format)}"></td>
-                                <td>
-                                    <a th:href="@{/internships/{id}(id=${sat?.internship.id})}"
-                                       th:text="${sat?.internship.project}"></a>
-                                </td>
-                                <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <div class="row">
-                                        <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-danger btn-circle btn-sm"
-                                               th:href="@{/documents/{id}/delete(id=${sat?.id})}"
-                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.piece}+'\');'">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </div>
-                                        <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-primary btn-circle btn-sm"
-                                               th:href="@{/documents/{id}(id=${sat?.id})}">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
 
@@ -162,6 +123,120 @@
 
 <!-- replace with page scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+
+<!-- Datatable Actions  @#@-->
+<div class="d-none replace-fragment"
+     id="actions"
+     th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.document})}"></div>
+
+
+<script>
+    $(document).ready(function () {
+
+        const lg = $('html').attr('lang')
+        let langUrl = '/js/json/' + lg + '.json'
+
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+
+        const columns = [
+            {data: 'id'},
+            {
+                data: null,
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    return `<a target="_blank" href="/documents/${row.id}/download">${row.attachment.pieceJoint}</a>`
+                }
+            },
+            {
+                data: 'attachment',
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    return data.type
+                }
+            },
+            {
+                data: 'piece',
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    return data.label
+                }
+            },
+            {
+                data: 'dateSaisie',
+                render: function (data, type, row) {
+                    let d = new Date(data)
+                    return d.toLocaleDateString(lg, dateOptions)
+                }
+            },
+            {
+                data: 'internship',
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    let startAt = new Date(data.startsAt)
+                    const date1 = startAt.toLocaleDateString(lg, dateOptions)
+                    let endAt = new Date(data.endsAt)
+                    const date2 = endAt.toLocaleDateString(lg, dateOptions)
+                    return `<dl><dt><a href="/internships/${data.id}">${data.project}</a></dt><dd><small>${date1} ~ ${date2}</small></dd></dl>`;
+                }
+            },
+        ]
+
+        const isAdmin = !!$('#actions-head').length;
+
+        const actionCol = {
+            data: null,
+            orderable: false,
+            searchable: false,
+            render: function (data, type, row) {
+                if (!isAdmin)
+                    return '';
+                const href = '/documents/' + row.id
+                let actions = $('#actions').clone()
+
+                $(actions).find('.btn-danger').attr('href', href + '/delete')
+                $(actions).find('.btn-primary').attr('href', href + '/update');
+                return actions.html();
+            }
+        };
+
+
+        if (isAdmin) {
+            columns.push(actionCol)
+        }
+
+
+        $('#serverSide-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+                searchable: isAdmin,
+                serverSide: true,
+                columns: columns,
+                ajax: {
+                    'contentType': 'application/json',
+                    url: '/api/stagePiece',
+                    type: 'POST',
+                    'data': function (d) {
+                        return JSON.stringify(d);
+                    },
+                    'beforeSend': function (request) {
+                        request.setRequestHeader(header, token);
+                    }
+                }
+            });
+    });
+
+</script>
+
 
 </body>
 

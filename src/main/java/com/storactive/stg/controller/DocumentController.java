@@ -1,6 +1,5 @@
 package com.storactive.stg.controller;
 
-import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Piece;
 import com.storactive.stg.model.StagePiece;
 import com.storactive.stg.service.*;
@@ -14,12 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("/documents")
@@ -48,39 +48,36 @@ public class DocumentController {
 
     @GetMapping({"/", ""})
     public String getIndex(Model model,
-                           Principal principal,
                            HttpServletRequest request) {
 
-        model.addAttribute("files", getStagePieces(request, principal));
         model.addAttribute("file", new StagePiece());
         return "attachment/index";
     }
 
 
-//    @GetMapping("/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public String getUpdateStagePiece(@NotNull @Positive @PathVariable Integer id,
-//                                   Model model) {
-//        StagePiece stagePiece = stagePieceSer.findById(id);
-//        model.addAttribute("stagePiece", stagePiece);
-//        return "attachment/update";
-//    }
-//
-//
-//    @PostMapping("/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public String putUpdateStagePiece(@NotNull @Positive @PathVariable Integer id,
-//                                      @NotNull @RequestParam("file") MultipartFile file,
-//                                      Principal principal,
-//                                      HttpServletRequest request,
-//                                      Model model) {
-//        stagePieceSer.update(id, file);
-//
-//        model.addAttribute("msg_updated", true);
-//        model.addAttribute("stagePiece", new StagePiece());
-//        model.addAttribute("files", getStagePieces(request, principal.getName()));
-//        return "attachment/index";
-//    }
+    @GetMapping("/{id}/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getUpdateStagePiece(@NotNull @Positive @PathVariable Integer id,
+                                      Model model) {
+        StagePiece stagePiece = stagePieceSer.findById(id);
+        model.addAttribute("stagePiece", stagePiece);
+        return "attachment/update";
+    }
+
+
+    @PostMapping("/{id}/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String putUpdateStagePiece(@NotNull @Positive @PathVariable Integer id,
+                                      @NotNull @RequestParam("file") MultipartFile file,
+                                      @NotNull @RequestParam("piece") Integer pieceId,
+                                      HttpServletRequest request,
+                                      Model model) {
+        stagePieceSer.update(id, pieceId, file);
+
+        model.addAttribute("msg_updated", true);
+        model.addAttribute("stagePiece", new StagePiece());
+        return "attachment/index";
+    }
 
     @GetMapping("/{id}/delete")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -115,7 +112,6 @@ public class DocumentController {
     @GetMapping("/categories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getCategories(Model model) {
-        model.addAttribute("pieces", pieceSer.getAll());
         model.addAttribute("piece", new Piece());
 
         return "attachment/piecesCat";
@@ -131,26 +127,44 @@ public class DocumentController {
             model.addAttribute("piece", new Piece());
             model.addAttribute("msg_inserted", true);
         }
-        model.addAttribute("pieces", pieceSer.getAll());
         return "attachment/piecesCat";
     }
 
+    @GetMapping("/categories/{id}/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getUpdatePiece(@NotNull @Positive @PathVariable Integer id,
+                                 Model model) {
+        Piece piece = pieceSer.findById(id);
+        model.addAttribute("piece", piece);
+        return "attachment/updateCat";
+    }
+
+
+    @PostMapping("/categories/{id}/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String putUpdatePiece(@NotNull @Positive @PathVariable Integer id,
+                                 @ModelAttribute @Valid Piece piece,
+                                 BindingResult bindingResult,
+                                 Model model) {
+        if (bindingResult.hasErrors())
+            return "attachment/updateCat";
+
+        piece.setId(id);
+        pieceSer.update(piece);
+
+        model.addAttribute("msg_updated", true);
+        return "redirect:/documents/categories?updated";
+    }
 
     @GetMapping("/categories/{id}/delete")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteCategorie(@PathVariable("id") int pieceId,
                                   Model model) {
         pieceSer.delete(pieceId);
-        model.addAttribute("pieces", pieceSer.getAll());
-        model.addAttribute("piece", new Piece());
+
         model.addAttribute("msg_deleted", true);
         return "redirect:/documents/categories?deleted";
     }
 
 
-    private List<StagePiece> getStagePieces(HttpServletRequest request, Principal principal) {
-        if (request.isUserInRole("ROLE_INTERNER"))
-            return internerSer.getUserFiles((Interner) principal);
-        return stagePieceSer.getAll();
-    }
 }

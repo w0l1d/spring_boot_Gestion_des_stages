@@ -1,5 +1,6 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.Utils;
 import com.storactive.stg.model.*;
 import com.storactive.stg.model.enums.Gender;
 import com.storactive.stg.service.EmployeeService;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/")
@@ -116,14 +116,14 @@ public class DashboardController {
     }
 
     @GetMapping("profile")
-    public String getProfile(HttpServletRequest request, Principal principal, Model model) {
+    public String getProfile(HttpServletRequest request, Model model) {
         model.addAttribute("isProfile", true);
         if (request.isUserInRole("ROLE_ADMIN")) {
-            model.addAttribute("user", (Employee) principal);
+            model.addAttribute("user", (Employee) Utils.getCurrUser());
             return "employee/update";
         }
 
-        Interner interner = (Interner) principal;
+        Interner interner = (Interner) Utils.getCurrUser();
         model.addAttribute("user", interner);
         return "interner/update";
 

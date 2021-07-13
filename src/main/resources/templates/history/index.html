@@ -8,6 +8,9 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="" name="description">
     <meta content="w0l1d" name="author">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 
     <title th:text="#{title.page.history}">Gestion des Stagiaires - Stagiares</title>
@@ -39,46 +42,56 @@
             <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
             <!-- End of Topbar -->
 
+
+            <!-- Alerts -->
+            <div class="replace-fragment" id="alerts" th:replace="~{fragments/alerts.html :: #history-alerts}"></div>
+
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800"
+                <h1 class="h3 mb-4 text-gray-800" th:unless="${myLog}"
                     th:text="#{sidebar.history}">Histories</h1>
+                <h1 class="h3 mb-4 text-gray-800" id="my-log" th:if="${myLog}"
+                    th:text="#{sidebar.activity_log}">Histories</h1>
+
 
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="d-inline m-0 font-weight-bold text-primary">
-
-                            <div class="alert alert-danger d-inline-block" th:if="${log_deleted}"
-                                 th:text="#{msg.history_deleted}"></div>
-                        </h6>
+                    <div class="card-header justify-content-around align-items-center py-3 row">
+                        <a class="btn btn-danger bg-gradient-danger col-auto"
+                           href="/history/delete-my-log"
+                           style="opacity: 0.75;"
+                           th:onclick="'return confirm(\''+#{msg.confirm_delete.my_log}+'\');'"
+                           th:text="#{action.delete.my_log}"></a>
+                        <a class="btn btn-danger bg-gradient-danger col-auto"
+                           href="/history/delete-log"
+                           style="opacity: 0.75;"
+                           th:onclick="'return confirm(\''+#{msg.confirm_delete.log}+'\');'"
+                           th:text="#{action.delete.log}"></a>
 
                     </div>
                     <div class="card-body">
                         <table class="display responsive nowrap"
-                               id="dataTable"
+                               id="serverSide-dataTable"
                                style="width:100%; font-size: calc(0.5em + 1vmin);">
                             <thead>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
                                 <th class="all" th:text="#{action.action}">Action</th>
-                                <th th:text="#{form.created_at}">Created At</th>
+                                <th th:text="#{form.done_at}">Created At</th>
+                                <th th:text="#{form.done_by}">Created By</th>
                             </tr>
                             </thead>
                             <tfoot>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
                                 <th class="all" th:text="#{action.action}">Action</th>
-                                <th th:text="#{form.created_at}">Created At</th>
+                                <th th:text="#{form.done_at}">Created At</th>
+                                <th th:text="#{form.done_by}">Created By</th>
                             </tr>
                             </tfoot>
                             <tbody>
-                            <tr th:each="sat : ${actions}" th:with="format=#{form.full_date_format}">
-                                <td th:text="${sat?.id}"></td>
-                                <td th:text="${sat?.action}"></td>
-                                <td th:text="${#dates.format(sat?.createdAt, format)}"></td>
-                            </tr>
                             </tbody>
                         </table>
 
@@ -115,6 +128,78 @@
 
 <!-- replace with page scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+<div class="d-none" id="user-natures">
+    <div id="n-0" th:text="#{user.nature.user}"></div>
+    <div id="n-1" th:text="#{user.nature.employee}"></div>
+    <div id="n-2" th:text="#{user.nature.interner}"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const lg = $('html').attr('lang')
+        let langUrl = '/js/json/' + lg + '.json'
+
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+
+
+        let ntVal = [];
+        $('#user-natures').children().each(function () {
+            ntVal.push($(this).text())
+        })
+
+        $('#serverSide-dataTable')
+            .DataTable({
+                order: [
+                    [0, "desc"]
+                ],
+                language: {
+                    url: langUrl
+                },
+                serverSide: true,
+                columns: [
+                    {data: 'id'},
+                    {data: 'action'},
+                    {
+                        data: 'createdDate',
+                        render: function (data, type, row) {
+                            let dt = new Date(data)
+                            return dt.toLocaleDateString(lg, dateOptions)
+                        }
+                    },
+                    {
+                        data: 'createdBy',
+                        render: function (data, type, row) {
+                            console.log(row)
+                            if (data == null)
+                                return 'null';
+                            const i = data.userNature;
+                            return `<strong>${data.id} <small>(${ntVal[i]})</small></strong> ~ ${data.name}`
+                        }
+                    },
+                ],
+                ajax: {
+                    'contentType': 'application/json',
+                    url: function () {
+                        if (!!$('#my-log'))
+                            return 'api/activity-log'
+                        return '/api/history'
+                    },
+                    type: 'POST',
+                    'data': function (d) {
+                        return JSON.stringify(d);
+                    },
+                    'beforeSend': function (request) {
+                        request.setRequestHeader(header, token);
+                    }
+                }
+            });
+    });
+
+</script>
 
 </body>
 

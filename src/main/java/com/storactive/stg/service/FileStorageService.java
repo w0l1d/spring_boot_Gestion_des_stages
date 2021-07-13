@@ -51,7 +51,6 @@ public class FileStorageService {
         pj.setPath(fileName);
         pj.setPieceJoint(file.getOriginalFilename());
 
-
         return pj;
     }
 
@@ -77,12 +76,12 @@ public class FileStorageService {
                     .resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 
-            if (resource.exists() || resource.isReadable()) {
-                if (!resource.getFile().delete())
-                    throw new RuntimeException("File Not Delete");
-            } else {
-                throw new RuntimeException("Could not read the file!");
-            }
+            if (resource.exists())
+                if (resource.isReadable()) {
+                    if (!resource.getFile().delete())
+                        throw new RuntimeException("File Not Delete");
+                } else
+                    throw new RuntimeException("Could not read the file!");
         } catch (IOException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }

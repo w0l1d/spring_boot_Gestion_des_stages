@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:lang="${#locale.language}">
+<html th:lang="${#locale.language}"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -43,34 +43,27 @@
 
                 <!-- Page Heading -->
                 <h1 class="h3 mb-4 text-gray-800" th:text="#{title.update_attachment}">Stagiaires</h1>
-                <form enctype="multipart/form-data" id="add_file_form"
-                      method="post"
-                      th:action="@{${#httpServletRequest.requestURI}+'?'+ ${_csrf.parameterName}+'='+${_csrf.token}}"
-                      th:object="${stagePiece}">
+                <form id="add_file_form" method="post"
+                      th:action="@{${#httpServletRequest.requestURI}}"
+                      th:object="${piece}">
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
                             </h6>
 
-
                         </div>
                         <div class="card-body">
 
                             <div class="form-group">
-                                <select class="custom-select" name="piece">
-                                    <option selected th:text="#{form.select_piece}">Select Pieces</option>
-                                    <option th:each="p : ${pieces}"
-                                            th:selected="${stagePiece.piece.id == p.id}" th:text="${p.label}"
-                                            th:value="${p.id}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="form-group date">
-                                <label for="file" th:text="#{form.file}"></label>
-                                <input class="form-control" id="file"
-                                       name="file" required
-                                       type="file">
+                                <label for="label" th:text="#{form.label}">Label</label>
+                                <input id="label"
+                                       required
+                                       th:class="'form-control ' + ${#fields.hasErrors('label') ? 'is-invalid':''}"
+                                       th:field="*{label}" type="text">
+                                <div class="invalid-feedback"
+                                     th:errors="*{label}"
+                                     th:if="${#fields.hasErrors('label')}"></div>
                             </div>
 
                         </div>

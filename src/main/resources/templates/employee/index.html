@@ -8,7 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="w0l1d">
-
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title th:text="#{title.page.user}">Gestion des Utilisateurs - Users</title>
 
@@ -64,57 +66,26 @@
 
                         </div>
                         <div class="card-body">
-                            <table  class="display responsive nowrap"
-                                    style="width:100%; font-size: calc(0.5em + 1vmin);"
-                                    id="dataTable">
-                                <thead>
+
+                            <div>
+                                <table class="display responsive nowrap"
+                                       id="serverSide-dataTable"
+                                       style="width:100%; font-size: calc(0.5em + 1vmin);">
+                                    <thead>
                                     <tr>
                                         <th th:text="#{form.id}">Id</th>
                                         <th class="all" th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
                                         <th th:text="#{form.cin}">CIN</th>
+                                        <th th:text="#{form.username}">Username</th>
                                         <th th:text="#{form.email}">Email</th>
                                         <th class="all" th:text="#{action.action}">Action</th>
                                     </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.email}">Email</th>
-                                        <th class="all" th:text="#{action.action}">Action</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                <tr th:each="sat : ${employees}">
-                                    <td th:text="${sat?.id}"></td>
-                                    <td th:text="${sat?.name}"></td>
-                                    <td th:text="${sat?.username}"></td>
-                                    <td th:text="${sat?.cin}"></td>
-                                    <td th:text="${sat?.email}"></td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-lg m-auto"
-                                                 th:if="${not #strings.equalsIgnoreCase(sat?.username, #authentication.name)}">
-                                                <a class="btn btn-danger btn-circle btn-sm"
-                                                   th:href="@{/users/{id}/delete(id=${sat?.id})}"
-                                                   th:onclick="'return confirm(\''+#{msg.confirm_delete.user}+'\');'">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </div>
-                                            <div class="col-lg m-auto">
-                                                <a class="btn btn-primary btn-circle btn-sm"
-                                                   th:href="@{/users/{id}(id=${sat?.id})}">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+
+                            </div>
 
                         </div>
                     </div>
@@ -155,6 +126,63 @@
     <div class="replace-fragment" id="add-user-dialog"
          th:replace="~{fragments/add_employee.html :: #add_user_form}"></div>
 
+    <!-- Datatable Actions  @#@-->
+    <div class="d-none replace-fragment"
+         id="actions"
+         th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.user})}"></div>
+
+
+    <script>
+        $(document).ready(function () {
+            let langUrl = '/js/json/' + $('html').attr('lang') + '.json'
+
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+
+
+            $('#serverSide-dataTable')
+                .DataTable({
+                    language: {
+                        url: langUrl
+                    },
+                    serverSide: true,
+                    columns: [
+                        {data: 'id'},
+                        {data: 'name'},
+                        {data: 'cin'},
+                        {data: 'username'},
+                        {data: 'email'},
+                        {
+                            data: null,
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                console.log(type)
+                                console.log(row)
+                                let href1 = `/users/${row.id}/delete`;
+                                console.log(href1)
+                                let actions = $('#actions').clone()
+                                $(actions).find('.delete-btn').attr('href', href1)
+                                $(actions).find('.update-btn').attr('href', '/users/' + row["id"]);
+                                return actions.html();
+                            }
+                        }
+                    ],
+                    ajax: {
+                        'contentType': 'application/json',
+                        url: '/api/employee',
+                        type: 'POST',
+                        'data': function (d) {
+                            return JSON.stringify(d);
+                        },
+                        'beforeSend': function (request) {
+                            request.setRequestHeader(header, token);
+                        }
+                    }
+                });
+        });
+
+    </script>
 
 </body>
 

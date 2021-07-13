@@ -1,7 +1,7 @@
 package com.storactive.stg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties({"enabled", "authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
 @Data
 @NoArgsConstructor
 @Entity

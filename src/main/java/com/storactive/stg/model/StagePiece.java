@@ -1,6 +1,5 @@
 package com.storactive.stg.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,9 +12,14 @@ import java.util.Date;
 @Table(name = "tab_stage_piece")
 public class StagePiece {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_stage_piece", updatable = false)
+    private Integer id;
+
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
-    Attachment attachment;
+    private Attachment attachment;
 
     @Column(name = "date_saisie")
     @CreatedDate
@@ -23,17 +27,11 @@ public class StagePiece {
 
 
     @ManyToOne(optional = false)
-    @JsonIgnore
     @ToString.Exclude
-    Piece piece;
+    private Piece piece;
 
     @ManyToOne(optional = false)
-    @JsonIgnore
     @ToString.Exclude
-    Internship internship;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_stage_piece")
-    private Integer id;
+    private Internship internship;
 
 }

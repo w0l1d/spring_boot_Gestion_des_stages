@@ -1,5 +1,6 @@
 package com.storactive.stg.service;
 
+import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.repository.StageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,6 @@ public class StageService {
     }
 
 
-    public List<Internship> getAll() {
-        return stageRepo.findAll();
-    }
 
     public Internship create(Internship internship) {
         internship.setId(null);
@@ -58,4 +56,7 @@ public class StageService {
     }
 
 
+    public List<Internship> getUserInternships(Interner interner) {
+        return stageRepo.findAllByInterner_Id(interner.getId());
+    }
 }

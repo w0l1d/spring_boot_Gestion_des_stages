@@ -29,7 +29,6 @@ public class EmployeeController {
     @GetMapping({"/", ""})
     public String getIndex(Model model) {
         model.addAttribute("employee", new Employee());
-        model.addAttribute("employees", employeeSer.getAll());
         return "employee/index";
     }
 
@@ -45,7 +44,6 @@ public class EmployeeController {
                     .addAttribute("employee", new Employee());
         }
 
-        model.addAttribute("employees", employeeSer.getAll());
 
         return "employee/index";
     }
@@ -71,7 +69,6 @@ public class EmployeeController {
         employeeSer.update(employee);
 
         model.addAttribute("msg_updated", true);
-        model.addAttribute("employees", employeeSer.getAll());
         return "employee/index";
     }
 

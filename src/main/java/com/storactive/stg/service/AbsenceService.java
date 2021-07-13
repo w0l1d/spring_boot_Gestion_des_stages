@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 public class AbsenceService {
 
@@ -24,10 +22,6 @@ public class AbsenceService {
         this.absenceRepo = absenceRepo;
         this.internshipSer = internshipSer;
         this.historySer = historySer;
-    }
-
-    public List<Absence> getAll() {
-        return absenceRepo.findAll();
     }
 
 

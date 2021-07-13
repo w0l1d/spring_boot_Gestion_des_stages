@@ -33,16 +33,14 @@
 
                 <div class="modal-body">
 
-                    <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
-                        <div class="form-group">
-                            <label for="label" th:text="#{form.label}">Label</label>
-                            <input id="label"
-                                   required th:class="'form-control ' + ${#fields.hasErrors('label') ? 'is-invalid':''}"
-                                   th:field="*{label}" type="text">
-                            <div class="invalid-feedback"
-                                 th:errors="*{label}"
-                                 th:if="${#fields.hasErrors('label')}"></div>
-                        </div>
+                    <div class="form-group">
+                        <label for="label" th:text="#{form.label}">Label</label>
+                        <input id="label"
+                               required th:class="'form-control ' + ${#fields.hasErrors('label') ? 'is-invalid':''}"
+                               th:field="*{label}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{label}"
+                             th:if="${#fields.hasErrors('label')}"></div>
                     </div>
 
                 </div>

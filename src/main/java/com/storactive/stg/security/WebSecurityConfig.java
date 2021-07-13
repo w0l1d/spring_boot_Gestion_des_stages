@@ -37,12 +37,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
 
         http.authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
                 .antMatchers("/vendor/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/img/**").permitAll()
-                .antMatchers("/insert").permitAll()
+                .antMatchers("/insert").not().authenticated()
                 .antMatchers("/login").not().authenticated()
                 .anyRequest().authenticated()
                 .and()
@@ -57,11 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe();
     }
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
-
 
 
     @Bean

@@ -9,6 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="w0l1d">
 
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 
     <title th:text="#{title.page.interner}">Gestion des Stagiaires - Stagiares</title>
 
@@ -64,80 +68,26 @@
 
                         </div>
                         <div class="card-body">
-                            <table  class="display responsive nowrap"
-                                    style="width:100%; font-size: calc(0.5em + 1vmin);"
-                                    id="dataTable">
+                            <table class="display responsive nowrap"
+                                   style="width:100%; font-size: calc(0.5em + 1vmin);"
+                                   id="serverSide-dataTable">
                                 <thead>
-                                    <tr>
-                                        <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.gender}">Gender</th>
-                                        <th th:text="#{form.phone}">Phone</th>
-                                        <th th:text="#{form.status}">Is Enabled</th>
-                                        <th th:text="#{form.email}">Email</th>
-                                        <th th:text="#{form.address}">address</th>
-                                        <th class="all" th:text="#{action.action}">Action</th>
-                                        <th th:text="#{internship}">internship</th>
-                                    </tr>
+                                <tr>
+                                    <th th:text="#{form.id}">Id</th>
+                                    <th class="all" th:text="#{form.name}">Name</th>
+                                    <th th:text="#{form.cin}">CIN</th>
+                                    <th th:text="#{form.username}">Username</th>
+                                    <th th:text="#{form.gender}">Gender</th>
+                                    <th th:text="#{form.phone}">Phone</th>
+                                    <th th:text="#{form.status}">Is Enabled</th>
+                                    <th th:text="#{form.email}">Email</th>
+                                    <th th:text="#{form.address}">address</th>
+                                    <th th:text="#{internship}">internship</th>
+                                    <th class="all" th:text="#{action.action}">Action</th>
+                                </tr>
                                 </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th th:text="#{form.id}">Id</th>
-                                        <th th:text="#{form.name}">Name</th>
-                                        <th th:text="#{form.username}">Username</th>
-                                        <th th:text="#{form.cin}">CIN</th>
-                                        <th th:text="#{form.gender}">Gender</th>
-                                        <th th:text="#{form.phone}">Phone</th>
-                                        <th th:text="#{form.status}">Is Enabled</th>
-                                        <th th:text="#{form.email}">Email</th>
-                                        <th th:text="#{form.address}">address</th>
-                                        <th class="all" th:text="#{action.action}">Action</th>
-                                        <th th:text="#{internship}">internship</th>
-                                    </tr>
-                                </tfoot>
                                 <tbody>
-                                    <tr     th:each="sat : ${interners}">
-                                        <td th:text="${sat?.id}"></td>
-                                        <td th:text="${sat?.name}"></td>
-                                        <td th:text="${sat?.username}"></td>
-                                        <td th:text="${sat?.cin}"></td>
-                                        <td th:text="${sat?.gender.getDisplayValue()}"></td>
-                                        <td th:text="${sat?.phone}"></td>
-                                        <td>
-                                            <div class="custom-control custom-switch">
-                                                <input th:id="${sat?.username + '-enabled'}" type="checkbox" th:checked="${sat?.isEnabled()}"
-                                                       class="custom-control-input position-relative" disabled/>
-                                                <label class="custom-control-label" th:for="${sat?.username + '-enabled'}"></label>
-                                            </div>
-                                        </td>
-                                        <td th:text="${sat?.email}"></td>
-                                        <td th:text="${sat?.address}"></td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-5 col-lg m-auto">
-                                                    <a th:href="@{/interners/{id}/delete(id=${sat?.id})}"
-                                                       th:onclick="'return confirm(\''+#{msg.confirm_delete.stagiare}+'\');'"
-                                                       class="btn btn-danger btn-circle btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="col-5 col-lg m-auto">
-                                                    <a th:href="@{/interners/{id}(id=${sat?.id})}"
-                                                       class="btn btn-primary btn-circle btn-sm">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-primary btn-circle btn-sm"
-                                               th:href="@{/interners/{id}/internship(id=${sat?.id})}">
-                                                <i class="fas fa-plus"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+
                                 </tbody>
                             </table>
 
@@ -180,6 +130,118 @@
          th:replace="~{fragments/add_interner.html :: #add_interner_form}"></div>
 
 
+    <div class="d-none" id="interner-status">
+        <div class="custom-control custom-switch">
+            <input class="custom-control-input position-relative enabled-switch" disabled
+                   th:checked="false" type="checkbox"/>
+            <label class="custom-control-label enabled-label"></label>
+        </div>
+    </div>
+
+    <!-- Datatable Actions  @#@-->
+    <div class="d-none replace-fragment"
+         id="actions"
+         th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.stagiare})}"></div>
+
+    <div class="d-none" id="add-internchip">
+        <a class="btn btn-primary btn-circle btn-sm"
+           href="#">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            let langUrl = '/js/json/' + $('html').attr('lang') + '.json'
+
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+
+
+            $('#serverSide-dataTable')
+                .DataTable({
+                    language: {
+                        url: langUrl
+                    },
+                    serverSide: true,
+                    columns: [
+                        {data: 'id'},
+                        {
+                            data: 'name',
+                            render: function (data, type, row) {
+                                return `<a href="/interners/${row.id}">${data}</a>`
+                            }
+                        },
+                        {data: 'cin'},
+                        {data: 'username'},
+                        {
+                            data: 'gender',
+                            searchable: false,
+                            render: function (data, type, row) {
+                                let icon = 'fa-male'
+                                let color = 'rgba(45,169,217,0.72)';
+                                if (data === 'F') {
+                                    icon = 'fa-female';
+                                    color = 'rgba(241,103,175,0.77)'
+                                }
+
+                                return `<i class="fa fa-2x ${icon} d-block text-center" style="color: ${color}"></i>`;
+                            }
+                        },
+                        {data: 'phone'},
+                        {
+                            data: 'enabled',
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                console.log(row)
+                                let status = $('#interner-status').clone()
+                                $(status).find('.enabled-switch').attr('id', row.id + '-switch').attr('checked', data)
+                                $(status).find('.enabled-label').attr('for', row.id + '-switch');
+                                console.log($(status, '.enabled-switch').html())
+                                console.log(status.html())
+                                return status.html();
+                            }
+                        },
+                        {data: 'email'},
+                        {data: 'address'},
+                        {
+                            data: null,
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                let internship = $('#add-internchip').clone();
+                                $(internship).find('.btn-primary').attr('href', `/interners/${row.id}/internship`);
+                                return internship.html();
+                            }
+                        },
+                        {
+                            data: null,
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                let actions = $('#actions').clone();
+                                $(actions).find('.btn-danger').attr('href', `/interners/${row.id}/delete`);
+                                $(actions).find('.btn-primary').attr('href', `/interners/${row.id}/update`);
+                                return actions.html();
+                            }
+                        },
+                    ],
+                    ajax: {
+                        'contentType': 'application/json',
+                        url: '/api/interner',
+                        type: 'POST',
+                        'data': function (d) {
+                            return JSON.stringify(d);
+                        },
+                        'beforeSend': function (request) {
+                            request.setRequestHeader(header, token);
+                        }
+                    }
+                });
+        });
+
+    </script>
 </body>
 
 </html>

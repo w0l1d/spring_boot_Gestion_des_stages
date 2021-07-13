@@ -1,7 +1,6 @@
 package com.storactive.stg.controller;
 
 import com.storactive.stg.model.Absence;
-import com.storactive.stg.model.Interner;
 import com.storactive.stg.service.AbsenceService;
 import com.storactive.stg.service.InternerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("/absences")
@@ -34,24 +30,13 @@ public class AbsenceController {
 
 
     @GetMapping({"/", ""})
-    public String getIndex(Principal principal,
-                           Model model,
-                           HttpServletRequest request) {
-        model.addAttribute("absences", getAbsences(request, principal));
+    public String getIndex(Model model) {
         model.addAttribute("absence", new Absence());
         return "absence/index";
     }
 
-    private List<Absence> getAbsences(HttpServletRequest request, Principal principal) {
-        if (!request.isUserInRole("ROLE_ADMIN")) {
-            Interner interner = (Interner) principal;
-            return internerSer.getUserAbsences(interner);
-        } else
-            return absenceSer.getAll();
-    }
 
-
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/update")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getUpdateAbsence(@NotNull @Positive @PathVariable Integer id,
                                    Model model) {
@@ -61,13 +46,11 @@ public class AbsenceController {
     }
 
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/update")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateAbsence(@NotNull @Positive @PathVariable Integer id,
                                    @ModelAttribute @Valid Absence absence,
                                    BindingResult bindingResult,
-                                   HttpServletRequest request,
-                                   Principal principal,
                                    Model model) {
         if (bindingResult.hasErrors())
             return "absence/update";
@@ -76,8 +59,7 @@ public class AbsenceController {
         absenceSer.update(absence);
 
         model.addAttribute("msg_updated", true);
-        model.addAttribute("absences", getAbsences(request, principal));
-        return "absence/index";
+        return "redirect:/absences?updated";
     }
 
     @GetMapping("/{id}/delete")

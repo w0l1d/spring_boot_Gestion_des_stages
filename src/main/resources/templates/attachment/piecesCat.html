@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:lang="${#locale.language}"
-      xmlns:th="http://www.thymeleaf.org">
+<html
+        th:lang="${#locale.language}"
+        xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -9,6 +9,9 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="" name="description">
     <meta content="w0l1d" name="author">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 
     <title th:text="#{title.page.piece}">Gestion des Stagiaires - Stagiares</title>
@@ -66,14 +69,15 @@
                     </div>
                     <div class="card-body">
                         <table class="display responsive nowrap"
-                               id="dataTable"
+                               id="serverSide-dataTable"
                                style="width:100%; font-size: calc(0.5em + 1vmin);">
                             <thead>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.label}">Label</th>
                                 <th th:text="#{form.files_number}">Files Number</th>
-                                <th class="all" th:text="#{action.action}"></th>
+                                <th class="all"
+                                    th:text="#{action.action}"></th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -81,32 +85,10 @@
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.label}">Label</th>
                                 <th th:text="#{form.files_number}">Files Number</th>
-                                <th class="all" th:text="#{action.action}"></th>
+                                <th th:text="#{action.action}"></th>
                             </tr>
                             </tfoot>
                             <tbody>
-                            <tr th:each="sat : ${pieces}">
-                                <td th:text="${sat?.id}"></td>
-                                <td th:text="${sat?.label}"></td>
-                                <td th:text="${sat?.stagePieces != null?#lists.size(sat?.stagePieces):'0'}"></td>
-                                <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <div class="row">
-                                        <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-danger btn-circle btn-sm"
-                                               th:href="@{/documents/categories/{id}/delete(id=${sat?.id})}"
-                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.piece}+'\');'">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </div>
-                                        <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-primary btn-circle btn-sm"
-                                               th:href="@{/documents/categories/{id}(id=${sat?.id})}">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
 
@@ -148,6 +130,70 @@
 <!-- Add piece Modal @#@-->
 <div class="replace-fragment" id="add-piece-dialog" th:replace="~{fragments/add_piece.html :: #add_piece_form}"></div>
 
+
+<!-- Datatable Actions  @#@-->
+<div class="d-none replace-fragment"
+     id="actions"
+     th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.piece})}"></div>
+
+<script>
+    $(document).ready(function () {
+
+        const lg = $('html').attr('lang')
+        let langUrl = '/js/json/' + lg + '.json'
+
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        const columns = [
+            {data: 'id'},
+            {data: 'label'},
+            {
+                data: 'spcCount',
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    return row.spcCount ? row.spcCount : 0
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    const href = '/documents/categories/' + row.id
+                    let actions = $('#actions').clone()
+
+                    $(actions).find('.btn-danger').attr('href', href + '/delete')
+                    $(actions).find('.btn-primary').attr('href', href + '/update');
+                    return actions.html();
+                }
+            }
+        ]
+
+
+        $('#serverSide-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+                serverSide: true,
+                columns: columns,
+                ajax: {
+                    'contentType': 'application/json',
+                    url: '/api/piece',
+                    type: 'POST',
+                    'data': function (d) {
+                        return JSON.stringify(d);
+                    },
+                    'beforeSend': function (request) {
+                        request.setRequestHeader(header, token);
+                    }
+                }
+            });
+    });
+
+</script>
 
 </body>
 

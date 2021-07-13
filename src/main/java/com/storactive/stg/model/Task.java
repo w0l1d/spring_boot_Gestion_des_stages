@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "tab_task")
 public class Task {
     @Id
-    @Column(name = "id_task")
+    @Column(name = "id_task", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

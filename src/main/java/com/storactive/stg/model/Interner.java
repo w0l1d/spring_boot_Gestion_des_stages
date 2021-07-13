@@ -37,11 +37,13 @@ public class Interner extends User {
     @JsonIgnore
     @ToString.Exclude
     Collection<Internship> internships;
-    @NotBlank
+
     @Size(min = 10, max = 13)
+    @NotBlank
     @Pattern(regexp = "^(\\+[0-9]{1,3}|0)([ \\-_/]*)(\\d[ \\-_/]*){9}$",
             message = "phone format: '*# ## ## ## ##' (#: number || *: 0 or '+'country code)")
     private String phone;
+
     @ColumnDefault("false")
     @Column(name = "is_enabled")
     private boolean enabled;
@@ -55,17 +57,17 @@ public class Interner extends User {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
 }

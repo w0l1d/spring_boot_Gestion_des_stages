@@ -1,10 +1,8 @@
 package com.storactive.stg.service;
 
-import com.storactive.stg.model.Attachment;
-import com.storactive.stg.model.Internship;
-import com.storactive.stg.model.Piece;
-import com.storactive.stg.model.StagePiece;
+import com.storactive.stg.model.*;
 import com.storactive.stg.repository.StagePieceRepo;
+import com.storactive.stg.specs.InternerSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,9 +40,6 @@ public class StagePieceService {
         this.pieceSer = pieceSer;
     }
 
-    public List<StagePiece> getAll() {
-        return stagePieceRepo.findAll();
-    }
 
     @Transactional
     public StagePiece create(Piece piece,
@@ -75,15 +70,18 @@ public class StagePieceService {
         //relate piece to StagePiece
         piece.getStagePieces().add(stagePiece);
 
-
+        //register action in history
         historySer.objetCreated(OBJ, stagePiece.getId());
         return stagePiece;
     }
 
 
     @Transactional
-    public StagePiece update(Integer stagePieceId, MultipartFile file) {
+    public StagePiece update(int stagePieceId, int pieceId, MultipartFile file) {
         StagePiece stagePiece = findById(stagePieceId);
+
+        if (pieceId != stagePiece.getPiece().getId())
+            stagePiece.setPiece(pieceSer.findById(pieceId));
 
         //get old attachment object
         Attachment oldAttachment = stagePiece.getAttachment();
@@ -106,6 +104,7 @@ public class StagePieceService {
         //finally create stagePiece
         StagePiece updatedStagePiece = stagePieceRepo.save(stagePiece);
 
+        //register action in history
         historySer.objetUpdated(OBJ, updatedStagePiece.getId());
 
         return updatedStagePiece;
@@ -146,5 +145,9 @@ public class StagePieceService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "StagePiece Not Found"));
     }
 
+
+    public List<StagePiece> getInternerFiles(Interner interner) {
+        return stagePieceRepo.findAll(InternerSpec.getDocSpec(interner));
+    }
 
 }

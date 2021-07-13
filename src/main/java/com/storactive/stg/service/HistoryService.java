@@ -1,5 +1,6 @@
 package com.storactive.stg.service;
 
+import com.storactive.stg.Utils;
 import com.storactive.stg.model.History;
 import com.storactive.stg.repository.HistoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.Date;
 
 @Service
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -22,12 +24,11 @@ public class HistoryService {
     }
 
 
-    public List<History> getAll() {
-        return historyRepo.findAll();
-    }
-
+    @Transactional
     public void create(String action) {
         History history = new History();
+        history.setCreatedBy(Utils.getCurrUser());
+        history.setCreatedDate(new Date());
         history.setAction(action);
         historyRepo.save(history);
     }
@@ -45,6 +46,7 @@ public class HistoryService {
     }
 
 
+    @Transactional
     public void deleteAll() {
         historyRepo.deleteAll();
     }
@@ -53,6 +55,10 @@ public class HistoryService {
         historyRepo.deleteAll(actions);
     }
 
+    @Transactional
+    public void deleteHistoryByUser(int userId) {
+        historyRepo.deleteAllByCreatedBy_Id(userId);
+    }
 
     public History findById(int id) {
         return historyRepo.findById(id).orElseThrow(

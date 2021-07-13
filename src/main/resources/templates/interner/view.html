@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+    <title th:text="#{title.page.interner}">Gestion des Stagiaires - Stagiares</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/link}"></div>
+
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid row">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800 col-12"></h1>
+
+                <!-- Start Internship Details Card-->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h4 class="d-inline m-0 font-weight-bold text-primary"
+                            th:text="#{internshiper}">
+                        </h4>
+                        <a class="bg-gradient-secondary btn btn-primary disabled float-right"
+                           th:if="${!interner.isEnabled()}"
+                           th:text="#{disabled}"></a>
+                        <a class="bg-gradient-success btn btn-primary disabled float-right"
+                           th:if="${interner.isEnabled()}"
+                           th:text="#{enabled}"></a>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row row-cols-4 internship-details" th:object="${interner}"
+                            th:with="format=#{form.date_format}">
+                            <dt class="col-4" th:text="#{form.name}"></dt>
+                            <dd class="col-8 d-inline-block" th:text="*{name + '  // ' + username}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-2 col-sm-4" th:text="#{form.cin}"></dt>
+                            <dd class="col-4 col-sm-8 d-inline-block" th:text="*{cin}"></dd>
+
+                            <hr class="d-none d-sm-block col-sm-12">
+
+                            <dt class="col-2 col-sm-4" th:text="#{form.gender}"></dt>
+                            <dd class="col-4 col-sm-8 d-inline-block">
+                                <i class="fa fa-2x fa-female"
+                                   style="color: rgba(241,103,175,0.77)"
+                                   th:if="*{#strings.equalsIgnoreCase(gender,'F')}"></i>
+                                <i class="fa fa-2x fa-male"
+                                   style="color: rgba(45,169,217,0.72)"
+                                   th:if="*{#strings.equalsIgnoreCase(gender,'M')}"></i>
+                            </dd>
+
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.contact}"></dt>
+                            <dd class="col-8" th:text="*{phone + ' ~ ' + email}"></dd>
+
+                            <hr class="col-12">
+
+                            <dt class="col-4" th:text="#{form.address}"></dt>
+                            <dd class="col-8 d-inline-block" th:text="*{address}"></dd>
+                        </dl>
+                    </div>
+
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+                <!-- End Internship Details Card-->
+
+
+                <!-- Start Internships Table Card-->
+                <div class="card shadow mb-4 col">
+                    <div class="card-header py-3">
+                        <h4 class="d-inline m-0 font-weight-bold text-primary"
+                            th:text="#{sidebar.internships}">
+                        </h4>
+
+                        <!-- Add internship Modal Button @#@-->
+                        <div class="replace-fragment"
+                             id="add-internship-dialog-button" sec:authorize="hasRole('ROLE_ADMIN')"
+                             th:replace="~{fragments/add_internship.html :: #add_internship_modal_button}"></div>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="internships-dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th class="all" th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.project_title}">project title</th>
+                                <th th:text="#{form.status}">Status</th>
+                                <th th:text="#{form.starts_at}">Starts at</th>
+                                <th th:text="#{form.ends_at}">Ends At</th>
+                                <th th:text="#{form.type}">Type</th>
+                                <th th:text="#{form.duration}">Duration</th>
+                                <th th:text="#{form.formation}">Formation</th>
+                                <th th:text="#{form.etablissement}">Establishment</th>
+                                <th th:text="#{form.project_desc}">Description</th>
+                                <th class="all" sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{action.action}">Action
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sat : ${interner.internships}" th:with="format=#{form.date_format}">
+                                <td th:text="${sat?.id}"></td>
+                                <td th:text="${sat?.project}"></td>
+                                <td th:if="${sat?.status} == 1" th:text="#{form.status.in_progress}"></td>
+                                <td th:if="${sat?.status} == 2" th:text="#{form.status.saved}"></td>
+                                <td th:if="${sat?.status} == 3" th:text="#{form.status.finished}"></td>
+                                <td th:if="${sat?.status} == 4" th:text="#{form.status.canceled}"></td>
+                                <td th:text="${#dates.format(sat?.startsAt, format)}"></td>
+                                <td th:text="${#dates.format(sat?.endsAt, format)}"></td>
+                                <td th:text="${sat?.type}"></td>
+                                <td th:text="${sat?.duration}"></td>
+                                <td th:text="${sat?.formation}"></td>
+                                <td th:text="${sat?.etablissement}"></td>
+                                <td th:text="${sat?.desc}"></td>
+
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div class="row">
+                                        <div class="col m-auto">
+                                            <a class="btn btn-danger btn-circle btn-sm"
+                                               th:href="@{/internships/{id}/delete(id=${sat?.id})}"
+                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.stage}+'\');'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col m-auto">
+                                            <a class="btn btn-primary btn-circle btn-sm"
+                                               th:href="@{/internships/{id}(id=${sat?.id})}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <!-- End Internships Table Card-->
+
+
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+<!-- replace with page scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+
+<!-- Add internship Modal @#@-->
+<div class="replace-fragment"
+     id="add-internship-dialog"
+     sec:authorize="hasRole('ROLE_ADMIN')" th:replace="~{fragments/add_internship.html :: #add_internship_form}"></div>
+
+
+<script>
+    // Call the dataTables jQuery plugin
+    $(document).ready(function () {
+        let langUrl = '/js/json/' + $('html').attr('lang') + '.json'
+        $('#internships-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+            });
+    });
+</script>
+
+</body>
+
+</html>

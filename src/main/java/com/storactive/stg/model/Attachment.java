@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 public class Attachment {
 
     @Id
-    @Column(name = "id_piece_jointe")
+    @Column(name = "id_piece_jointe", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

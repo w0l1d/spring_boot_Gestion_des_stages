@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,10 +34,6 @@ public class EmployeeService {
         this.pwdEncoder = pwdEncoder;
     }
 
-
-    public List<Employee> getAll() {
-        return employeeRepo.findAll();
-    }
 
     public Employee create(Employee employee) {
         Optional<User> user = userRepo

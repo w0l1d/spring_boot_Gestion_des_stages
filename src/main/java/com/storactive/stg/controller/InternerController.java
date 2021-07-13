@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Controller
 @RequestMapping("/interners")
@@ -31,8 +32,17 @@ public class InternerController {
     @GetMapping({"/", ""})
     public String getIndex(Model model) {
         model.addAttribute("interner", new Interner());
-        model.addAttribute("interners", internerSer.getAll());
         return "interner/index";
+    }
+
+
+    @GetMapping("/{id}")
+    public String getInterner(@PathVariable @Valid @NotNull Integer id,
+                              Model model) {
+        Interner interner = internerSer.findById(id);
+        model.addAttribute(interner)
+                .addAttribute("internship", new Internship());
+        return "interner/view";
     }
 
 
@@ -44,35 +54,35 @@ public class InternerController {
         if (!bindingResult.hasErrors())
             internerSer.create(interner);
 
-        model.addAttribute("interners", internerSer.getAll());
         return "interner/index";
     }
 
 
-    @GetMapping({"/{id}"})
-    public String getUpdateInterner(@PathVariable Integer id, Model model) {
+    @GetMapping({"/{id}/update"})
+    public String getUpdateInterner(@PathVariable @Valid @NotNull Integer id,
+                                    Model model) {
         Interner interner = internerSer.findById(id);
         model.addAttribute("interner", interner);
         return "interner/update";
     }
 
-    @PostMapping({"/{id}"})
-    public String putUpdateInterner(@PathVariable Integer id,
+    @PostMapping("/{id}/update")
+    public String putUpdateInterner(@PathVariable @Valid @NotNull Integer id,
                                     @ModelAttribute @Valid Interner interner,
-                                    Model model, BindingResult bindingResult) {
+                                    Model model,
+                                    BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "interner/update";
 
         interner.setId(id);
         internerSer.update(interner);
 
-        model.addAttribute("interners", internerSer.getAll())
-                .addAttribute("msg_updated", true);
-        return "interner/index";
+        model.addAttribute("msg_updated", true);
+        return "redirect:/interners/" + id;
     }
 
-    @GetMapping({"/{id}/delete"})
-    public String deleteInterner(@PathVariable Integer id,
+    @GetMapping("/{id}/delete")
+    public String deleteInterner(@PathVariable @Valid @NotNull Integer id,
                                  Model model) {
         internerSer.delete(id);
         model.addAttribute("msg_deleted", true);
@@ -80,26 +90,23 @@ public class InternerController {
     }
 
     @GetMapping("/{id}/internship")
-    public String getAddInternship(Model model, @PathVariable Integer id) {
+    public String getAddInternship(Model model, @PathVariable @Valid @NotNull Integer id) {
         model.addAttribute("internship", new Internship());
-        return "interner/add_internship";
+        return "add_internship_page";
     }
 
-    @PostMapping("/{id}/internship")
+    @PostMapping({"/{id}", "/{id}/internship"})
     @Transactional
-    public String postAddInternship(@PathVariable Integer id,
+    public String postAddInternship(@PathVariable @Valid @NotNull Integer id,
                                     @ModelAttribute @Valid Internship internship,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "interner/add_internship";
+            return "add_internship_page";
 
         Interner interner = internerSer.findById(id);
 
-        internship = stageSer.create(internship);
-
         internship.setInterner(interner);
-
-        interner.getInternships().add(internship);
+        stageSer.create(internship);
 
 
         return "redirect:/internships?inserted";

@@ -1,7 +1,9 @@
 package com.storactive.stg.service;
 
 import com.storactive.stg.exception.ValueAlreadyUsedException;
-import com.storactive.stg.model.*;
+import com.storactive.stg.model.Absence;
+import com.storactive.stg.model.Interner;
+import com.storactive.stg.model.User;
 import com.storactive.stg.repository.InternerRepo;
 import com.storactive.stg.repository.UserRepo;
 import com.storactive.stg.service.iService.IInternerService;
@@ -11,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
@@ -38,16 +39,6 @@ public class InternerService implements IInternerService {
     }
 
 
-    @Override
-    public List<Interner> getAll() {
-        return internerRepo.findAll();
-    }
-
-    public List<Task> getUserTasks(Interner interner) {
-        List<Task> tasks = new Vector<>();
-        interner.getInternships().forEach(internship -> tasks.addAll(internship.getTasks()));
-        return tasks;
-    }
 
 
     public List<Absence> getUserAbsences(Interner interner) {
@@ -56,15 +47,7 @@ public class InternerService implements IInternerService {
         return absences;
     }
 
-    public List<StagePiece> getUserFiles(Interner interner) {
-        List<StagePiece> stagePieces = new Vector<>();
-        interner.getInternships().forEach(internship -> stagePieces.addAll(internship.getStagePieces()));
-        return stagePieces;
-    }
 
-    public Collection<Internship> getUserInternships(Interner interner) {
-        return interner.getInternships();
-    }
 
     @Override
     public Interner create(Interner interner) {

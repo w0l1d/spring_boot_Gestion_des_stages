@@ -1,7 +1,7 @@
 .toast {
     height: auto;
     position: absolute;
-    left: 50%;
+    right: 5%;
     background-color: transparent;
     font-family: Calibri, serif;
     text-align: center;

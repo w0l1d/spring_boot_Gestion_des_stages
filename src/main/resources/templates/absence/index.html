@@ -9,6 +9,9 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="" name="description">
     <meta content="w0l1d" name="author">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 
     <title th:text="#{title.page.absence}">Gestion des Stagiaires - Stagiares</title>
@@ -64,65 +67,23 @@
                     </div>
                     <div class="card-body">
                         <table class="display responsive nowrap"
-                               id="dataTable"
+                               id="serverSide-dataTable"
                                style="width:100%; font-size: calc(0.5em + 1vmin);">
                             <thead>
                             <tr>
                                 <th th:text="#{form.id}">Id</th>
-                                <th th:text="#{form.duration}">Name</th>
-                                <th th:text="#{form.start}">Username</th>
+                                <th th:text="#{form.duration}"></th>
+                                <th th:text="#{form.start}"></th>
                                 <th th:text="#{form.end}"></th>
                                 <th th:text="#{form.cause}"></th>
                                 <th th:text="#{form.internship}"></th>
-                                <th class="all"
+                                <th class="all" id="actions-head"
                                     sec:authorize="hasRole('ROLE_ADMIN')"
                                     th:text="#{action.action}">Action
                                 </th>
                             </tr>
                             </thead>
-                            <tfoot>
-                            <tr>
-                                <th th:text="#{form.id}">Id</th>
-                                <th th:text="#{form.duration}">Name</th>
-                                <th th:text="#{form.start}">Username</th>
-                                <th th:text="#{form.end}"></th>
-                                <th th:text="#{form.cause}"></th>
-                                <th th:text="#{form.internship}"></th>
-                                <th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{action.action}">Action</th>
-                            </tr>
-                            </tfoot>
                             <tbody>
-                            <tr th:each="sat : ${absences}" th:with="format=#{form.date_format}">
-                                <td th:text="${sat?.id}"></td>
-                                <td th:text="${sat?.nbrDays}+' '+#{form.days}"></td>
-                                <td th:text="${#dates.format(sat?.startsAt, format)}"></td>
-                                <td th:text="${#dates.format(sat?.endsAt, format)}"></td>
-                                <td th:text="${sat?.cause}"></td>
-                                <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <a th:href="@{/internships/{id}(id=${sat?.internship.id})}"
-                                       th:text="${sat?.internship.project}"></a>
-                                </td>
-                                <td sec:authorize="hasRole('ROLE_INTERNER')"
-                                    th:text="${sat?.internship.project}"></td>
-
-                                <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <div class="row">
-                                        <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-danger btn-circle btn-sm"
-                                               th:href="@{/absences/{id}/delete(id=${sat?.id})}"
-                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.absence}+'\');'">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </div>
-                                        <div class="col-5 col-lg m-auto">
-                                            <a class="btn btn-primary btn-circle btn-sm"
-                                               th:href="@{/absences/{id}(id=${sat?.id})}">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
 
@@ -163,6 +124,119 @@
 
 <!-- replace with page scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+
+<!-- Datatable Actions  @#@-->
+<div class="d-none replace-fragment"
+     id="actions"
+     th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.absence})}"></div>
+
+
+<script>
+    $(document).ready(function () {
+
+        const lg = $('html').attr('lang')
+        let langUrl = '/js/json/' + lg + '.json'
+
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+
+        const columns = [
+            {data: 'id'},
+            {
+                data: 'nbrDays',
+                render: function (data, type, row) {
+                    let pl = ''
+                    if (data > 1)
+                        pl = 's'
+                    if (lg === 'fr')
+                        return data + ' Jour' + pl
+                    return data + " Day" + pl
+
+                }
+            },
+            {
+                data: 'startsAt',
+                render: function (data, type, row) {
+                    let d = new Date(data)
+                    return d.toLocaleDateString(lg, dateOptions)
+                }
+            },
+            {
+                data: 'endsAt',
+                render: function (data, type, row) {
+                    let d = new Date(data)
+                    return d.toLocaleDateString(lg, dateOptions)
+                }
+            },
+            {
+                data: 'cause'
+            },
+            {
+                data: 'internship',
+                searchable: false,
+                render: function (data, type, row) {
+                    let startAt = new Date(data.startsAt)
+                    const date1 = startAt.toLocaleDateString(lg, dateOptions)
+                    let endAt = new Date(data.endsAt)
+                    const date2 = endAt.toLocaleDateString(lg, dateOptions)
+                    return `<dl><dt><a href="/internships/${data.id}">${data.project}</a></dt><dd><small>${date1} ~ ${date2}</small></dd></dl>`;
+                }
+            },
+        ]
+
+
+        const isAdmin = !!$('#actions-head').length;
+
+        if (isAdmin) {
+            const actionCol = {
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    if (!$('#actions-head').length)
+                        return '';
+
+                    const hrefDelete = `/absences/${row.id}/delete`
+                    const hrefUpdate = `/absences/${row.id}/update`
+
+                    let actions = $('#actions').clone()
+
+                    $(actions).find('.btn-danger').attr('href', hrefDelete)
+                    $(actions).find('.btn-primary').attr('href', hrefUpdate);
+                    return actions.html();
+                }
+            };
+
+            columns.push(actionCol)
+        }
+
+
+        $('#serverSide-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+                serverSide: true,
+                columns: columns,
+                searchable: isAdmin,
+                ajax: {
+                    'contentType': 'application/json',
+                    url: '/api/absence',
+                    type: 'POST',
+                    'data': function (d) {
+                        return JSON.stringify(d);
+                    },
+                    'beforeSend': function (request) {
+                        request.setRequestHeader(header, token);
+                    }
+                }
+            });
+    });
+
+</script>
 
 </body>
 
