@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Vector;
+
 @Service
 public class PieceService {
 
@@ -22,6 +25,12 @@ public class PieceService {
         this.pieceRepo = pieceRepo;
         this.internshipSer = internshipSer;
         this.historySer = historySer;
+    }
+
+    public List<Piece> findAll() {
+        List<Piece> result = new Vector<>();
+        pieceRepo.findAll().forEach(result::add);
+        return result;
     }
 
     public Piece create(Piece piece) {

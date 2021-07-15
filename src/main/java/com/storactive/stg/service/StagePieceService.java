@@ -1,8 +1,10 @@
 package com.storactive.stg.service;
 
-import com.storactive.stg.model.*;
+import com.storactive.stg.model.Attachment;
+import com.storactive.stg.model.Internship;
+import com.storactive.stg.model.Piece;
+import com.storactive.stg.model.StagePiece;
 import com.storactive.stg.repository.StagePieceRepo;
-import com.storactive.stg.specs.InternerSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class StagePieceService {
@@ -145,9 +146,5 @@ public class StagePieceService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "StagePiece Not Found"));
     }
 
-
-    public List<StagePiece> getInternerFiles(Interner interner) {
-        return stagePieceRepo.findAll(InternerSpec.getDocSpec(interner));
-    }
 
 }

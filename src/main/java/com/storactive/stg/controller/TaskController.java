@@ -1,9 +1,12 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.Utils;
+import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Task;
 import com.storactive.stg.service.InternerService;
+import com.storactive.stg.service.StageService;
 import com.storactive.stg.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,38 +17,43 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
+@RequiredArgsConstructor
 public class TaskController {
 
     final TaskService taskSer;
     final InternerService internerSer;
-
-    @Autowired
-    public TaskController(TaskService taskSer,
-                          InternerService internerSer) {
-        this.taskSer = taskSer;
-        this.internerSer = internerSer;
-    }
+    final StageService stageSer;
 
 
     @GetMapping({"/", ""})
     public String getIndex(Model model,
                            HttpServletRequest request) {
-        List<Task> tasks;
-
-//        if (!request.isUserInRole("ROLE_ADMIN")) {
-//            Interner interner = (Interner) Utils.getCurrUser();
-//            tasks = internerSer.getUserTasks(interner);
-//        } else
-//            tasks = taskSer.getAll();
-//
-//        model.addAttribute("tasks", tasks);
 
         model.addAttribute("task", new Task());
         return "task/index";
+    }
+
+    @PostMapping({"/", ""})
+    public String postTask(Model model,
+                           HttpServletRequest request,
+                           @ModelAttribute @Valid Task task,
+                           BindingResult bindingResult,
+                           @NotNull @RequestParam("internship-select") Integer internshipId) {
+        if (bindingResult.hasErrors())
+            return "task/index";
+
+        Internship internship = stageSer.findById(internshipId);
+
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
+
+        task.setInternship(internship);
+        task = taskSer.create(task);
+        internship.getTasks().add(task);
+
+        return "redirect:/tasks?inserted";
     }
 
 
@@ -81,5 +89,6 @@ public class TaskController {
         model.addAttribute("msg_deleted", true);
         return "redirect:/tasks?deleted";
     }
+
 
 }

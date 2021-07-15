@@ -1,9 +1,15 @@
 package com.storactive.stg.service;
 
+import com.storactive.stg.Utils;
 import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.repository.StageRepo;
+import com.storactive.stg.specs.InternerOwnSpec;
+import com.storactive.stg.specs.InternshipContainSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,6 +30,16 @@ public class StageService {
         this.historySer = historySer;
     }
 
+    public Page<Internship> findAllContains(String s, boolean isInterner) {
+        if (isInterner)
+            return stageRepo.findAll(Specification
+                            .where(InternshipContainSpec.getInternshipSpec(s))
+                            .and(InternerOwnSpec.getInternshipSpec((Interner) Utils.getCurrUser())
+                            ),
+                    Pageable.ofSize(8));
+        return stageRepo.findAll(InternshipContainSpec.getInternshipSpec(s), Pageable.ofSize(8));
+
+    }
 
 
     public Internship create(Internship internship) {

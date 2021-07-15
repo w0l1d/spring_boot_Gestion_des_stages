@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface InternerRepo extends DataTablesRepository<Interner, Integer> {
     Optional<Interner> findByUsername(String username);
+
+    Optional<Interner> findByIdAndUsernameAndEnabledIsTrue(int id, String username);
 }

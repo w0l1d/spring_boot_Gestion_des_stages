@@ -4,7 +4,6 @@ import com.storactive.stg.Utils;
 import com.storactive.stg.model.*;
 import com.storactive.stg.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Controller
 @RequestMapping("/internships")
@@ -51,10 +51,33 @@ public class InternshipsController {
     }
 
 
+    @PostMapping({"/", ""})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String postInternship(@ModelAttribute @Valid Internship internship,
+                                 @NotNull @RequestParam("interner-select") Integer internerId,
+                                 BindingResult result,
+                                 Model model) {
+        if (result.hasErrors())
+            return "internship/index";
+        Interner interner = internerSer.findById(internerId);
+
+        internship.setInterner(interner);
+        internship = stageSer.create(internship);
+
+        interner.getInternships().add(internship);
+
+        return "internship/index";
+    }
+
     @GetMapping("/{id}")
     public String getInternship(@PathVariable Integer id,
+                                HttpServletRequest request,
                                 Model model) {
         Internship internship = stageSer.findById(id);
+
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
+
+
         model.addAttribute("internship", internship)
                 .addAttribute("interner", internship.getInterner());
 
@@ -62,6 +85,8 @@ public class InternshipsController {
             model.addAttribute("task", new Task());
         if (model.getAttribute("absence") == null)
             model.addAttribute("absence", new Absence());
+
+        model.addAttribute("pieces", pieceSer.findAll());
 
         return "internship/view";
     }
@@ -114,12 +139,7 @@ public class InternshipsController {
                                      HttpServletRequest request) {
         Internship internship = stageSer.findById(id);
 
-        if (!request.isUserInRole("ROLE_ADMIN")
-                && !isAuthorizedToInternship(internship.getInterner()))
-            throw new AuthorizationServiceException(
-                    "Not Authorized to this Resource"
-            );
-
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
 
         model.addAttribute("internship", internship)
                 .addAttribute("task", new Task())
@@ -145,11 +165,7 @@ public class InternshipsController {
 
         // Interner can add task only to it's own internships
         // while admin can do it to any
-        if (!request.isUserInRole("ROLE_ADMIN")
-                && !isAuthorizedToInternship(internship.getInterner()))
-            throw new AuthorizationServiceException(
-                    "Not Authorized to this Resource"
-            );
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
 
         task.setInternship(internship);
         taskSer.create(task);
@@ -183,9 +199,8 @@ public class InternshipsController {
                                         HttpServletRequest request) {
         Internship internship = stageSer.findById(id);
 
-        if (!request.isUserInRole("ROLE_ADMIN")
-                && !isAuthorizedToInternship(internship.getInterner()))
-            throw new AuthorizationServiceException("Not Authorized to this Resource");
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
+
 
         model.addAttribute("internship", internship);
         model.addAttribute("absence", new Absence());
@@ -208,9 +223,7 @@ public class InternshipsController {
             return "internship/view";
         }
 
-        if (!request.isUserInRole("ROLE_ADMIN")
-                && !isAuthorizedToInternship(internship.getInterner()))
-            throw new AuthorizationServiceException("Not Authorized to this Resource");
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
 
         absence.setInternship(internship);
         absence = absenceSer.create(absence);
@@ -249,9 +262,8 @@ public class InternshipsController {
                                      HttpServletRequest request) {
         Internship internship = stageSer.findById(id);
 
-        if (!request.isUserInRole("ROLE_ADMIN")
-                && !isAuthorizedToInternship(internship.getInterner()))
-            throw new AuthorizationServiceException("Not Authorized to this Resource");
+
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
 
         model.addAttribute("internship", internship);
         model.addAttribute("file", new StagePiece());
@@ -284,8 +296,4 @@ public class InternshipsController {
      */
 
 
-    private boolean isAuthorizedToInternship(Interner owner) {
-        Interner loggedInterner = (Interner) Utils.getCurrUser();
-        return owner.getId().equals(loggedInterner.getId());
-    }
 }

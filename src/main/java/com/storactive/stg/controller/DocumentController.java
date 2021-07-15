@@ -1,9 +1,10 @@
 package com.storactive.stg.controller;
 
+import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Piece;
 import com.storactive.stg.model.StagePiece;
 import com.storactive.stg.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/documents")
+@RequiredArgsConstructor
 public class DocumentController {
 
 
@@ -32,26 +34,30 @@ public class DocumentController {
     final InternerService internerSer;
     final StagePieceService stagePieceSer;
 
-    @Autowired
-    public DocumentController(StageService stageSer,
-                              FileStorageService storageSer,
-                              StagePieceService stagePieceSer,
-                              InternerService internerSer,
-                              PieceService pieceSer) {
-        this.stageSer = stageSer;
-        this.storageSer = storageSer;
-        this.stagePieceSer = stagePieceSer;
-        this.internerSer = internerSer;
-        this.pieceSer = pieceSer;
-    }
-
 
     @GetMapping({"/", ""})
     public String getIndex(Model model,
                            HttpServletRequest request) {
 
-        model.addAttribute("file", new StagePiece());
+        model.addAttribute("file", new StagePiece())
+                .addAttribute("pieces", pieceSer.findAll());
         return "attachment/index";
+    }
+
+
+    @PostMapping({"/", ""})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String postDocument(Model model,
+                               @RequestParam("piece") Integer pieceId,
+                               @RequestParam("file") MultipartFile file,
+                               @NotNull @RequestParam("internship-select") Integer internshipId) {
+
+        Internship internship = stageSer.findById(internshipId);
+        Piece piece = pieceSer.findById(pieceId);
+
+        stagePieceSer.create(piece, internship, file);
+
+        return "redirect:/documents?inserted";
     }
 
 
@@ -70,12 +76,12 @@ public class DocumentController {
     public String putUpdateStagePiece(@NotNull @Positive @PathVariable Integer id,
                                       @NotNull @RequestParam("file") MultipartFile file,
                                       @NotNull @RequestParam("piece") Integer pieceId,
-                                      HttpServletRequest request,
                                       Model model) {
         stagePieceSer.update(id, pieceId, file);
 
-        model.addAttribute("msg_updated", true);
-        model.addAttribute("stagePiece", new StagePiece());
+        model.addAttribute("msg_updated", true)
+                .addAttribute("stagePiece", new StagePiece())
+                .addAttribute("pieces", pieceSer.findAll());
         return "attachment/index";
     }
 

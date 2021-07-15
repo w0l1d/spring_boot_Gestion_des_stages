@@ -2,7 +2,7 @@ package com.storactive.stg.service;
 
 import com.storactive.stg.model.*;
 import com.storactive.stg.repository.*;
-import com.storactive.stg.specs.InternerSpec;
+import com.storactive.stg.specs.InternerOwnSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -50,7 +50,7 @@ public class DataTableService {
 
 
     public DataTablesOutput<Task> getTasks(DataTablesInput dtRequest, Interner interner) {
-        DataTablesOutput<Task> output = taskRepo.findAll(dtRequest, InternerSpec.getTaskSpec(interner));
+        DataTablesOutput<Task> output = taskRepo.findAll(dtRequest, InternerOwnSpec.getTaskSpec(interner));
         output.setRecordsTotal(output.getRecordsFiltered());
         return output;
     }
@@ -60,7 +60,7 @@ public class DataTableService {
     }
 
     public DataTablesOutput<Absence> getAbsences(DataTablesInput request, Interner interner) {
-        return absenceRepo.findAll(request, InternerSpec.getAbsenceSpec(interner));
+        return absenceRepo.findAll(request, InternerOwnSpec.getAbsenceSpec(interner));
     }
 
     public DataTablesOutput<History> getHistory(DataTablesInput request) {
@@ -68,7 +68,7 @@ public class DataTableService {
     }
 
     public DataTablesOutput<History> getHistory(DataTablesInput request, User user) {
-        return historyRepo.findAll(request, InternerSpec.getHistorySpec(user));
+        return historyRepo.findAll(request, InternerOwnSpec.getHistorySpec(user));
     }
 
     public DataTablesOutput<Piece> getPieces(DataTablesInput request) {
@@ -80,7 +80,7 @@ public class DataTableService {
     }
 
     public DataTablesOutput<StagePiece> getStagePieces(DataTablesInput request, Interner interner) {
-        return stagePieceRepo.findAll(request, InternerSpec.getDocSpec(interner));
+        return stagePieceRepo.findAll(request, InternerOwnSpec.getDocSpec(interner));
     }
 
     public DataTablesOutput<Internship> getStages(DataTablesInput request) {
@@ -88,7 +88,7 @@ public class DataTableService {
     }
 
     public DataTablesOutput<Internship> getStages(DataTablesInput request, Interner interner) {
-        return stageRepo.findAll(request, InternerSpec.getInternshipSpec(interner));
+        return stageRepo.findAll(request, InternerOwnSpec.getInternshipSpec(interner));
     }
 
 

@@ -35,6 +35,11 @@ public class EmployeeService {
     }
 
 
+    public Employee findByIdAndCredentialsUnchanged(User user) {
+        return employeeRepo.findByIdAndUsername(user.getId(), user.getUsername()).orElse(null);
+    }
+
+
     public Employee create(Employee employee) {
         Optional<User> user = userRepo
                 .findByUsernameIgnoreCaseOrCinIgnoreCase

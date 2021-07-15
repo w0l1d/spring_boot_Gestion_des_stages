@@ -11,5 +11,6 @@ public interface EmployeeRepo extends DataTablesRepository<Employee, Integer> {
 
     Optional<Employee> findByUsername(String username);
 
+    Optional<Employee> findByIdAndUsername(int id, String username);
 
 }

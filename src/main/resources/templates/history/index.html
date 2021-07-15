@@ -173,7 +173,6 @@
                     {
                         data: 'createdBy',
                         render: function (data, type, row) {
-                            console.log(row)
                             if (data == null)
                                 return 'null';
                             const i = data.userNature;
@@ -183,11 +182,7 @@
                 ],
                 ajax: {
                     'contentType': 'application/json',
-                    url: function () {
-                        if (!!$('#my-log'))
-                            return 'api/activity-log'
-                        return '/api/history'
-                    },
+                    url: !!$('#my-log') ? 'api/activity-log' : '/api/history',
                     type: 'POST',
                     'data': function (d) {
                         return JSON.stringify(d);

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" th:lang="${#locale.language}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.min.css}">
+
+</head>
+<body>
+
+<button class="btn btn-primary float-right px-4 d-inline-block" data-target="#add_absence_modal"
+        data-toggle="modal"
+        id="add_absence_modal_button" th:text="#{action.add}"
+        type="button">
+    Add
+</button>
+
+<form id="add_absence_form" method="post"
+      th:action="@{${#httpServletRequest.requestURI}}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+      th:object="${absence}">
+    <div aria-hidden="true" aria-labelledby="add_absence_modal_Title" class="modal fade" id="add_absence_modal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add_absence_modal_Title" th:text="#{title.add_absence}">Modal title</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="internship-select" th:text="#{form.internship}"></label>
+                        <select class="form-control select2-single" id="internship-select" name="internship-select"
+                                required style="width: 100%">
+                        </select>
+                    </div>
+
+                    <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
+                        <div class="form-group date">
+                            <label for="start" th:text="#{form.starts_at}">starts at</label>
+                            <input id="start"
+                                   required
+                                   th:class="'form-control' + ${#fields.hasErrors('startsAt') ? ' is-invalid':''}"
+                                   th:field="*{startsAt}"
+                                   type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{startsAt}"
+                                 th:if="${#fields.hasErrors('startsAt')}"></div>
+                        </div>
+                        <div class="form-group date">
+                            <label for="ends" th:text="#{form.ends_at}">ends at</label>
+                            <input id="ends"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('endsAt') ? 'is-invalid':''}"
+                                   th:field="*{endsAt}"
+                                   type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{endsAt}"
+                                 th:if="${#fields.hasErrors('endsAt')}"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nbr_jours" th:text="#{form.nbr_jours}"></label>
+                        <div class="input-group">
+                            <input id="nbr_jours"
+                                   min="1"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('nbrDays') ? 'is-invalid':''}"
+                                   th:field="*{nbrDays}"
+                                   type="number">
+                            <div class="input-group-append">
+                                        <span class="input-group-text"
+                                              id="basic-addon2"
+                                              th:text="#{form.days}">Days</span>
+                            </div>
+                            <div class="invalid-feedback"
+                                 th:errors="*{nbrDays}"
+                                 th:if="${#fields.hasErrors('nbrDays')}"></div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="absence_cause" th:text="#{form.cause}"></label>
+                        <input id="absence_cause"
+                               required th:class="'form-control ' + ${#fields.hasErrors('cause') ? 'is-invalid':''}"
+                               th:field="*{cause}"
+                               type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{cause}"
+                             th:if="${#fields.hasErrors('cause')}"></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" th:text="#{action.close}" type="button">
+                        Close
+                    </button>
+                    <button class="btn btn-primary" th:text="#{action.add}" type="submit">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            if ($('#add_absence_form').hasClass('was-validated'))
+                $("#add_absence_modal_button").click()
+        });
+    </script>
+
+</form>
+
+
+<script th:fragment="select2-script">
+    $(document).ready(function () {
+
+        $('#internship-select').select2({
+            placeholder: "choose Internship",
+            dropdownParent: $('#add_absence_modal'),
+            width: 'resolve',
+            ajax: {
+                url: '/api/internship/ac',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: jQuery.map(data.content, function (item) {
+                            // item.text = item.id + ' ~ ' + item.name + ' // ' + item.username;
+                            return {
+                                id: item.id,
+                                text: item.id + ' ~ ' + item.project,
+                                obj: item
+                            }
+                        })
+                    };
+                }
+            }
+        });
+    });
+</script>
+
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+</body>
+</html>

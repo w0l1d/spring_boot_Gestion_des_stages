@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.min.css}">
+
+</head>
+<body>
+
+<button class="btn btn-primary float-right px-4 d-inline-block" data-target="#add_task_modal"
+        data-toggle="modal"
+        id="add_task_modal_button" th:text="#{action.add}"
+        type="button">
+    Add
+</button>
+
+<form id="add_task_form" method="post"
+      th:action="@{${#httpServletRequest.requestURI}}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+      th:object="${task}">
+    <div aria-hidden="true" aria-labelledby="add_task_modal_Title" class="modal fade" id="add_task_modal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add_task_modal_Title" th:text="#{title.add_task}">Modal title</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="internship-select" th:text="#{form.internship}"></label>
+                        <select class="form-control select2-single" id="internship-select" name="internship-select"
+                                required style="width: 100%">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task" th:text="#{form.task}"></label>
+                        <input id="task"
+                               required
+                               th:class="'form-control ' + ${#fields.hasErrors('txtTask') ? 'is-invalid':''}"
+                               th:field="*{txtTask}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{txtTask}"
+                             th:if="${#fields.hasErrors('txtTask')}"></div>
+                    </div>
+                    <div class="form-group date">
+                        <label for="task_date" th:text="#{form.task_date}"></label>
+                        <input id="task_date"
+                               required
+                               th:class="'form-control ' + ${#fields.hasErrors('dateTask') ? 'is-invalid':''}"
+                               th:field="*{dateTask}"
+                               th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
+                               type="date">
+                        <div class="invalid-feedback"
+                             th:errors="*{dateTask}"
+                             th:if="${#fields.hasErrors('dateTask')}"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" th:text="#{action.close}" type="button">
+                        Close
+                    </button>
+                    <button class="btn btn-primary" th:text="#{action.add}" type="submit">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script th:fragment="select2-script">
+    $(document).ready(function () {
+
+        $('#internship-select').select2({
+            placeholder: "choose Internship",
+            dropdownParent: $('#add_task_modal'),
+            width: 'resolve',
+            ajax: {
+                url: '/api/internship/ac',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: jQuery.map(data.content, function (item) {
+                            // item.text = item.id + ' ~ ' + item.name + ' // ' + item.username;
+                            return {
+                                id: item.id,
+                                text: item.id + ' ~ ' + item.project,
+                                obj: item
+                            }
+                        })
+                    };
+                }
+            }
+        });
+    });
+</script>
+
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+
+</body>
+</html>

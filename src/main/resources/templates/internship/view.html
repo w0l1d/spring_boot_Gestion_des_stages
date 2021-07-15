@@ -139,7 +139,7 @@
                         </h4>
                         <!-- Add Tasks Modal Button @#@-->
                         <div class="replace-fragment"
-                             id="add-task-dialog-button"
+                             id="add-task-dialog-button" sec:authorize="hasRole('ROLE_ADMIN')"
                              th:replace="~{fragments/add_task.html :: #add_task_modal_button}"></div>
                     </div>
                     <div class="card-body">
@@ -246,6 +246,71 @@
                 </div>
                 <!-- End Absence Table Card-->
 
+
+                <!-- Start Documents Table Card-->
+                <div class="card shadow mb-4 col-auto mx-auto">
+                    <div class="card-header py-3">
+                        <h4 class="d-inline m-0 font-weight-bold text-primary"
+                            th:text="#{sidebar.documents}">
+                        </h4>
+
+                        <!-- Add File Modal Button @#@-->
+                        <div class="replace-fragment"
+                             id="add-file-dialog-button" sec:authorize="hasRole('ROLE_ADMIN')"
+                             th:replace="~{fragments/add_file.html :: #add_file_modal_button}"></div>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="documents-dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.file}">File</th>
+                                <th th:text="#{form.type}">type</th>
+                                <th th:text="#{form.piece}"></th>
+                                <th th:text="#{form.created_at}">Created at</th>
+                                <th class="all"
+                                    sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{action.action}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sat : ${internship.stagePieces}" th:with="format=#{form.full_date_format}">
+                                <td th:text="${sat?.id}"></td>
+                                <td>
+                                    <a target="_blank" th:href="@{/documents/{id}/download(id=${sat?.attachment.id})}"
+                                       th:text="${sat?.attachment.pieceJoint}"></a>
+                                </td>
+                                <td th:text="${sat?.attachment.type}"></td>
+                                <td th:text="${sat?.piece.label}"></td>
+                                <td th:text="${#dates.format(sat?.dateSaisie, format)}"></td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div class="row">
+                                        <div class="col-auto col-lg">
+                                            <a class="btn btn-danger btn-circle btn-sm"
+                                               th:href="@{/documents/{id}/delete(id=${sat?.id})}"
+                                               th:onclick="'return confirm(\''+#{msg.confirm_delete.document}+'\');'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-auto col-lg">
+                                            <a class="btn btn-primary btn-circle btn-sm"
+                                               th:href="@{/documents/{id}(id=${sat?.id})}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+                <!-- End Documents Table Card-->
+
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -278,12 +343,28 @@
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
 
 <!-- Add Task Modal @#@-->
-<div class="replace-fragment" id="add-task-dialog" th:replace="~{fragments/add_task.html :: #add_task_form}"></div>
+<div class="replace-fragment" id="add-task-dialog" sec:authorize="hasRole('ROLE_ADMIN')"
+     th:replace="~{fragments/add_task.html :: #add_task_form}"></div>
 
 
 <!-- Add Absence Modal @#@-->
 <div class="replace-fragment" id="add-absence-dialog"
      th:replace="~{fragments/add_absence.html :: #add_absence_form}"></div>
+
+<!-- Add internship Modal @#@-->
+<div class="replace-fragment" id="add-file-dialog" sec:authorize="hasRole('ROLE_ADMIN')"
+     th:replace="~{fragments/add_file.html :: #add_file_form}"></div>
+
+<script sec:authorize="hasRole('ROLE_ADMIN')">
+    $(document).ready(function () {
+        $('#file').on('change', function () {
+            let numb = $(this)[0].files[0].size / 1024 / 1024;
+            numb = numb.toFixed(2);
+            if (numb > 5)
+                alert('to big, maximum is 2MiB. You file size is: ' + numb + ' MiB');
+        });
+    })
+</script>
 
 <script>
     // Call the dataTables jQuery plugin
@@ -302,6 +383,15 @@
                     url: langUrl
                 },
             });
+
+        $('#documents-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+            });
+
+
     });
 </script>
 

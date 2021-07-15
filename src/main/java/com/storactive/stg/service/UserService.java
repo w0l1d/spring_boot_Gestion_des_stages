@@ -1,6 +1,5 @@
 package com.storactive.stg.service;
 
-import com.storactive.stg.model.User;
 import com.storactive.stg.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ public class UserService {
     public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
-
 
 
 

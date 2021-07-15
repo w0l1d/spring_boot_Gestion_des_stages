@@ -3,7 +3,7 @@ package com.storactive.stg.specs;
 import com.storactive.stg.model.*;
 import org.springframework.data.jpa.domain.Specification;
 
-public class InternerSpec {
+public class InternerOwnSpec {
     public static Specification<Absence> getAbsenceSpec(Interner interner) {
         return (root, cq, cb) -> cb.equal(root.get(Absence_.INTERNSHIP).get(Internship_.INTERNER).get(Interner_.ID), interner.getId());
     }

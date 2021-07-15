@@ -22,6 +22,10 @@
     <!-- replace with local stylesheets-->
     <div th:replace="~{fragments/local_assets.html :: #datatable/link}" class="replace-fragment"></div>
 
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment"
+         sec:authorize="hasRole('ROLE_ADMIN')" th:replace="~{fragments/local_assets.html :: select2/link}"></div>
+
 </head>
 
 <body id="page-top">
@@ -58,11 +62,10 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
 
-
                             <!-- Add internship Modal Button @#@-->
-                            <!--                            <div th:replace="~{fragments/add_internship_page.html :: #add_internship_modal_button}"-->
-                            <!--                                 id="add-internship-dialog-button" class="replace-fragment"-->
-                            <!--                                 sec:authorize="hasRole('ROLE_ADMIN')" ></div>-->
+                            <div class="replace-fragment"
+                                 id="add-internship-dialog-button" sec:authorize="hasRole('ROLE_ADMIN')"
+                                 th:replace="~{internship/add_internship.html :: #add_internship_modal_button}"></div>
 
                         </div>
                         <div class="card-body">
@@ -136,24 +139,38 @@
     </a>
 
     <!-- Logout Modal @#@-->
-    <div th:replace="~{fragments/logout_modal.html :: #logoutModal}" id="logout-dialog" class="replace-fragment"></div>
+    <div class="replace-fragment"
+         id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
 
 
     <!-- Add internship Modal @#@-->
-    <!--    <div th:replace="~{fragments/add_internship_page.html :: #add_internship_form}" sec:authorize="hasRole('ROLE_ADMIN')" id="add-internship-dialog" class="replace-fragment"></div>-->
+    <div class="replace-fragment"
+         id="add-internship-dialog"
+         sec:authorize="hasRole('ROLE_ADMIN')"
+         th:replace="~{internship/add_internship.html :: #add_internship_form}"></div>
 
 
     <!-- replace with global scripts @#@ -->
-    <div th:replace="~{fragments/all_assets.html :: script}" class="replace-fragment"></div>
+    <div class="replace-fragment"
+         th:replace="~{fragments/all_assets.html :: script}"></div>
 
 
     <!-- replace with page scripts @#@ -->
-    <div th:replace="~{fragments/local_assets.html :: #datatable/script}" class="replace-fragment"></div>
+    <div class="replace-fragment"
+         th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+    <!-- replace with page scripts @#@ -->
+    <div class="replace-fragment"
+         sec:authorize="hasRole('ROLE_ADMIN')" th:replace="~{fragments/local_assets.html :: select2/script}"></div>
+
+    <!-- Add internship Modal @#@-->
+    <div class="replace-fragment"
+         id="select2-script" sec:authorize="hasRole('ROLE_ADMIN')"
+         th:replace="~{internship/add_internship.html :: select2-script}"></div>
 
 
     <!-- Datatable Actions  @#@-->
-    <div class="d-none replace-fragment"
-         id="actions"
+    <div class="d-none replace-fragment" id="actions"
          th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.stage})}"></div>
 
     <div class="d-none" id="status">
@@ -260,9 +277,11 @@
                         }
                     }
                 });
-        });
 
+
+        });
     </script>
+
 
 </body>
 

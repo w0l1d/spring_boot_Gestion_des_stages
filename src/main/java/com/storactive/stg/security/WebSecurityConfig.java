@@ -1,5 +1,7 @@
 package com.storactive.stg.security;
 
+import com.storactive.stg.service.EmployeeService;
+import com.storactive.stg.service.InternerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +23,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserDetailsService userDetailsService;
+    private final EmployeeService employeeSer;
+    private final InternerService internerSer;
 
     @Autowired
     public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-                             BCryptPasswordEncoder bCryptPasswordEncoder) {
+                             BCryptPasswordEncoder bCryptPasswordEncoder,
+                             EmployeeService employeeSer,
+                             InternerService internerSer) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userDetailsService = userDetailsService;
+        this.employeeSer = employeeSer;
+        this.internerSer = internerSer;
     }
 
 
@@ -34,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.addFilterBefore(
-                new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
+                new LoginPageFilter(internerSer, employeeSer), DefaultLoginPageGeneratingFilter.class);
 
         http.authorizeRequests()
                 .antMatchers("/vendor/**").permitAll()

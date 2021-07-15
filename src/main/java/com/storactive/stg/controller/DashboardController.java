@@ -63,6 +63,14 @@ public class DashboardController {
         return "fragments/add_internship";
     }
 
+    @GetMapping("test0")
+    public String getTest0(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("absence", new Absence());
+        return "absence/add_absence";
+    }
+
 
     @GetMapping("test2")
     public String getTest2(RedirectAttributes redirectAttributes,
@@ -113,6 +121,14 @@ public class DashboardController {
         redirectAttributes.addAttribute("msg_deleted", true);
         model.addAttribute("file", new Piece());
         return "fragments/add_piece";
+    }
+
+    @GetMapping("test8")
+    public String getTest8(RedirectAttributes redirectAttributes,
+                           Model model) {
+        redirectAttributes.addAttribute("msg_deleted", true);
+        model.addAttribute("internship", new Internship());
+        return "internship/add_internship";
     }
 
     @GetMapping("profile")

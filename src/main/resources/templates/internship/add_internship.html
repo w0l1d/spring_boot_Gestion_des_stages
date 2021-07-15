@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.min.css}">
+
+</head>
+<body>
+
+<button class="btn btn-primary float-right px-4 d-inline-block" data-target="#add_internship_modal"
+        data-toggle="modal"
+        id="add_internship_modal_button" th:text="#{action.add}"
+        type="button">
+    Add
+</button>
+
+<form id="add_internship_form" method="post"
+      th:action="@{${#httpServletRequest.requestURI}}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+      th:object="${internship}">
+    <div aria-hidden="true" aria-labelledby="add_internship_modal_Title" class="modal fade" id="add_internship_modal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add_internship_modal_Title" th:text="#{title.add_internship}">Modal
+                        title</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="interner-select" th:text="#{form.interner}"></label>
+                        <select class="form-control select2-single" id="interner-select" name="interner-select"
+                                required style="width: 100%">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="intitul_poject" th:text="#{form.project_title}">project title</label>
+                        <input class="form-control" id="intitul_poject" required
+                               th:field="*{project}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{etablissement}"
+                             th:if="${#fields.hasErrors('etablissement')}"></div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="type" th:text="#{form.type}">type</label>
+                        <input id="type" required
+                               th:class="'form-control ' + ${#fields.hasErrors('type') ? 'is-invalid':''}"
+                               th:field="*{type}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{type}"
+                             th:if="${#fields.hasErrors('type')}"></div>
+                    </div>
+
+
+                    <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
+                        <div class="form-group">
+                            <label for="start" th:text="#{form.starts_at}">starts at</label>
+                            <input id="start"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('startsAt') ? 'is-invalid':''}"
+                                   th:field="*{startsAt}" type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{startsAt}"
+                                 th:if="${#fields.hasErrors('startsAt')}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ends" th:text="#{form.ends_at}">ends at</label>
+                            <input id="ends"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('endsAt') ? 'is-invalid':''}"
+                                   th:field="*{endsAt}" type="date">
+                            <div class="invalid-feedback"
+                                 th:errors="*{endsAt}"
+                                 th:if="${#fields.hasErrors('endsAt')}"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row row-cols-2 row-cols-sm-1">
+                        <div class="form-group">
+                            <label for="duration" th:text="#{form.duration}">duration</label>
+                            <input id="duration"
+                                   required
+                                   th:class="'form-control ' + ${#fields.hasErrors('duration') ? 'is-invalid':''}"
+                                   th:field="*{duration}" type="text">
+                            <div class="invalid-feedback"
+                                 th:errors="*{duration}"
+                                 th:if="${#fields.hasErrors('duration')}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" th:text="#{form.status}"></label>
+                            <select id="status"
+                                    required
+                                    th:class="'form-control ' + ${#fields.hasErrors('status') ? 'is-invalid':''}"
+                                    th:field="*{status}">
+                                <option selected th:text="#{form.status.in_progress}" value="1"></option>
+                                <option th:text="#{form.status.saved}" value="2"></option>
+                                <option th:text="#{form.status.finished}" value="3"></option>
+                                <option th:text="#{form.status.canceled}" value="3"></option>
+                            </select>
+                            <div class="invalid-feedback"
+                                 th:errors="*{status}"
+                                 th:if="${#fields.hasErrors('status')}"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="etab" th:text="#{form.etablissement}">establishment</label>
+                        <input id="etab"
+                               th:class="'form-control ' + ${#fields.hasErrors('etablissement') ? 'is-invalid':''}"
+                               th:field="*{etablissement}"
+                               type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{etablissement}"
+                             th:if="${#fields.hasErrors('etablissement')}"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="formation" th:text="#{form.formation}">formation</label>
+                        <input id="formation"
+                               th:class="'form-control ' + ${#fields.hasErrors('formation') ? 'is-invalid':''}"
+                               th:field="*{formation}" type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{formation}"
+                             th:if="${#fields.hasErrors('formation')}"></div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="desc_poject" th:text="#{form.project_desc}">project Description</label>
+                        <input id="desc_poject"
+                               th:class="'form-control ' + ${#fields.hasErrors('desc') ? 'is-invalid':''}"
+                               th:field="*{desc}"
+                               type="text">
+                        <div class="invalid-feedback"
+                             th:errors="*{desc}"
+                             th:if="${#fields.hasErrors('desc')}"></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" th:text="#{action.close}" type="button">
+                        Close
+                    </button>
+                    <button class="btn btn-primary" th:text="#{action.add}" type="submit">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            if ($('#add_interner_form').hasClass('was-validated'))
+                $("#add_interner_modal_button").click()
+        });
+    </script>
+</form>
+
+<script th:fragment="select2-script">
+    $(document).ready(function () {
+
+        $('#interner-select').select2({
+            placeholder: "choose interner",
+            dropdownParent: $('#add_internship_modal'),
+            width: 'resolve',
+            ajax: {
+                url: '/api/interner/ac',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: jQuery.map(data.content, function (item) {
+                            // item.text = item.id + ' ~ ' + item.name + ' // ' + item.username;
+                            return {
+                                id: item.id,
+                                text: item.id + ' ~ ' + item.name + ' // ' + item.username,
+                                obj: item
+                            }
+                        })
+                    };
+                }
+            }
+        });
+    });
+</script>
+
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+</body>
+</html>

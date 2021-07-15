@@ -22,6 +22,10 @@
     <!-- replace with local stylesheets-->
     <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/link}"></div>
 
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment"
+         th:replace="~{fragments/local_assets.html :: select2/link}"></div>
+
 </head>
 
 <body id="page-top">
@@ -62,7 +66,9 @@
                         </h6>
 
                         <!-- Add absence Modal Button @#@-->
-                        <!--                            <div th:replace="~{fragments/add_absence.html :: #add_absence_modal_button}" id="add-absence-dialog-button" class="replace-fragment"></div>-->
+                        <div class="replace-fragment"
+                             id="add-absence-dialog-button"
+                             th:replace="~{fragments/add_absence.html :: #add_absence_modal_button}"></div>
 
                     </div>
                     <div class="card-body">
@@ -114,16 +120,27 @@
 <div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
 
 
-<!-- Add absence Modal @#@-->
-<!--    <div th:replace="~{fragments/add_absence.html :: #add_absence_form}" id="add-absence-dialog" class="replace-fragment"></div>-->
-
-
 <!-- replace with global scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
 
 
 <!-- replace with page scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+
+<!-- replace with page scripts @#@ -->
+<div class="replace-fragment"
+     th:replace="~{fragments/local_assets.html :: select2/script}"></div>
+
+
+<!-- Add task Modal @#@-->
+<div class="replace-fragment"
+     id="add-absence-dialog" th:replace="~{absence/add_absence.html :: #add_absence_form}"></div>
+
+
+<!-- Select2 script @#@-->
+<div class="replace-fragment"
+     id="select2-script" th:replace="~{absence/add_absence.html :: select2-script}"></div>
 
 
 <!-- Datatable Actions  @#@-->

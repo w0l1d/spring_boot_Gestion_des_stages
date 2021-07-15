@@ -1,21 +1,21 @@
 package com.storactive.stg.service;
 
 import com.storactive.stg.exception.ValueAlreadyUsedException;
-import com.storactive.stg.model.Absence;
 import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.User;
 import com.storactive.stg.repository.InternerRepo;
 import com.storactive.stg.repository.UserRepo;
 import com.storactive.stg.service.iService.IInternerService;
+import com.storactive.stg.specs.InternerContainSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Vector;
 
 @Service
 public class InternerService implements IInternerService {
@@ -38,15 +38,14 @@ public class InternerService implements IInternerService {
         this.pwdEncoder = pwdEncoder;
     }
 
-
-
-
-    public List<Absence> getUserAbsences(Interner interner) {
-        List<Absence> absences = new Vector<>();
-        interner.getInternships().forEach(internship -> absences.addAll(internship.getAbsences()));
-        return absences;
+    public Interner findByIdAndCredentialsUnchanged(User user) {
+        return internerRepo.findByIdAndUsernameAndEnabledIsTrue(user.getId(), user.getUsername()).orElse(null);
     }
 
+
+    public Page<Interner> findAllContains(String s) {
+        return internerRepo.findAll(InternerContainSpec.getInternerSpec(s), Pageable.ofSize(8));
+    }
 
 
     @Override
