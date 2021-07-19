@@ -182,7 +182,7 @@
                 ],
                 ajax: {
                     'contentType': 'application/json',
-                    url: !!$('#my-log') ? 'api/activity-log' : '/api/history',
+                    url: !!$('#my-log') ? '/api/my-history' : '/api/history',
                     type: 'POST',
                     'data': function (d) {
                         return JSON.stringify(d);

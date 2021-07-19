@@ -7,7 +7,7 @@ import com.storactive.stg.repository.InternerRepo;
 import com.storactive.stg.repository.UserRepo;
 import com.storactive.stg.service.iService.IInternerService;
 import com.storactive.stg.specs.InternerContainSpec;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class InternerService implements IInternerService {
 
     final String OBJ = "Stagiaire";
@@ -28,15 +29,15 @@ public class InternerService implements IInternerService {
     final BCryptPasswordEncoder pwdEncoder;
 
 
-    @Autowired
-    public InternerService(InternerRepo internerRepo,
-                           UserRepo userRepo,
-                           HistoryService historySer, BCryptPasswordEncoder pwdEncoder) {
-        this.userRepo = userRepo;
-        this.internerRepo = internerRepo;
-        this.historySer = historySer;
-        this.pwdEncoder = pwdEncoder;
+    public long countAll() {
+        return internerRepo.count();
     }
+
+
+    public long countAllActive() {
+        return internerRepo.countInActiveInternship();
+    }
+
 
     public Interner findByIdAndCredentialsUnchanged(User user) {
         return internerRepo.findByIdAndUsernameAndEnabledIsTrue(user.getId(), user.getUsername()).orElse(null);

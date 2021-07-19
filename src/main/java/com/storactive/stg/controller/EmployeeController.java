@@ -2,7 +2,7 @@ package com.storactive.stg.controller;
 
 import com.storactive.stg.model.Employee;
 import com.storactive.stg.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +16,11 @@ import javax.validation.constraints.Positive;
 @Controller
 @RequestMapping("/users")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequiredArgsConstructor
 public class EmployeeController {
 
     final EmployeeService employeeSer;
 
-    @Autowired
-    public EmployeeController(EmployeeService employeeSer) {
-        this.employeeSer = employeeSer;
-    }
 
 
     @GetMapping({"/", ""})

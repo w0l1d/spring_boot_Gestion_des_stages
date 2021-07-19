@@ -143,16 +143,16 @@
          id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
 
 
+    <!-- replace with global scripts @#@ -->
+    <div class="replace-fragment"
+         th:replace="~{fragments/all_assets.html :: script}"></div>
+
+
     <!-- Add internship Modal @#@-->
     <div class="replace-fragment"
          id="add-internship-dialog"
          sec:authorize="hasRole('ROLE_ADMIN')"
          th:replace="~{internship/add_internship.html :: #add_internship_form}"></div>
-
-
-    <!-- replace with global scripts @#@ -->
-    <div class="replace-fragment"
-         th:replace="~{fragments/all_assets.html :: script}"></div>
 
 
     <!-- replace with page scripts @#@ -->

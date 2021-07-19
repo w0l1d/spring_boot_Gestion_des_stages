@@ -2,7 +2,7 @@ package com.storactive.stg.service;
 
 import com.storactive.stg.model.Piece;
 import com.storactive.stg.repository.PieceRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Vector;
 
 @Service
+@RequiredArgsConstructor
 public class PieceService {
 
     final String OBJ = "Piece";
@@ -20,12 +21,6 @@ public class PieceService {
     final StageService internshipSer;
     final HistoryService historySer;
 
-    @Autowired
-    public PieceService(PieceRepo pieceRepo, StageService internshipSer, HistoryService historySer) {
-        this.pieceRepo = pieceRepo;
-        this.internshipSer = internshipSer;
-        this.historySer = historySer;
-    }
 
     public List<Piece> findAll() {
         List<Piece> result = new Vector<>();

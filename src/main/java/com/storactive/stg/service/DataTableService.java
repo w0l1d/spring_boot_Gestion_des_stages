@@ -3,12 +3,13 @@ package com.storactive.stg.service;
 import com.storactive.stg.model.*;
 import com.storactive.stg.repository.*;
 import com.storactive.stg.specs.InternerOwnSpec;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DataTableService {
 
     final EmployeeRepo employeeRepo;
@@ -20,21 +21,7 @@ public class DataTableService {
     final PieceRepo pieceRepo;
     final StagePieceRepo stagePieceRepo;
 
-    @Autowired
-    public DataTableService(EmployeeRepo employeeRepo, InternerRepo internerRepo,
-                            StageRepo stageRepo, TaskRepo taskRepo,
-                            AbsenceRepo absenceRepo, HistoryRepo historyRepo,
-                            PieceRepo pieceRepo, StagePieceRepo stagePieceRepo) {
 
-        this.employeeRepo = employeeRepo;
-        this.internerRepo = internerRepo;
-        this.stageRepo = stageRepo;
-        this.taskRepo = taskRepo;
-        this.absenceRepo = absenceRepo;
-        this.historyRepo = historyRepo;
-        this.pieceRepo = pieceRepo;
-        this.stagePieceRepo = stagePieceRepo;
-    }
 
     public DataTablesOutput<Employee> getEmployees(DataTablesInput request) {
         return employeeRepo.findAll(request);

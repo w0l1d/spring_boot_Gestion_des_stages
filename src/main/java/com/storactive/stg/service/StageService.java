@@ -6,7 +6,7 @@ import com.storactive.stg.model.Internship;
 import com.storactive.stg.repository.StageRepo;
 import com.storactive.stg.specs.InternerOwnSpec;
 import com.storactive.stg.specs.InternshipContainSpec;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StageService {
 
     final String OBJ = "Stage";
@@ -24,11 +25,15 @@ public class StageService {
     final StageRepo stageRepo;
     final HistoryService historySer;
 
-    @Autowired
-    public StageService(StageRepo stageRepo, HistoryService historySer) {
-        this.stageRepo = stageRepo;
-        this.historySer = historySer;
+
+    public long countAll() {
+        return stageRepo.count();
     }
+
+    public long countAllActive() {
+        return stageRepo.countActiveInternship();
+    }
+
 
     public Page<Internship> findAllContains(String s, boolean isInterner) {
         if (isInterner)

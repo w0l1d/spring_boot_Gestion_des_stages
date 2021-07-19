@@ -54,7 +54,7 @@ public class DataTableRestController {
         return dataTableService.getHistory(dtRequest);
     }
 
-    @PostMapping("/activity-log")
+    @PostMapping("/my-history")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public DataTablesOutput<History> getMyHistory(@Valid @RequestBody DataTablesInput dtRequest) {
         return dataTableService.getHistory(dtRequest, Utils.getCurrUser());

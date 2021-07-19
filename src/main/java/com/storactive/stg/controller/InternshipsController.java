@@ -3,7 +3,7 @@ package com.storactive.stg.controller;
 import com.storactive.stg.Utils;
 import com.storactive.stg.model.*;
 import com.storactive.stg.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 @Controller
 @RequestMapping("/internships")
+@RequiredArgsConstructor
 public class InternshipsController {
 
     final StageService stageSer;
@@ -27,17 +28,7 @@ public class InternshipsController {
     final PieceService pieceSer;
     final AbsenceService absenceSer;
 
-    @Autowired
-    public InternshipsController(StageService stageSer, TaskService taskSer,
-                                 AbsenceService absenceSer, StagePieceService stagePieceSer,
-                                 PieceService pieceSer, InternerService internerSer) {
-        this.stageSer = stageSer;
-        this.taskSer = taskSer;
-        this.pieceSer = pieceSer;
-        this.stagePieceSer = stagePieceSer;
-        this.absenceSer = absenceSer;
-        this.internerSer = internerSer;
-    }
+
 
     @GetMapping({"/", ""})
     public String getIndex(Model model,
@@ -53,12 +44,12 @@ public class InternshipsController {
 
     @PostMapping({"/", ""})
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String postInternship(@ModelAttribute @Valid Internship internship,
-                                 @NotNull @RequestParam("interner-select") Integer internerId,
-                                 BindingResult result,
-                                 Model model) {
+    public String postInternship(@NotNull @RequestParam("interner-select") Integer internerId,
+                                 @ModelAttribute @Valid Internship internship,
+                                 BindingResult result) {
         if (result.hasErrors())
             return "internship/index";
+
         Interner interner = internerSer.findById(internerId);
 
         internship.setInterner(interner);
@@ -238,8 +229,7 @@ public class InternshipsController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteAbsence(@PathVariable("id") Integer id,
                                 @PathVariable("absence_id") Integer absId,
-                                Model model,
-                                HttpServletRequest request) {
+                                Model model) {
         Internship internship = stageSer.findById(id);
 
         absenceSer.delete(absId);

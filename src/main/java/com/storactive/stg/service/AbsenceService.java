@@ -3,13 +3,14 @@ package com.storactive.stg.service;
 import com.storactive.stg.model.Absence;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.repository.AbsenceRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class AbsenceService {
 
     final String OBJ = "Absence";
@@ -17,12 +18,6 @@ public class AbsenceService {
     final StageService internshipSer;
     final HistoryService historySer;
 
-    @Autowired
-    public AbsenceService(AbsenceRepo absenceRepo, StageService internshipSer, HistoryService historySer) {
-        this.absenceRepo = absenceRepo;
-        this.internshipSer = internshipSer;
-        this.historySer = historySer;
-    }
 
 
     public Absence create(Absence absence) {

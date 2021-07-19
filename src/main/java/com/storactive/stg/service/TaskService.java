@@ -3,12 +3,13 @@ package com.storactive.stg.service;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Task;
 import com.storactive.stg.repository.TaskRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
     final String OBJ = "Tache";
@@ -17,12 +18,6 @@ public class TaskService {
     final StageService internshipSer;
     final HistoryService historySer;
 
-    @Autowired
-    public TaskService(TaskRepo taskRepo, StageService internshipSer, HistoryService historySer) {
-        this.taskRepo = taskRepo;
-        this.internshipSer = internshipSer;
-        this.historySer = historySer;
-    }
 
     public Task create(Task task) {
         task.setId(null);

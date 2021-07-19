@@ -3,7 +3,7 @@ package com.storactive.stg.service;
 import com.storactive.stg.Utils;
 import com.storactive.stg.model.History;
 import com.storactive.stg.repository.HistoryRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,11 @@ import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequiredArgsConstructor
 public class HistoryService {
 
     final HistoryRepo historyRepo;
 
-    @Autowired
-    public HistoryService(HistoryRepo historyRepo) {
-        this.historyRepo = historyRepo;
-    }
 
 
     @Transactional
@@ -47,15 +43,18 @@ public class HistoryService {
 
 
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteAll() {
         historyRepo.deleteAll();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteAllSpecified(Iterable<History> actions) {
         historyRepo.deleteAll(actions);
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteHistoryByUser(int userId) {
         historyRepo.deleteAllByCreatedBy_Id(userId);
     }

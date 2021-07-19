@@ -4,7 +4,7 @@ import com.storactive.stg.Utils;
 import com.storactive.stg.model.Employee;
 import com.storactive.stg.service.EmployeeService;
 import com.storactive.stg.service.HistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/history")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequiredArgsConstructor
 public class HistoryController {
 
     final HistoryService historySer;
     final EmployeeService employeeSer;
 
-    @Autowired
-    public HistoryController(HistoryService historySer, EmployeeService employeeSer) {
-        this.historySer = historySer;
-        this.employeeSer = employeeSer;
-    }
 
     @GetMapping({"/", ""})
     public String getIndex(Model model) {

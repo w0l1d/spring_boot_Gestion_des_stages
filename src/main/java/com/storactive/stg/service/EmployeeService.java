@@ -5,7 +5,7 @@ import com.storactive.stg.model.Employee;
 import com.storactive.stg.model.User;
 import com.storactive.stg.repository.EmployeeRepo;
 import com.storactive.stg.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
     final String OBJ = "Employee";
@@ -24,16 +25,9 @@ public class EmployeeService {
     final BCryptPasswordEncoder pwdEncoder;
 
 
-    @Autowired
-    public EmployeeService(EmployeeRepo employeeRepo,
-                           HistoryService historySer, UserRepo userRepo,
-                           BCryptPasswordEncoder pwdEncoder) {
-        this.historySer = historySer;
-        this.userRepo = userRepo;
-        this.employeeRepo = employeeRepo;
-        this.pwdEncoder = pwdEncoder;
+    public long count() {
+        return employeeRepo.count();
     }
-
 
     public Employee findByIdAndCredentialsUnchanged(User user) {
         return employeeRepo.findByIdAndUsername(user.getId(), user.getUsername()).orElse(null);

@@ -4,7 +4,7 @@ import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.service.InternerService;
 import com.storactive.stg.service.StageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +18,12 @@ import javax.validation.constraints.NotNull;
 @Controller
 @RequestMapping("/interners")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequiredArgsConstructor
 public class InternerController {
 
     final InternerService internerSer;
     final StageService stageSer;
 
-    @Autowired
-    public InternerController(InternerService internerSer, StageService stageSer) {
-        this.internerSer = internerSer;
-        this.stageSer = stageSer;
-    }
 
     @GetMapping({"/", ""})
     public String getIndex(Model model) {

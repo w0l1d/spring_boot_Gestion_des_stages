@@ -5,7 +5,7 @@ import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Piece;
 import com.storactive.stg.model.StagePiece;
 import com.storactive.stg.repository.StagePieceRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class StagePieceService {
     final String OBJ = "Stage Piece";
 
@@ -27,19 +28,6 @@ public class StagePieceService {
     final PieceService pieceSer;
 
 
-    @Autowired
-    public StagePieceService(StagePieceRepo stagePieceRepo,
-                             HistoryService historySer, PieceService pieceSer,
-                             AttachmentService attachmentSer,
-                             FileStorageService storageSer,
-                             StageService internshipSer) {
-        this.stagePieceRepo = stagePieceRepo;
-        this.historySer = historySer;
-        this.internshipSer = internshipSer;
-        this.attachmentSer = attachmentSer;
-        this.storageSer = storageSer;
-        this.pieceSer = pieceSer;
-    }
 
 
     @Transactional

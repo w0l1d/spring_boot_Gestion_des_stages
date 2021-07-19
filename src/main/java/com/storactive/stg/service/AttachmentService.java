@@ -2,13 +2,14 @@ package com.storactive.stg.service;
 
 import com.storactive.stg.model.Attachment;
 import com.storactive.stg.repository.AttachmentRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class AttachmentService {
 
     final String OBJ = "Piece Joint";
@@ -17,11 +18,6 @@ public class AttachmentService {
     final HistoryService historySer;
 
 
-    @Autowired
-    public AttachmentService(AttachmentRepo attachmentRepo, HistoryService historySer) {
-        this.attachmentRepo = attachmentRepo;
-        this.historySer = historySer;
-    }
 
 
     public Attachment create(Attachment attachment) {
