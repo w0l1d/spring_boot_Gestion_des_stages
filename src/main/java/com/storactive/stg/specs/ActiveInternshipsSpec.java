@@ -8,8 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.Expression;
 import java.sql.Date;
 
-import static org.springframework.data.jpa.domain.Specification.where;
-
 public class ActiveInternshipsSpec {
 
     public static Specification<Internship> getCurrInternshipsSpec() {
@@ -21,7 +19,7 @@ public class ActiveInternshipsSpec {
 
 
     public static Specification<Internship> getOwnedCurrInternshipsSpec(Interner interner) {
-        return where(getCurrInternshipsSpec())
+        return getCurrInternshipsSpec()
                 .and(InternerOwnSpec.getInternshipSpec(interner));
     }
 }
