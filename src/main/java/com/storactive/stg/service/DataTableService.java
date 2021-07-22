@@ -2,6 +2,7 @@ package com.storactive.stg.service;
 
 import com.storactive.stg.model.*;
 import com.storactive.stg.repository.*;
+import com.storactive.stg.specs.ActiveInternshipsSpec;
 import com.storactive.stg.specs.InternerOwnSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -76,6 +77,16 @@ public class DataTableService {
 
     public DataTablesOutput<Internship> getStages(DataTablesInput request, Interner interner) {
         return stageRepo.findAll(request, InternerOwnSpec.getInternshipSpec(interner));
+    }
+
+
+    public DataTablesOutput<Internship> getCurrStages(DataTablesInput request) {
+        return stageRepo.findAll(request, ActiveInternshipsSpec.getCurrInternshipsSpec());
+    }
+
+
+    public DataTablesOutput<Internship> getCurrStages(DataTablesInput request, Interner interner) {
+        return stageRepo.findAll(request, ActiveInternshipsSpec.getOwnedCurrInternshipsSpec(interner));
     }
 
 

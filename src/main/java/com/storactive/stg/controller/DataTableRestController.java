@@ -48,6 +48,16 @@ public class DataTableRestController {
         return dataTableService.getStages(dtRequest, (Interner) Utils.getCurrUser());
     }
 
+    @PostMapping("/curr-internship")
+    public DataTablesOutput<Internship> getCurrInternships(@Valid @RequestBody DataTablesInput dtRequest,
+                                                           HttpServletRequest request) {
+        if (request.isUserInRole("ROLE_ADMIN"))
+            return dataTableService.getCurrStages(dtRequest);
+
+        return dataTableService.getCurrStages(dtRequest, (Interner) Utils.getCurrUser());
+    }
+
+
     @PostMapping("/history")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public DataTablesOutput<History> getHistory(@Valid @RequestBody DataTablesInput dtRequest) {
