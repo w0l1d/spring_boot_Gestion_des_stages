@@ -208,7 +208,8 @@
         const isAdmin = !!$('#actions-head').length;
 
         if (isAdmin) {
-            const actionCol = {
+
+            columns.push({
                 data: null,
                 orderable: false,
                 searchable: false,
@@ -225,9 +226,7 @@
                     $(actions).find('.btn-primary').attr('href', hrefUpdate);
                     return actions.html();
                 }
-            };
-
-            columns.push(actionCol)
+            })
         }
 
 

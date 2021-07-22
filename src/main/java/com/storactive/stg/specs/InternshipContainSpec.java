@@ -4,6 +4,8 @@ import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Internship_;
 import org.springframework.data.jpa.domain.Specification;
 
+import static org.springframework.data.jpa.domain.Specification.where;
+
 public class InternshipContainSpec {
     private static Specification<Internship> intrIdSpec(String s) {
         return (root, cq, cb) -> cb.like(root.get(Internship_.ID).as(String.class), "%" + s + "%");
@@ -34,7 +36,7 @@ public class InternshipContainSpec {
     }
 
     public static Specification<Internship> getInternshipSpec(String s) {
-        return Specification.where(intrIdSpec(s))
+        return where(intrIdSpec(s))
                 .or(intrProjectSpec(s))
                 .or(intrDurationSpec(s))
                 .or(intrDescSpec(s))

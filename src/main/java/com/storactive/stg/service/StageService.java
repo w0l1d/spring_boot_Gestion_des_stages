@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +27,16 @@ public class StageService {
     final HistoryService historySer;
 
 
-    public long countAll() {
-        return stageRepo.count();
+    public long countAll(Interner interner) {
+        if (Objects.isNull(interner))
+            return stageRepo.count();
+        return stageRepo.count(InternerOwnSpec.getInternshipSpec(interner));
     }
 
-    public long countAllActive() {
-        return stageRepo.countActiveInternship();
+    public long countAllActive(Interner interner) {
+        if (Objects.isNull(interner))
+            return stageRepo.countActiveInternship();
+        return stageRepo.countActiveInternship(interner.getId());
     }
 
 

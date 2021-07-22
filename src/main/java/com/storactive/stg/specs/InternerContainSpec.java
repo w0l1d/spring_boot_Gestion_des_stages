@@ -4,6 +4,8 @@ import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Interner_;
 import org.springframework.data.jpa.domain.Specification;
 
+import static org.springframework.data.jpa.domain.Specification.where;
+
 public class InternerContainSpec {
     private static Specification<Interner> intrIdSpec(String s) {
         return (root, cq, cb) -> cb.like(root.get(Interner_.ID).as(String.class), "%" + s + "%");
@@ -30,7 +32,7 @@ public class InternerContainSpec {
     }
 
     public static Specification<Interner> getInternerSpec(String s) {
-        return Specification.where(intrIdSpec(s))
+        return where(intrIdSpec(s))
                 .or(intrCinSpec(s))
                 .or(intrNameSpec(s))
                 .or(intrEmailSpec(s))

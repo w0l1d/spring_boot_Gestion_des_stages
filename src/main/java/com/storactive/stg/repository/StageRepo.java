@@ -12,6 +12,10 @@ public interface StageRepo extends DataTablesRepository<Internship, Integer> {
     List<Internship> findAllByInterner_Id(int id);
 
     @Query("select count(i) from Internship i " +
+            "where current_date between i.startsAt and i.endsAt and i.interner.id = ?1")
+    long countActiveInternship(int internerId);
+
+    @Query("select count(i) from Internship i " +
             "where current_date between i.startsAt and i.endsAt")
     long countActiveInternship();
 

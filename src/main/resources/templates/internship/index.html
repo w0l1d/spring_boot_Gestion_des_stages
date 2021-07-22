@@ -77,7 +77,9 @@
                                     <th th:text="#{form.id}">Id</th>
                                     <th th:text="#{form.project_title}">project title</th>
                                     <th th:text="#{form.status}">Status</th>
-                                    <th th:text="#{internshiper}">interner</th>
+                                    <th sec:authorize="hasRole('ROLE_ADMIN')"
+                                        th:text="#{internshiper}">interner
+                                    </th>
                                     <th th:text="#{form.starts_at}">Starts at</th>
                                     <th th:text="#{form.ends_at}">Ends At</th>
                                     <th th:text="#{form.type}">Type</th>
@@ -97,7 +99,9 @@
                                     <th th:text="#{form.id}">Id</th>
                                     <th th:text="#{form.project_title}">project title</th>
                                     <th th:text="#{form.status}">Status</th>
-                                    <th th:text="#{internshiper}">interner</th>
+                                    <th sec:authorize="hasRole('ROLE_ADMIN')"
+                                        th:text="#{internshiper}">interner
+                                    </th>
                                     <th th:text="#{form.starts_at}">Starts at</th>
                                     <th th:text="#{form.ends_at}">Ends At</th>
                                     <th th:text="#{form.type}">Type</th>
@@ -207,12 +211,6 @@
                     }
                 },
                 {
-                    data: 'interner',
-                    render: function (data, type, row) {
-                        return `<a href="/interners/${data.id}">${data.name}</a>`
-                    }
-                },
-                {
                     data: 'startsAt',
                     render: function (data, type, row) {
                         let d = new Date(data)
@@ -235,25 +233,31 @@
 
             const isAdmin = !!$('#actions-head').length;
 
-            const actionCol = {
-                data: null,
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    if (!isAdmin)
-                        return '';
-                    const href = '/documents/' + row.id
-                    let actions = $('#actions').clone()
-
-                    $(actions).find('.btn-danger').attr('href', href + '/delete')
-                    $(actions).find('.btn-primary').attr('href', href + '/update');
-                    return actions.html();
-                }
-            };
-
 
             if (isAdmin) {
-                columns.push(actionCol)
+                columns.splice(3, 0, {
+                    data: 'interner',
+                    searchable: false,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `<a href="/interners/${data.id}">${data.name}</a>`
+                    }
+                });
+                columns.push({
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        if (!isAdmin)
+                            return '';
+                        const href = '/documents/' + row.id
+                        let actions = $('#actions').clone()
+
+                        $(actions).find('.btn-danger').attr('href', href + '/delete')
+                        $(actions).find('.btn-primary').attr('href', href + '/update');
+                        return actions.html();
+                    }
+                })
             }
 
 

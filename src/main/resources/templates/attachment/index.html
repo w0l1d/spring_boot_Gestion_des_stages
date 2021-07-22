@@ -207,25 +207,23 @@
 
         const isAdmin = !!$('#actions-head').length;
 
-        const actionCol = {
-            data: null,
-            orderable: false,
-            searchable: false,
-            render: function (data, type, row) {
-                if (!isAdmin)
-                    return '';
-                const href = '/documents/' + row.id
-                let actions = $('#actions').clone()
-
-                $(actions).find('.btn-danger').attr('href', href + '/delete')
-                $(actions).find('.btn-primary').attr('href', href + '/update');
-                return actions.html();
-            }
-        };
-
 
         if (isAdmin) {
-            columns.push(actionCol)
+            columns.push({
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    if (!isAdmin)
+                        return '';
+                    const href = '/documents/' + row.id
+                    let actions = $('#actions').clone()
+
+                    $(actions).find('.btn-danger').attr('href', href + '/delete')
+                    $(actions).find('.btn-primary').attr('href', href + '/update');
+                    return actions.html();
+                }
+            })
         }
 
 

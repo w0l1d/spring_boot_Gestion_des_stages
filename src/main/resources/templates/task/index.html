@@ -183,27 +183,25 @@
                 },
             ]
 
-            const actionCol = {
-                data: null,
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    if (!$('#actions-head').length)
-                        return '';
-                    const hrefDelete = `/tasks/${row.id}/delete`
-                    const hrefUpdate = `/tasks/${row.id}/update`
-                    let actions = $('#actions').clone()
-
-                    $(actions).find('.btn-danger').attr('href', hrefDelete)
-                    $(actions).find('.btn-primary').attr('href', hrefUpdate);
-                    return actions.html();
-                }
-            };
-
             const isAdmin = !!$('#actions-head').length;
 
             if (isAdmin) {
-                columns.push(actionCol)
+                columns.push({
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        if (!$('#actions-head').length)
+                            return '';
+                        const hrefDelete = `/tasks/${row.id}/delete`
+                        const hrefUpdate = `/tasks/${row.id}/update`
+                        let actions = $('#actions').clone()
+
+                        $(actions).find('.btn-danger').attr('href', hrefDelete)
+                        $(actions).find('.btn-primary').attr('href', hrefUpdate);
+                        return actions.html();
+                    }
+                })
             }
 
 

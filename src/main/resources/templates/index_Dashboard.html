@@ -54,7 +54,7 @@
 
                 <!-- Start Info Cards -->
                 <div class="row">
-                    <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4" sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -74,7 +74,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4" sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -114,23 +114,23 @@
                     </div>
 
 
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Earnings (Monthly)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--                    <div class="col-xl-3 col-md-6 mb-4">-->
+                    <!--                        <div class="card border-left-primary shadow h-100 py-2">-->
+                    <!--                            <div class="card-body">-->
+                    <!--                                <div class="row no-gutters align-items-center">-->
+                    <!--                                    <div class="col mr-2">-->
+                    <!--                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">-->
+                    <!--                                            Earnings (Monthly)-->
+                    <!--                                        </div>-->
+                    <!--                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>-->
+                    <!--                                    </div>-->
+                    <!--                                    <div class="col-auto">-->
+                    <!--                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>-->
+                    <!--                                    </div>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
                 </div>
                 <!-- End Info Cards -->
@@ -149,7 +149,9 @@
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.project_title}">project title</th>
                                 <th th:text="#{form.status}">Status</th>
-                                <th th:text="#{internshiper}">interner</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{internshiper}">interner
+                                </th>
                                 <th th:text="#{form.starts_at}">Starts at</th>
                                 <th th:text="#{form.ends_at}">Ends At</th>
                                 <th th:text="#{form.type}">Type</th>
@@ -169,7 +171,9 @@
                                 <th th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.project_title}">project title</th>
                                 <th th:text="#{form.status}">Status</th>
-                                <th th:text="#{internshiper}">interner</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{internshiper}">interner
+                                </th>
                                 <th th:text="#{form.starts_at}">Starts at</th>
                                 <th th:text="#{form.ends_at}">Ends At</th>
                                 <th th:text="#{form.type}">Type</th>
@@ -276,14 +280,6 @@
                 }
             },
             {
-                data: 'interner',
-                searchable: false,
-                orderable: false,
-                render: function (data, type, row) {
-                    return `<a href="/interners/${data.id}">${data.name}</a>`
-                }
-            },
-            {
                 data: 'startsAt',
                 render: function (data, type, row) {
                     let d = new Date(data)
@@ -308,6 +304,16 @@
 
 
         if (isAdmin) {
+
+            columns.splice(3, 0, {
+                data: 'interner',
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    return `<a href="/interners/${data.id}">${data.name}</a>`
+                }
+            });
+
             columns.push({
                 data: null,
                 orderable: false,
