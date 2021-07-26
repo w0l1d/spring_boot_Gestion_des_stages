@@ -5,7 +5,7 @@ import com.storactive.stg.model.*;
 import com.storactive.stg.model.enums.Gender;
 import com.storactive.stg.service.EmployeeService;
 import com.storactive.stg.service.InternerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class DashboardController {
 
     final EmployeeService employeeSer;
     final InternerService internerSer;
 
-    @Autowired
-    public DashboardController(EmployeeService employeeSer, InternerService internerSer) {
-        this.employeeSer = employeeSer;
-        this.internerSer = internerSer;
-    }
 
     @GetMapping("blank")
     public String getBlank() {
@@ -36,11 +32,13 @@ public class DashboardController {
     public String getInsert() {
         Employee employee = new Employee();
         employee.setName("walid ah");
-        employee.setCin("VA145962");
-        employee.setEmail("walid@ah.com");
+        employee.setCin("VA145988");
+        employee.setEmail("walid@ah55.com");
         employee.setPassword("password");
-        employee.setUsername("admin");
+        employee.setUsername("admin2");
+
         employeeSer.create(employee);
+
 
         Interner interner = new Interner();
         interner.setName("walid ah");

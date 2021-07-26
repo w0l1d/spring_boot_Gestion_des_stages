@@ -1,13 +1,11 @@
 package com.storactive.stg.service;
 
-import com.storactive.stg.exception.ValueAlreadyUsedException;
 import com.storactive.stg.model.Employee;
 import com.storactive.stg.model.User;
 import com.storactive.stg.repository.EmployeeRepo;
 import com.storactive.stg.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class EmployeeService {
 
     final String OBJ = "Employee";
@@ -51,8 +49,8 @@ public class EmployeeService {
         }
         User user1 = user.orElse(null);
         if (user1.getCin().equals(employee.getCin()))
-            throw new ValueAlreadyUsedException("cin '"+user1.getCin()+"' Already Exists");
-        throw new ValueAlreadyUsedException("Username '"+user1.getUsername()+"' Already Exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "cin '" + user1.getCin() + "' Already Exists");
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "Username '" + user1.getUsername() + "' Already Exists");
     }
 
 

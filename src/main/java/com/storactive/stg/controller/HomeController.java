@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
@@ -47,6 +48,14 @@ public class HomeController {
 
         return "index_Dashboard";
 
+    }
+
+
+    @GetMapping("logout")
+    public String getLogout(HttpServletRequest request)
+            throws ServletException {
+        request.logout();
+        return "redirect:/login?logout";
     }
 
 
