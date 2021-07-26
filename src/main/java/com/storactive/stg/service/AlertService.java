@@ -22,7 +22,7 @@ public class AlertService {
     }
 
 
-    public long countByStatus(int st) {
+    public long countByStatus(short st) {
         return alertRepo.countByStatusEquals(st);
     }
 

@@ -18,6 +18,7 @@ public class AlertInterceptor implements HandlerInterceptor {
             throws Exception {
         if (Utils.isAuthenticated()) {
             request.setAttribute("alerts", alertSer.getIndex());
+            request.setAttribute("unsolvedCount", alertSer.countByStatus((short) 0));
         }
         return true;
     }

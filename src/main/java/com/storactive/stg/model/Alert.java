@@ -37,6 +37,7 @@ public class Alert {
     @Min(0)
     @Max(1)
     private short status;
+
     @ManyToOne(optional = false)
     @JsonIgnoreProperties({
             Internship_.FORMATION,

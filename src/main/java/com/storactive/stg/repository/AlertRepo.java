@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlertRepo extends JpaRepository<Alert, Integer>, JpaSpecificationExecutor<Alert> {
-    long countByStatusEquals(int status);
+    long countByStatusEquals(short status);
 }
