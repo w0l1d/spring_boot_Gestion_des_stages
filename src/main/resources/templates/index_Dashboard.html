@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                     <div class="col-auto">
-                                        <i class="fas fa-folder-open-o fa-2x text-gray-300"></i>
+                                        <i class="fas fa-id-badge fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +321,7 @@
                 render: function (data, type, row) {
                     if (!isAdmin)
                         return '';
-                    const href = '/documents/' + row.id
+                    const href = '/internships/' + row.id
                     let actions = $('#actions').clone()
 
                     $(actions).find('.btn-danger').attr('href', href + '/delete')

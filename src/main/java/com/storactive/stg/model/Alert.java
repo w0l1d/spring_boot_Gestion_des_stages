@@ -1,8 +1,9 @@
 package com.storactive.stg.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -26,14 +27,30 @@ public class Alert {
     @Size(min = 5)
     private String content;
 
-    @CreatedDate
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
     @Column(nullable = false)
+    @ColumnDefault("0")
     @Min(0)
     @Max(1)
-    private byte status;
+    private short status;
+    @ManyToOne(optional = false)
+    @JsonIgnoreProperties({
+            Internship_.FORMATION,
+            Internship_.ETABLISSEMENT,
+            Internship_.DESC,
+            Internship_.TYPE,
+            Internship_.DURATION,
+            Internship_.INTERNER
+    })
+    private Internship internship;
 
+    @Transient
+    public boolean isSolved() {
+        return status != 0;
+    }
 
 }

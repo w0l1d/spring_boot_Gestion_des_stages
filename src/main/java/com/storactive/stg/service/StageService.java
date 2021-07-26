@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -25,6 +24,7 @@ public class StageService {
 
     final StageRepo stageRepo;
     final HistoryService historySer;
+    final AlertService alertSer;
 
 
     public long countAll(Interner interner) {
@@ -61,13 +61,20 @@ public class StageService {
         return internship1;
     }
 
-    public Internship update(Internship internship) {
-        if (!stageRepo.existsById(internship.getId()))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Internship Not Found");
-        Internship internship1 = stageRepo.save(internship);
-        historySer.objetUpdated(OBJ, internship1.getId());
-        return internship1;
+    public Internship update(final Internship internship) {
+        Internship oldInternship = findById(internship.getId());
+        internship.setInterner(oldInternship.getInterner());
+        int oldSts = oldInternship.getStatus(),
+                newSts = internship.getStatus();
+
+        stageRepo.save(internship);
+
+        historySer.objetUpdated(OBJ, internship.getId());
+        alertSer.alertUpdateInternship(internship, oldSts, newSts);
+
+        return internship;
     }
+
 
     public void delete(Integer id) {
         if (!stageRepo.existsById(id))
@@ -82,7 +89,4 @@ public class StageService {
     }
 
 
-    public List<Internship> getUserInternships(Interner interner) {
-        return stageRepo.findAllByInterner_Id(interner.getId());
-    }
 }

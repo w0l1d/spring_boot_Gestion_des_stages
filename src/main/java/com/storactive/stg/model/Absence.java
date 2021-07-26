@@ -1,5 +1,6 @@
 package com.storactive.stg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.storactive.stg.Utils;
 import lombok.Data;
 import lombok.ToString;
@@ -41,6 +42,8 @@ public class Absence {
     }
 
     @AssertTrue
+    @Transient
+    @JsonIgnore
     public boolean isValidRange() {
         return endsAt.compareTo(startsAt) > 0;
     }

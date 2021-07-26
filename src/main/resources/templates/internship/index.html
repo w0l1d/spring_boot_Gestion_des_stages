@@ -250,7 +250,7 @@
                     render: function (data, type, row) {
                         if (!isAdmin)
                             return '';
-                        const href = '/documents/' + row.id
+                        const href = '/internships/' + row.id
                         let actions = $('#actions').clone()
 
                         $(actions).find('.btn-danger').attr('href', href + '/delete')

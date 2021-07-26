@@ -1,6 +1,6 @@
 .toast {
     height: auto;
-    position: absolute;
+    position: fixed;
     right: 5%;
     background-color: transparent;
     font-family: Calibri, serif;

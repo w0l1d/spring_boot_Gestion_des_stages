@@ -28,12 +28,10 @@ public class Internship {
 
     @Column(nullable = false,name = "date_du")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @FutureOrPresent
     private Date startsAt;
 
     @Column(nullable = false,name = "date_au")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Future
     private Date endsAt;
 
 
@@ -59,19 +57,21 @@ public class Internship {
     @Min(1)
     @Max(4)
     private int status;
+
     @ManyToOne(optional = false)
-    @JsonIgnoreProperties(value = {
-            Interner_.INTERNSHIPS,
-            Interner_.ADDRESS,
-            Interner_.CIN,
-            Interner_.EMAIL,
-            Interner_.ENABLED,
-            Interner_.GENDER,
-            Interner_.HISTORIES,
-            Interner_.PHONE,
-            Interner_.PASSWORD,
-            Interner_.USERNAME
-    })
+    @JsonIgnoreProperties(
+            value = {
+                    Interner_.INTERNSHIPS,
+                    Interner_.ADDRESS,
+                    Interner_.CIN,
+                    Interner_.EMAIL,
+                    Interner_.ENABLED,
+                    Interner_.GENDER,
+                    Interner_.HISTORIES,
+                    Interner_.PHONE,
+                    Interner_.PASSWORD,
+                    Interner_.USERNAME
+            })
     @ToString.Exclude
     private Interner interner;
 
@@ -81,11 +81,11 @@ public class Internship {
     @JsonIgnore
     @ToString.Exclude
     private Collection<Absence> absences;
-
-    @AssertTrue
-    public boolean isValidRange() {
-        return endsAt.compareTo(startsAt) > 0;
-    }
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "internship")
+    @JsonIgnore
+    @ToString.Exclude
+    private Collection<Alert> alerts;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")
@@ -93,10 +93,12 @@ public class Internship {
     @ToString.Exclude
     private Collection<StagePiece> stagePieces;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @AssertTrue
+    @Transient
     @JsonIgnore
-    @ToString.Exclude
-    private Collection<Alert> alerts;
+    public boolean isValidRange() {
+        return endsAt.compareTo(startsAt) > 0;
+    }
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")

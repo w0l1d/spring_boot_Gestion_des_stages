@@ -2,6 +2,8 @@ package com.storactive.stg.config;
 
 import com.storactive.stg.model.User;
 import com.storactive.stg.security.SpringSecurityAuditorAware;
+import com.storactive.stg.service.AlertService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,17 +22,29 @@ import java.util.Locale;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-@EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class, basePackages = "com.storactive.stg.repository")
+@EnableJpaRepositories(
+        repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class,
+        basePackages = "com.storactive.stg.repository"
+)
+@RequiredArgsConstructor
 public class MvcConfigurer implements WebMvcConfigurer {
 
     @Value("${spring.max-upload-size}")
     private long MAX_UPLOAD_SIZE;
+    final AlertService alertSer;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(alertInterceptor());
     }
 
+
+    @Bean
+    public AlertInterceptor alertInterceptor() {
+        return new AlertInterceptor(alertSer);
+    }
 
     @Bean
     public AuditorAware<User> auditorAware() {

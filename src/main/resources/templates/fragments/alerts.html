@@ -124,42 +124,39 @@
 
 
 <div class="alerts font-weight-bold m-0 text-primary toast" id="internship-tasks-alerts">
-    <div class="alert alert-success d-inline-block row" th:if="${msg_inserted} or ${param.inserted}">
+    <div class="alert alert-success d-inline-block row" th:if="${task_inserted} or ${param.task_inserted}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.task_inserted}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>
-    <div class="alert alert-success d-inline-block row" th:if="${msg_updated} or ${param.updated}">
+    <div class="alert alert-success d-inline-block row" th:if="${task_updated} or ${param.task_updated}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.task_updated}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>
-    <div class="alert alert-danger d-inline-block row" th:if="${msg_deleted} or ${param.deleted}">
+    <div class="alert alert-danger d-inline-block row" th:if="${task_deleted} or ${param.task_deleted}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.task_deleted}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>
 </div>
 
 <div class="alerts font-weight-bold m-0 text-primary toast" id="internship-absences-alerts">
-    <div class="alert alert-success d-inline-block row" th:if="${msg_inserted} or ${param.inserted}">
+    <div class="alert alert-success d-inline-block row" th:if="${absence_inserted} or ${param.absence_inserted}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.absence_inserted}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>
-    <div class="alert alert-success d-inline-block row" th:if="${msg_updated} or ${param.updated}">
-        <p class="d-inline-block m-0 col-auto" th:text="#{msg.absence_updated}"></p>
-        <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
-    </div>
-    <div class="alert alert-danger d-inline-block row" th:if="${msg_deleted} or ${param.deleted}">
+
+    <div class="alert alert-danger d-inline-block row" th:if="${absence_deleted} or ${param.absence_deleted}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.absence_deleted}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>
 </div>
 
 <div class="alerts font-weight-bold m-0 text-primary toast" id="internship-files-alerts">
-    <div class="alert alert-success d-inline-block row" th:if="${msg_inserted} or ${param.inserted}">
+    <div class="alert alert-success d-inline-block row" th:if="${doc_inserted} or ${param.doc_inserted}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.file_inserted}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>
 
-    <div class="alert alert-danger d-inline-block row" th:if="${msg_deleted} or ${param.deleted}">
+    <div class="alert alert-danger d-inline-block row" th:if="${doc_deleted} or ${param.doc_deleted}">
         <p class="d-inline-block m-0 col-auto" th:text="#{msg.file_deleted}"></p>
         <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
     </div>

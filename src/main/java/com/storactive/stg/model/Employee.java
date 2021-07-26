@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 public class Employee extends User {
 
     @Override
+    @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList();
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -27,21 +29,25 @@ public class Employee extends User {
     }
 
     @Override
+    @Transient
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isEnabled() {
         return true;
     }

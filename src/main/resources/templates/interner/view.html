@@ -145,7 +145,10 @@
                             <tbody>
                             <tr th:each="sat : ${interner.internships}" th:with="format=#{form.date_format}">
                                 <td th:text="${sat?.id}"></td>
-                                <td th:text="${sat?.project}"></td>
+                                <td>
+                                    <a th:href="@{/internships/{id}(id=${sat?.id})}"
+                                       th:text="${sat?.project}"></a>
+                                </td>
                                 <td th:if="${sat?.status} == 1" th:text="#{form.status.in_progress}"></td>
                                 <td th:if="${sat?.status} == 2" th:text="#{form.status.saved}"></td>
                                 <td th:if="${sat?.status} == 3" th:text="#{form.status.finished}"></td>

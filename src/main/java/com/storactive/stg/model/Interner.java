@@ -3,7 +3,6 @@ package com.storactive.stg.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.storactive.stg.model.enums.Gender;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @NoArgsConstructor
@@ -32,11 +30,6 @@ public class Interner extends User {
 
     private String address;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            mappedBy = "interner")
-    @JsonIgnore
-    @ToString.Exclude
-    Collection<Internship> internships;
 
     @Size(min = 10, max = 13)
     @NotBlank
@@ -48,7 +41,16 @@ public class Interner extends User {
     @Column(name = "is_enabled")
     private boolean enabled;
 
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "interner")
+    @JsonIgnore
+    @ToString.Exclude
+    Collection<Internship> internships;
+
+
     @Override
+    @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList();
         authorities.add(new SimpleGrantedAuthority("ROLE_INTERNER"));
@@ -56,16 +58,19 @@ public class Interner extends User {
     }
 
     @Override
+    @Transient
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isCredentialsNonExpired() {
         return true;
     }

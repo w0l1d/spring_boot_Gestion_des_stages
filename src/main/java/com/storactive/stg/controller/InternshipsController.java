@@ -97,9 +97,9 @@ public class InternshipsController {
                                       @ModelAttribute @Valid Internship internship,
                                       Model model,
                                       BindingResult bindingResult) {
-
         if (bindingResult.hasErrors())
             return "internship/update";
+
 
         internship.setId(id);
         stageSer.update(internship);
@@ -149,8 +149,7 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("internship", internship)
-                    .addAttribute("tasks", internship.getTasks());
+            model.addAttribute("internship", internship);
             return "internship/view";
         }
 
@@ -161,8 +160,8 @@ public class InternshipsController {
         task.setInternship(internship);
         taskSer.create(task);
 
-        model.addAttribute("msg_inserted", true);
-        return "redirect:/internships/" + id;
+        model.addAttribute("task_inserted", true);
+        return "redirect:/internships/" + id + "?task_inserted";
     }
 
 
@@ -172,8 +171,8 @@ public class InternshipsController {
                                        @PathVariable("task_id") Integer taskId,
                                        Model model) {
         taskSer.delete(taskId);
-        model.addAttribute("msg_deleted", true);
-        return "redirect:/internships/" + id + "?deleted";
+        model.addAttribute("task_deleted", true);
+        return "redirect:/internships/" + id + "?task_deleted";
     }
 
     /*
@@ -220,8 +219,8 @@ public class InternshipsController {
         absence = absenceSer.create(absence);
         internship.getAbsences().add(absence);
 
-        model.addAttribute("msg_inserted", true);
-        return "redirect:/internships/" + id;
+        model.addAttribute("absence_inserted", true);
+        return "redirect:/internships/" + id + "?absence_inserted";
     }
 
 
@@ -233,8 +232,8 @@ public class InternshipsController {
         Internship internship = stageSer.findById(id);
 
         absenceSer.delete(absId);
-        model.addAttribute("msg_deleted", true);
-        return "redirect:/internships/" + id + "?deleted";
+        model.addAttribute("absence_deleted", true);
+        return "redirect:/internships/" + id + "?absence_deleted";
     }
     /*
      **********************         End  Absences         **********************
@@ -277,9 +276,20 @@ public class InternshipsController {
 
         model.addAttribute("msg_inserted", true);
 
-        return "redirect:/internships/" + id;
+        return "redirect:/internships/" + id + "?doc_inserted";
     }
 
+    @GetMapping("/{id}/files/{file_id}/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteFile(@PathVariable("id") Integer id,
+                             @PathVariable("file_id") Integer flId,
+                             Model model) {
+        Internship internship = stageSer.findById(id);
+
+        stagePieceSer.delete(flId);
+        model.addAttribute("absence_deleted", true);
+        return "redirect:/internships/" + id + "?doc_deleted";
+    }
 
     /*
      **********************         End  Files         **********************
