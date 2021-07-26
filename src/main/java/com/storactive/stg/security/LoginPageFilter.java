@@ -6,7 +6,6 @@ import com.storactive.stg.model.User;
 import com.storactive.stg.service.EmployeeService;
 import com.storactive.stg.service.InternerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -28,13 +27,11 @@ class LoginPageFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        if (SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+        if (Utils.isAuthenticated()
                 && ((HttpServletRequest) request).getRequestURI().contentEquals("/login"))
             ((HttpServletResponse) response).sendRedirect("/");
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+        if (Utils.isAuthenticated()) {
             User user = Utils.getCurrUser();
 
             if (user instanceof Interner)
@@ -43,7 +40,7 @@ class LoginPageFilter extends GenericFilterBean {
                 user = employeeSer.findByIdAndCredentialsUnchanged(user);
 
             if (user == null)
-                ((HttpServletResponse) response).sendRedirect("/logout?re-log-in");
+                ((HttpServletRequest) request).logout();
         }
 
         chain.doFilter(request, response);

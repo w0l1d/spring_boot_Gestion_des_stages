@@ -40,19 +40,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.addFilterBefore(
-                new LoginPageFilter(internerSer, employeeSer), DefaultLoginPageGeneratingFilter.class);
-
         http.authorizeRequests()
                 .antMatchers("/vendor/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/img/**").permitAll()
-                .antMatchers("/insert").not().authenticated()
+                .antMatchers("/insert").permitAll()
                 .antMatchers("/login").not().authenticated()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(loginPageFilter(), DefaultLoginPageGeneratingFilter.class)
                 .formLogin()
                 .loginPage("/login")
                 .failureHandler(authenticationFailureHandler())
@@ -76,5 +73,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new MyAuthenticationFailureHandler();
     }
 
+
+    @Bean
+    public LoginPageFilter loginPageFilter() {
+        return new LoginPageFilter(internerSer, employeeSer);
+    }
 
 }

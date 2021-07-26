@@ -44,8 +44,7 @@ public abstract class User implements UserDetails {
     private String email;
 
     @Column(unique = true,
-            nullable = false,
-            updatable = false)
+            nullable = false)
     @Size(min = 4, message = "must be at least 4 characters length")
     @NotBlank
     private String username;

@@ -157,13 +157,10 @@
                             orderable: false,
                             searchable: false,
                             render: function (data, type, row) {
-                                console.log(type)
-                                console.log(row)
-                                let href1 = `/users/${row.id}/delete`;
-                                console.log(href1)
+                                let href = `/users/${row.id}`;
                                 let actions = $('#actions').clone()
-                                $(actions).find('.delete-btn').attr('href', href1)
-                                $(actions).find('.update-btn').attr('href', '/users/' + row["id"]);
+                                $(actions).find('.btn-danger').attr('href', href + 'delete')
+                                $(actions).find('.btn-primary').attr('href', href + '/update');
                                 return actions.html();
                             }
                         }

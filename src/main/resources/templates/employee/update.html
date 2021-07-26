@@ -47,7 +47,7 @@
             <form id="add_user_form" method="post"
                   th:action="@{${#httpServletRequest.requestURI}}"
                   th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
-                  th:object="${user}">
+                  th:object="${employee}">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="d-inline m-0 font-weight-bold text-primary">
@@ -92,8 +92,13 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="username" th:text="#{form.username}">Username</label>
-                                <input type="text" class="form-control"
-                                       id="username" readonly th:field="*{username}">
+                                <input id="username" min="4"
+                                       required
+                                       th:class="'form-control ' + ${#fields.hasErrors('username') ? 'is-invalid':''}"
+                                       th:field="*{username}" type="text">
+                                <div class="invalid-feedback"
+                                     th:errors="*{username}"
+                                     th:if="${#fields.hasErrors('username')}"></div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="password" th:text="#{form.password}">Password</label>

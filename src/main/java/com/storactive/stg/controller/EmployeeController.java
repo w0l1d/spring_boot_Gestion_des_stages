@@ -46,7 +46,7 @@ public class EmployeeController {
     }
 
 
-    @GetMapping({"/{id}"})
+    @GetMapping({"/{id}/update"})
     public String getUpdateEmployee(@PathVariable Integer id, Model model) {
         Employee employee = employeeSer.findById(id);
         model.addAttribute("employee", employee);
@@ -54,7 +54,7 @@ public class EmployeeController {
     }
 
 
-    @PostMapping({"/{id}"})
+    @PostMapping({"/{id}/update"})
     public String putUpdateEmployee(@NotNull @Positive @PathVariable Integer id,
                                     @ModelAttribute @Valid Employee employee,
                                     BindingResult bindingResult,
