@@ -74,9 +74,9 @@
                     Alerts Center
                 </h6>
 
-                <a th:class="'dropdown-item d-flex align-items-center' + ${alert?.status != 0?'text-gray-300':''}"
+                <a th:class="'dropdown-item d-flex align-items-center' + ${alert?.status != 0?' bg-gray-300':''}"
                    th:each="alert : ${#request.getAttribute('alerts')}"
-                   th:href="@{/internships/{id}(id=${alert?.internship?.id})}">
+                   th:href="@{/internships/{id}(id=${alert?.internship?.id}, a=${alert?.id})}">
                     <div class="mr-3">
                         <div class="icon-circle bg-primary">
                             <i class="fas fa-file-alt text-white"></i>

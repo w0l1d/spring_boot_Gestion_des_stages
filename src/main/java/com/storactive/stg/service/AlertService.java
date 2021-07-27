@@ -42,6 +42,13 @@ public class AlertService {
         return alertRepo.save(alert);
     }
 
+    public void markAsRead(int alertId) {
+        Alert alert = findById(alertId);
+        alert.setStatus((short) 1);
+        alertRepo.save(alert);
+    }
+
+
     public void deleteById(int id) {
         assertExistById(id);
         alertRepo.deleteById(id);

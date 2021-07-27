@@ -20,7 +20,7 @@ public class AlertInterceptor implements HandlerInterceptor {
             request.setAttribute("alerts", alertSer.getIndex());
             request.setAttribute("unsolvedCount", alertSer.countByStatus((short) 0));
         }
-        return true;
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
 }

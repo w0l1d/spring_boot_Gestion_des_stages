@@ -32,7 +32,10 @@ public class MvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
-        registry.addInterceptor(alertInterceptor());
+        registry.addInterceptor(alertReadInterceptor())
+                .addPathPatterns("/internships/{id:[1-9][0-9]*}");
+        registry.addInterceptor(alertInterceptor())
+                .excludePathPatterns("/login*", "/logout*");
     }
 
 
@@ -41,6 +44,10 @@ public class MvcConfigurer implements WebMvcConfigurer {
         return new AlertInterceptor(alertSer);
     }
 
+    @Bean
+    public AlertReadInterceptor alertReadInterceptor() {
+        return new AlertReadInterceptor(alertSer);
+    }
 
     @Bean
     public LocaleResolver localeResolver() {
