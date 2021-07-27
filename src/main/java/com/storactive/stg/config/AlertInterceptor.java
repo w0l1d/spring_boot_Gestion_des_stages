@@ -17,8 +17,15 @@ public class AlertInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         if (Utils.isAuthenticated()) {
-            request.setAttribute("alerts", alertSer.getIndex());
-            request.setAttribute("unsolvedCount", alertSer.countByStatus((short) 0));
+            if (request.isUserInRole("ROLE_ADMIN")) {
+                request.setAttribute("alerts", alertSer.getIndex());
+                request.setAttribute("unsolvedCount", alertSer.countByStatus((short) 0));
+            } else {
+                request.setAttribute("alerts", alertSer.getIndexInterner());
+                request.setAttribute("unsolvedCount",
+                        alertSer.countByStatusForInterner((short) 0));
+            }
+
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

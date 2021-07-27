@@ -24,5 +24,10 @@ public class InternerOwnSpec {
         return (root, cq, cb) -> cb.equal(root.get(History_.CREATED_BY).get(User_.ID), user.getId());
     }
 
+    public static Specification<Alert> getAlertSpec(Interner interner) {
+        return (root, cq, cb) -> cb.equal(root.get(Alert_.INTERNSHIP)
+                .get(Internship_.INTERNER).get(Interner_.ID), interner.getId());
+    }
+
 
 }

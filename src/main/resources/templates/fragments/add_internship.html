@@ -17,7 +17,7 @@
 </button>
 
 <form id="add_internship_form" method="post"
-      th:action="@{#httpServletRequest.requestURI}" th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
       th:object="${internship}">
     <div aria-hidden="true" aria-labelledby="add_internship_modal_Title" class="modal fade" id="add_internship_modal"
          role="dialog" tabindex="-1">

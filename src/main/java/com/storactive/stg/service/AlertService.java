@@ -1,12 +1,17 @@
 package com.storactive.stg.service;
 
+import com.storactive.stg.Utils;
 import com.storactive.stg.model.Alert;
+import com.storactive.stg.model.Alert_;
+import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.enums.InternshipStatus;
 import com.storactive.stg.repository.AlertRepo;
+import com.storactive.stg.specs.InternerOwnSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,9 +26,24 @@ public class AlertService {
         return alertRepo.findAll(PageRequest.ofSize(5));
     }
 
+    public Page<Alert> getIndexInterner() {
+        return alertRepo.findAll(
+                InternerOwnSpec.getAlertSpec((Interner) Utils.getCurrUser()),
+                PageRequest.ofSize(5)
+        );
+    }
+
 
     public long countByStatus(short st) {
         return alertRepo.countByStatusEquals(st);
+    }
+
+    public long countByStatusForInterner(short st) {
+        return alertRepo.count(
+                InternerOwnSpec.getAlertSpec((Interner) Utils.getCurrUser())
+                        .and((Specification<Alert>) (root, cq, cb)
+                                -> cb.equal(root.get(Alert_.STATUS), st))
+        );
     }
 
 
