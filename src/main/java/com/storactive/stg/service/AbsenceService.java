@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AbsenceService {
 
     final String OBJ = "Absence";

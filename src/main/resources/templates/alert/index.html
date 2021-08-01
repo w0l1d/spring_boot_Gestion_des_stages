@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+    <title th:text="#{title.page.alert}">Gestion des Alerts - Alerts</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+    <!-- replace with local stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/link}"></div>
+
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800"
+                    th:text="#{sidebar.alerts}">Tasks</h1>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="d-inline m-0 font-weight-bold text-primary">
+
+                        </h6>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="display responsive nowrap"
+                               id="serverSide-dataTable"
+                               style="width:100%; font-size: calc(0.5em + 1vmin);">
+                            <thead>
+                            <tr>
+                                <th th:text="#{form.id}">Id</th>
+                                <th th:text="#{form.content}">Content</th>
+                                <th th:text="#{form.created_at}">date</th>
+                                <th th:text="#{form.internship}">internship</th>
+                                <th class="all"
+                                    th:text="#{form.status}">
+                                    status
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+
+<!-- replace with page scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
+
+
+<script>
+    $(document).ready(function () {
+
+        const lg = $('html').attr('lang')
+        let langUrl = '/js/json/' + lg + '.json'
+
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+
+        const columns = [
+            {data: 'id'},
+            {
+                data: 'content',
+                render: function (data, type, row) {
+                    return `<p style="word-break: break-all">${data}</p>`
+                }
+            },
+            {
+                data: 'createdAt',
+                render: function (data, type, row) {
+                    let d = new Date(data)
+                    return d.toLocaleDateString(lg, dateOptions)
+                }
+            },
+            {
+                data: 'internship',
+                searchable: false,
+                render: function (data, type, row) {
+                    let startAt = new Date(data.startsAt)
+                    const date1 = startAt.toLocaleDateString(lg, dateOptions)
+                    let endAt = new Date(data.endsAt)
+                    const date2 = endAt.toLocaleDateString(lg, dateOptions)
+                    return `<dl><dt><a href="/internships/${data.id}?a=${row.id}">${data.project}</a></dt><dd><small>${date1} ~ ${date2}</small></dd></dl>`;
+                }
+            },
+            {
+                data: 'status',
+                render: function (data, type, row) {
+                    let html;
+                    if (data === 1)
+                        html = '<a class="bg-gradient-light btn btn-circle btn-outline-secondary btn-sm"' +
+                            ` href="/internships/${row.internship.id}">` +
+                            '<i class="fa-eye fas"></i>' +
+                            '</a>'
+                    else
+                        html = '<a class="bg-gradient-warning btn btn-circle btn-sm btn-warning"' +
+                            ` href="/internships/${row.internship.id}?a=${row.id}">` +
+                            '<i class="fa-eye-slash fas"></i>' +
+                            '</a>'
+                    return html;
+                }
+            }
+        ]
+
+
+        $('#serverSide-dataTable')
+            .DataTable({
+                language: {
+                    url: langUrl
+                },
+                order: [
+                    [2, "desc"]
+                ],
+                serverSide: true,
+                columns: columns,
+                ajax: {
+                    'contentType': 'application/json',
+                    url: '/api/alert',
+                    type: 'POST',
+                    'data': function (d) {
+                        return JSON.stringify(d);
+                    },
+                    'beforeSend': function (request) {
+                        request.setRequestHeader(header, token);
+                    }
+                }
+            });
+    });
+
+</script>
+
+</body>
+
+</html>

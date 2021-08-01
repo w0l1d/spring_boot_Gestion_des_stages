@@ -1,18 +1,21 @@
 package com.storactive.stg.service;
 
+import com.storactive.stg.model.Internship;
 import com.storactive.stg.model.Piece;
 import com.storactive.stg.repository.PieceRepo;
+import com.storactive.stg.specs.PieceSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Vector;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PieceService {
 
     final String OBJ = "Piece";
@@ -20,6 +23,7 @@ public class PieceService {
     final PieceRepo pieceRepo;
     final StageService internshipSer;
     final HistoryService historySer;
+    final AlertService alertSer;
 
 
     public List<Piece> findAll() {
@@ -53,6 +57,11 @@ public class PieceService {
     public Piece findById(int id) {
         return pieceRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Piece Not Found"));
+    }
+
+
+    public List<Piece> findAllNotRelatedToInternship(Internship internship) {
+        return pieceRepo.findAll(PieceSpec.piecesNotRelatedToInternshipSpec(internship));
     }
 
 

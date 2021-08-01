@@ -14,6 +14,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class HistoryService {
 
     final HistoryRepo historyRepo;

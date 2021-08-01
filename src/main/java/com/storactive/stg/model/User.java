@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.storactive.stg.Utils;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -36,7 +37,7 @@ public abstract class User implements UserDetails {
 
     @NotBlank
     @Size(min = 4,
-            message = "must be at least 2 characters length")
+            message = "must be at least 4 characters length")
     private String name;
 
     @Column(nullable = false)
@@ -47,6 +48,7 @@ public abstract class User implements UserDetails {
             nullable = false)
     @Size(min = 4, message = "must be at least 4 characters length")
     @NotBlank
+    @UniqueElements
     private String username;
 
     @Column(name = "mot_de_passe", nullable = false)
@@ -54,6 +56,7 @@ public abstract class User implements UserDetails {
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "createdBy")
     @JsonIgnore

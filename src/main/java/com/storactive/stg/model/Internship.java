@@ -81,6 +81,7 @@ public class Internship {
     @JsonIgnore
     @ToString.Exclude
     private Collection<Absence> absences;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")
     @JsonIgnore

@@ -7,6 +7,7 @@ import com.storactive.stg.repository.StageRepo;
 import com.storactive.stg.specs.InternerOwnSpec;
 import com.storactive.stg.specs.InternshipContainSpec;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,11 +15,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StageService {
+
+    @Value("${spring.custom.select2.page-size}")
+    private Integer MAX_PAGE_SIZE;
+
+    @Value("${spring.custom.select2.limited-results-number}")
+    private boolean LIMITED_NUMBER;
 
     final String OBJ = "Stage";
 
@@ -41,13 +50,16 @@ public class StageService {
 
 
     public Page<Internship> findAllContains(String s, boolean isInterner) {
+        Pageable pageable = (LIMITED_NUMBER) ?
+                Pageable.ofSize(MAX_PAGE_SIZE)
+                :
+                Pageable.unpaged();
         if (isInterner)
             return stageRepo.findAll(Specification
                             .where(InternshipContainSpec.getInternshipSpec(s))
-                            .and(InternerOwnSpec.getInternshipSpec((Interner) Utils.getCurrUser())
-                            ),
-                    Pageable.ofSize(8));
-        return stageRepo.findAll(InternshipContainSpec.getInternshipSpec(s), Pageable.ofSize(8));
+                            .and(InternerOwnSpec.getInternshipSpec((Interner) Utils.getCurrUser())),
+                    pageable);
+        return stageRepo.findAll(InternshipContainSpec.getInternshipSpec(s), pageable);
 
     }
 

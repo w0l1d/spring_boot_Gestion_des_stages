@@ -8,14 +8,16 @@ import com.storactive.stg.repository.StagePieceRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StagePieceService {
     final String OBJ = "Stage Piece";
 
@@ -26,11 +28,11 @@ public class StagePieceService {
     final AttachmentService attachmentSer;
     final FileStorageService storageSer;
     final PieceService pieceSer;
+    final AlertService alertSer;
 
 
 
 
-    @Transactional
     public StagePiece create(Piece piece,
                              Internship internship,
                              MultipartFile file) {
@@ -61,11 +63,15 @@ public class StagePieceService {
 
         //register action in history
         historySer.objetCreated(OBJ, stagePiece.getId());
+
+        //alert Pieces which are not related to internship
+        List<Piece> pieces = pieceSer.findAllNotRelatedToInternship(internship);
+        alertSer.alertInternshipPieces(internship, pieces);
+
         return stagePiece;
     }
 
 
-    @Transactional
     public StagePiece update(int stagePieceId, int pieceId, MultipartFile file) {
         StagePiece stagePiece = findById(stagePieceId);
 
@@ -99,7 +105,6 @@ public class StagePieceService {
         return updatedStagePiece;
     }
 
-    @Transactional
     public void delete(Integer id) {
         StagePiece stagePiece = findById(id);
 
@@ -125,7 +130,12 @@ public class StagePieceService {
         //delete stagePiece
         stagePieceRepo.deleteById(id);
 
+        //register action in history
         historySer.objetDeleted(OBJ, id);
+
+        //alert Pieces which are not related to internship
+        List<Piece> pieces = pieceSer.findAllNotRelatedToInternship(internship);
+        alertSer.alertInternshipPieces(internship, pieces);
     }
 
 

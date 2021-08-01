@@ -1,6 +1,5 @@
 package com.storactive.stg.service;
 
-import com.storactive.stg.exception.ValueAlreadyUsedException;
 import com.storactive.stg.model.Interner;
 import com.storactive.stg.model.User;
 import com.storactive.stg.repository.InternerRepo;
@@ -8,6 +7,7 @@ import com.storactive.stg.repository.UserRepo;
 import com.storactive.stg.service.iService.IInternerService;
 import com.storactive.stg.specs.InternerContainSpec;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,11 +15,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InternerService implements IInternerService {
+
+
+    @Value("${spring.custom.select2.page-size}")
+    private Integer MAX_PAGE_SIZE;
+    @Value("${spring.custom.select2.limited-results-number}")
+    private boolean LIMITED_NUMBER;
 
     final String OBJ = "Stagiaire";
     final InternerRepo internerRepo;
@@ -43,9 +51,13 @@ public class InternerService implements IInternerService {
         return internerRepo.findByIdAndUsernameAndEnabledIsTrue(user.getId(), user.getUsername()).orElse(null);
     }
 
-
     public Page<Interner> findAllContains(String s) {
-        return internerRepo.findAll(InternerContainSpec.getInternerSpec(s), Pageable.ofSize(8));
+        Pageable pageable = (LIMITED_NUMBER) ?
+                Pageable.ofSize(MAX_PAGE_SIZE)
+                :
+                Pageable.unpaged();
+        return internerRepo.findAll(InternerContainSpec.getInternerSpec(s), pageable);
+
     }
 
 
@@ -62,8 +74,8 @@ public class InternerService implements IInternerService {
         }
         User user1 = user.orElse(null);
         if (user1.getCin().equals(interner.getCin()))
-            throw new ValueAlreadyUsedException("cin '"+user1.getCin()+"' Already Exists");
-        throw new ValueAlreadyUsedException("Username '"+user1.getUsername()+"' Already Exists");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "cin '" + user1.getCin() + "' Already Exists");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Username '" + user1.getUsername() + "' Already Exists");
     }
 
 

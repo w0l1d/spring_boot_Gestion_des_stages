@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DataTableService {
 
     final EmployeeRepo employeeRepo;
@@ -21,6 +23,7 @@ public class DataTableService {
     final HistoryRepo historyRepo;
     final PieceRepo pieceRepo;
     final StagePieceRepo stagePieceRepo;
+    final AlertRepo alertRepo;
 
 
 
@@ -39,6 +42,17 @@ public class DataTableService {
 
     public DataTablesOutput<Task> getTasks(DataTablesInput dtRequest, Interner interner) {
         DataTablesOutput<Task> output = taskRepo.findAll(dtRequest, InternerOwnSpec.getTaskSpec(interner));
+        output.setRecordsTotal(output.getRecordsFiltered());
+        return output;
+    }
+
+    public DataTablesOutput<Alert> getAlerts(DataTablesInput request) {
+        return alertRepo.findAll(request);
+    }
+
+
+    public DataTablesOutput<Alert> getAlerts(DataTablesInput dtRequest, Interner interner) {
+        DataTablesOutput<Alert> output = alertRepo.findAll(dtRequest, InternerOwnSpec.getAlertSpec(interner));
         output.setRecordsTotal(output.getRecordsFiltered());
         return output;
     }

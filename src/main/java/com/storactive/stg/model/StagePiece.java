@@ -33,5 +33,4 @@ public class StagePiece {
     @ManyToOne(optional = false)
     @ToString.Exclude
     private Internship internship;
-
 }

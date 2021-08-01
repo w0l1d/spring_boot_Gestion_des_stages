@@ -103,4 +103,14 @@ public class DataTableRestController {
         return dataTableService.getStagePieces(dtRequest, (Interner) Utils.getCurrUser());
     }
 
+
+    @PostMapping("/alert")
+    public DataTablesOutput<Alert> getAlerts(@Valid @RequestBody DataTablesInput dtRequest,
+                                             HttpServletRequest request) {
+        if (request.isUserInRole("ROLE_ADMIN"))
+            return dataTableService.getAlerts(dtRequest);
+
+        return dataTableService.getAlerts(dtRequest, (Interner) Utils.getCurrUser());
+    }
+
 }

@@ -133,12 +133,12 @@ public class DashboardController {
     public String getProfile(HttpServletRequest request, Model model) {
         model.addAttribute("isProfile", true);
         if (request.isUserInRole("ROLE_ADMIN")) {
-            model.addAttribute("user", (Employee) Utils.getCurrUser());
+            model.addAttribute("employee", (Employee) Utils.getCurrUser());
             return "employee/update";
         }
 
         Interner interner = (Interner) Utils.getCurrUser();
-        model.addAttribute("user", interner);
+        model.addAttribute("employee", interner);
         return "interner/update";
 
 

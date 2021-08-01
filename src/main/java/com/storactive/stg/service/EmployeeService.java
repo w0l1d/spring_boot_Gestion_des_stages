@@ -10,11 +10,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
+@Transactional
 public class EmployeeService {
 
     final String OBJ = "Employee";
