@@ -41,7 +41,6 @@ public class EmployeeController {
                     .addAttribute("employee", new Employee());
         }
 
-
         return "employee/index";
     }
 
@@ -74,7 +73,7 @@ public class EmployeeController {
                                   Model model) {
         employeeSer.delete(id);
         model.addAttribute("msg_deleted", true);
-        return "redirect:/internships?inserted";
+        return "redirect:/users?deleted";
     }
 
 }

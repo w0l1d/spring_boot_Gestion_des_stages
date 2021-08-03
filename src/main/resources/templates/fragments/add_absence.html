@@ -18,7 +18,7 @@
 </button>
 
 <form id="add_absence_form" method="post"
-      th:action="@{${#httpServletRequest.requestURI + '/absences'}}"
+      th:action="@{{curr}/absences(curr=${#httpServletRequest.requestURI})}"
       th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
       th:object="${absence}">
     <div aria-hidden="true" aria-labelledby="add_absence_modal_Title" class="modal fade" id="add_absence_modal"
@@ -54,6 +54,16 @@
                             <div class="invalid-feedback"
                                  th:errors="*{endsAt}"
                                  th:if="${#fields.hasErrors('endsAt')}"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="valideRange" required
+                                   th:class="'form-control' + ${#fields.hasErrors('validRange') ? ' is-invalid':''}"
+                                   th:field="*{validRange}"
+                                   type="hidden">
+                            <div class="invalid-feedback"
+                                 th:errors="*{validRange}"
+                                 th:if="${#fields.hasErrors('validRange')}">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">

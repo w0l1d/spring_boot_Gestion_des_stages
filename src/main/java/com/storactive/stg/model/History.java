@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 import static javax.persistence.TemporalType.TIMESTAMP;
@@ -20,7 +22,9 @@ public class History {
     private Integer id;
 
     @Column(nullable = false)
-    @NotBlank
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String action;
 
     @CreatedDate

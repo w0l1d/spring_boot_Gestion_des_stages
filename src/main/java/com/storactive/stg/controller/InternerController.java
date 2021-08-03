@@ -65,8 +65,8 @@ public class InternerController {
     @PostMapping("/{id}/update")
     public String putUpdateInterner(@PathVariable @Valid @NotNull Integer id,
                                     @ModelAttribute @Valid Interner interner,
-                                    Model model,
-                                    BindingResult bindingResult) {
+                                    BindingResult bindingResult,
+                                    Model model) {
         if (bindingResult.hasErrors())
             return "interner/update";
 
@@ -88,7 +88,7 @@ public class InternerController {
     @GetMapping("/{id}/internship")
     public String getAddInternship(Model model, @PathVariable @Valid @NotNull Integer id) {
         model.addAttribute("internship", new Internship());
-        return "add_internship_page";
+        return "interner/add_internship_page";
     }
 
     @PostMapping({"/{id}", "/{id}/internship"})
@@ -97,7 +97,7 @@ public class InternerController {
                                     @ModelAttribute @Valid Internship internship,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "add_internship_page";
+            return "interner/add_internship_page";
 
         Interner interner = internerSer.findById(id);
 
@@ -105,7 +105,7 @@ public class InternerController {
         stageSer.create(internship);
 
 
-        return "redirect:/internships?inserted";
+        return "redirect:/interners/" + id + "?internship_inserted";
     }
 
 

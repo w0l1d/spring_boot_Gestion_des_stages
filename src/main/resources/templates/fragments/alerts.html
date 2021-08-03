@@ -42,6 +42,14 @@
     </div>
 </div>
 
+<div class="alerts font-weight-bold m-0 text-primary toast" id="interner-internships-alerts">
+    <div class="alert alert-success d-inline-block row"
+         th:if="${msg_internship_inserted} or ${param.internship_inserted}">
+        <p class="d-inline-block m-0 col-auto" th:text="#{msg.stage_inserted}"></p>
+        <i class="close-alert fa fa-times pl-4 col-auto" role="button"></i>
+    </div>
+</div>
+
 
 <div class="alerts font-weight-bold m-0 text-primary toast" id="absence-alerts">
     <div class="alert alert-success d-inline-block row" th:if="${msg_inserted} or ${param.inserted}">

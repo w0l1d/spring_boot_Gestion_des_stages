@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -105,8 +106,8 @@ public class InternshipsController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String putUpdateInternship(@PathVariable Integer id,
                                       @ModelAttribute @Valid Internship internship,
-                                      Model model,
-                                      BindingResult bindingResult) {
+                                      BindingResult bindingResult,
+                                      Model model) {
         if (bindingResult.hasErrors())
             return "internship/update";
 
@@ -154,13 +155,21 @@ public class InternshipsController {
     public String postInternshipTask(@PathVariable Integer id,
                                      @ModelAttribute @Valid Task task,
                                      BindingResult bindingResult,
+                                     RedirectAttributes attr,
                                      Model model,
                                      HttpServletRequest request) {
         Internship internship = stageSer.findById(id);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("internship", internship);
-            return "internship/view";
+            attr.addFlashAttribute("internship", internship);
+            attr.addFlashAttribute("org.springframework.validation.BindingResult.absence", bindingResult);
+
+            if (model.containsAttribute("task"))
+                model.addAttribute("task", new Task());
+            if (model.containsAttribute("absence"))
+                model.addAttribute("absence", new Absence());
+            return "redirect:/internships/" + id;
         }
 
         // Interner can add task only to it's own internships
@@ -208,28 +217,40 @@ public class InternshipsController {
         return "internship/absences";
     }
 
-
-    @PostMapping("/{id}/absences")
-    @Transactional
-    public String postInternshipAbsence(@PathVariable Integer id,
-                                        @ModelAttribute @Valid Absence absence,
-                                        HttpServletRequest request,
-                                        BindingResult bindingResult,
-                                        Model model) {
+    @GetMapping("/{id}/absence/create")
+    public String getAddInternshipAbsences(@PathVariable Integer id,
+                                           Model model,
+                                           HttpServletRequest request) {
         Internship internship = stageSer.findById(id);
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("internship", internship);
-            return "internship/view";
-        }
 
         Utils.assertAuthorizedToResource(request, internship.getInterner());
 
-        absence.setInternship(internship);
-        absence = absenceSer.create(absence);
-        internship.getAbsences().add(absence);
+        model.addAttribute("absence", new Absence());
+        return "internship/add_absence_page";
+    }
 
-        model.addAttribute("absence_inserted", true);
+
+    @PostMapping("/{id}/absence/create")
+    @Transactional
+    public String postInternshipAbsence(@PathVariable Integer id,
+                                        @ModelAttribute @Valid Absence absence,
+                                        BindingResult bindingResult,
+                                        HttpServletRequest request,
+                                        RedirectAttributes attr) {
+        Internship internship = stageSer.findById(id);
+
+        System.out.println("************** 00000000");
+        if (bindingResult.hasErrors())
+            return "internship/add_absence_page";
+
+        System.out.println("************** 111111");
+
+        Utils.assertAuthorizedToResource(request, internship.getInterner());
+        System.out.println("************** 22222222");
+        absence.setInternship(internship);
+        absenceSer.create(absence);
+
+        attr.addFlashAttribute("absence_inserted", true);
         return "redirect:/internships/" + id + "?absence_inserted";
     }
 

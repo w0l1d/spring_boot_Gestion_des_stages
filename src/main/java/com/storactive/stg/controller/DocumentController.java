@@ -67,6 +67,7 @@ public class DocumentController {
                                       Model model) {
         StagePiece stagePiece = stagePieceSer.findById(id);
         model.addAttribute("stagePiece", stagePiece);
+        model.addAttribute("pieces", pieceSer.findAll());
         return "attachment/update";
     }
 

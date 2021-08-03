@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:lang="${#locale.language}">
+<html th:lang="${#locale.language}"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,7 @@
     <meta content="w0l1d" name="author">
 
 
-    <title th:text="#{title.update_absence}">Gestion des Stagiaires - Stagiares</title>
+    <title th:text="#{title.add_absence}">Gestion des Stagiaires - Stagiares</title>
 
     <!-- replace with global stylesheets-->
     <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
@@ -42,8 +42,8 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800" th:text="#{title.update_absence}">update absence</h1>
-                <form id="add_absence_form" method="post"
+                <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_absence}">Stagiaires</h1>
+                <form id="add_internship_form" method="post"
                       th:action="@{${#httpServletRequest.requestURI}}"
                       th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
                       th:object="${absence}">
@@ -51,8 +51,6 @@
                         <div class="card-header py-3">
                             <h6 class="d-inline m-0 font-weight-bold text-primary">
                             </h6>
-
-
                         </div>
                         <div class="card-body">
                             <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
@@ -77,7 +75,8 @@
                                 <div class="form-group">
                                     <input id="valideRange" required
                                            th:class="'form-control' + ${#fields.hasErrors('validRange') ? ' is-invalid':''}"
-                                           th:field="*{validRange}" type="hidden">
+                                           th:field="*{validRange}"
+                                           type="hidden">
                                     <div class="invalid-feedback"
                                          th:errors="*{validRange}"
                                          th:if="${#fields.hasErrors('validRange')}">
@@ -89,8 +88,9 @@
                                 <div class="input-group">
                                     <input id="nbr_jours"
                                            min="1"
+                                           required
                                            th:class="'form-control ' + ${#fields.hasErrors('nbrDays') ? 'is-invalid':''}"
-                                           required th:field="*{nbrDays}" type="number">
+                                           th:field="*{nbrDays}" type="number">
                                     <div class="input-group-append">
                                         <span class="input-group-text"
                                               id="basic-addon2"
@@ -115,11 +115,8 @@
                             </div>
 
                         </div>
-
                         <div class="card-footer">
-                            <button class="btn btn-primary btn-block" th:text="#{action.update}" type="submit">
-                                Update
-                            </button>
+                            <button class="btn btn-primary btn-block" th:text="#{action.add}" type="submit">Add</button>
                         </div>
                     </div>
                 </form>
@@ -144,11 +141,6 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-
-<!-- Logout Modal @#@-->
-<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
-
-
 <!-- replace with global scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
 
@@ -160,12 +152,8 @@
             return date;
         }
 
-        let starts = $('#start');
-        let date = starts.val();
-        date = new Date(date).addDays(1).toISOString().slice(0, 10);
-        $('#ends').prop('min', date);
 
-        starts.on('change', function () {
+        $('#start').on('change', function () {
             let date = $(this).val();
             date = new Date(date).addDays(1).toISOString().slice(0, 10);
             $('#ends').prop('min', date);

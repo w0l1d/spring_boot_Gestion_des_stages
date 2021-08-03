@@ -45,7 +45,7 @@
       <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_internship}">Stages</h1>
+        <h1 class="h3 mb-4 text-gray-800" th:text="#{title.update_internship}">Stages</h1>
         <form id="add_internship_form" th:object="${internship}"
               method="post" th:action="@{${#httpServletRequest.requestURI}}"
               th:class="${#fields.hasAnyErrors()? 'was-validated':''}">
@@ -82,6 +82,15 @@
                        th:errors="*{endsAt}"
                        th:if="${#fields.hasErrors('endsAt')}"></div>
                 </div>
+                <div class="form-group">
+                  <input id="valideRange" required
+                         th:class="'form-control' + ${#fields.hasErrors('validRange') ? ' is-invalid':''}"
+                         th:field="*{validRange}" type="hidden">
+                  <div class="invalid-feedback"
+                       th:errors="*{validRange}"
+                       th:if="${#fields.hasErrors('validRange')}">
+                  </div>
+                </div>
               </div>
 
               <div class="form-row row-cols-2 row-cols-sm-1">
@@ -99,7 +108,7 @@
                   <select id="status"
                           required th:class="'form-control ' + ${#fields.hasErrors('status') ? 'is-invalid':''}"
                           th:field="*{status}">
-                    <option selected th:text="#{form.status.in_progress}"
+                    <option th:text="#{form.status.in_progress}"
                             th:value="${T(com.storactive.stg.model.enums.InternshipStatus).IN_PROGRESS.value}"></option>
                     <option th:text="#{form.status.saved}"
                             th:value="${T(com.storactive.stg.model.enums.InternshipStatus).SAVED.value}"></option>
@@ -191,6 +200,29 @@
 
 <!-- replace with global scripts @#@ -->
 <div th:replace="~{fragments/all_assets.html :: script}" class="replace-fragment"></div>
+
+<script>
+  $(document).ready(function () {
+    Date.prototype.addDays = function (days) {
+      var date = new Date(this.valueOf());
+      date.setDate(date.getDate() + days);
+      return date;
+    }
+
+
+    let starts = $('#start');
+    let date = starts.val();
+    date = new Date(date).addDays(1).toISOString().slice(0, 10);
+    $('#ends').prop('min', date);
+
+
+    starts.on('change', function () {
+      let date = $(this).val();
+      date = new Date(date).addDays(1).toISOString().slice(0, 10);
+      $('#ends').prop('min', date);
+    });
+  });
+</script>
 
 </body>
 

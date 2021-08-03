@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 
@@ -23,10 +24,12 @@ public class Absence {
 
     @Column(nullable = false,name = "date_du")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "{validation.required}")
     private Date startsAt;
 
     @Column(nullable = false, name = "date_au")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "{validation.required}")
     private Date endsAt;
 
     @Column(nullable = false, name = "nombre_jours")
@@ -34,18 +37,26 @@ public class Absence {
 
     private String cause;
 
+    @AssertTrue(message = "{validation.dates.valid_range}")
+    @Transient
+    @JsonIgnore
+    private boolean validRange;
+
 
     @PrePersist
     @PreUpdate
-    public void calculateNbrDays() {
+    public void initValues() {
         this.nbrDays = Utils.getPeriodInDaysBetween(this.startsAt, this.endsAt);
+        this.validRange = endsAt.compareTo(startsAt) > 0;
     }
 
-    @AssertTrue
-    @Transient
-    @JsonIgnore
+
     public boolean isValidRange() {
-        return endsAt.compareTo(startsAt) > 0;
+        return this.validRange;
+    }
+
+    public void setValidRange(boolean validRange) {
+        this.validRange = endsAt.compareTo(startsAt) > 0;
     }
 
 

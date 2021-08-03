@@ -22,22 +22,26 @@ public class Internship {
     private Integer id;
 
     @Column(nullable = false)
-    @NotBlank
-    @NotEmpty
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String type;
 
     @Column(nullable = false,name = "date_du")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "{validation.required}")
     private Date startsAt;
 
     @Column(nullable = false,name = "date_au")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "{validation.required}")
     private Date endsAt;
 
 
     @Column(name = "duree")
-    @NotBlank
-    @NotEmpty
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String duration;
 
     private String formation;
@@ -46,17 +50,41 @@ public class Internship {
     private String etablissement;
 
     @Column(name = "intitule_projet", nullable = false)
-    @NotBlank
-    @NotEmpty
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String project;
 
     @Column(name = "description_project")
     private String desc;
 
     @Column(nullable = false)
-    @Min(1)
-    @Max(4)
+    @NotNull(message = "{validation.required}")
+    @Min(value = 1, message = "{validation.min}")
+    @Max(value = 4, message = "{validation.max}")
     private int status;
+
+    @AssertTrue(message = "{validation.dates.valid_range}")
+    @Transient
+    @JsonIgnore
+    private boolean validRange;
+
+
+    public boolean isValidRange() {
+        return this.validRange;
+    }
+
+
+    public void setValidRange(boolean validRange) {
+        this.validRange = endsAt.compareTo(startsAt) > 0;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void initValues() {
+        this.validRange = endsAt.compareTo(startsAt) > 0;
+    }
+
 
     @ManyToOne(optional = false)
     @JsonIgnoreProperties(
@@ -94,12 +122,6 @@ public class Internship {
     @ToString.Exclude
     private Collection<StagePiece> stagePieces;
 
-    @AssertTrue
-    @Transient
-    @JsonIgnore
-    public boolean isValidRange() {
-        return endsAt.compareTo(startsAt) > 0;
-    }
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "internship")

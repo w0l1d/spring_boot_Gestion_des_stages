@@ -159,7 +159,7 @@
                             render: function (data, type, row) {
                                 let href = `/users/${row.id}`;
                                 let actions = $('#actions').clone()
-                                $(actions).find('.btn-danger').attr('href', href + 'delete')
+                                $(actions).find('.btn-danger').attr('href', href + '/delete')
                                 $(actions).find('.btn-primary').attr('href', href + '/update');
                                 return actions.html();
                             }

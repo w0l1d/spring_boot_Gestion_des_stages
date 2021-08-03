@@ -67,22 +67,31 @@
                             <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
                                 <div class="form-group">
                                     <label for="start" th:text="#{form.starts_at}">starts at</label>
-                                    <input id="start"
+                                    <input id="start" required
                                            th:class="'form-control ' + ${#fields.hasErrors('startsAt') ? 'is-invalid':''}"
-                                           required th:field="*{startsAt}" type="date">
+                                           th:field="*{startsAt}" type="date">
                                     <div class="invalid-feedback"
                                          th:errors="*{startsAt}"
                                          th:if="${#fields.hasErrors('startsAt')}"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="ends" th:text="#{form.ends_at}">ends at</label>
-                                    <input id="ends"
-                                           required
+                                    <input id="ends" required
                                            th:class="'form-control ' + ${#fields.hasErrors('endsAt') ? 'is-invalid':''}"
                                            th:field="*{endsAt}" type="date">
                                     <div class="invalid-feedback"
                                          th:errors="*{endsAt}"
                                          th:if="${#fields.hasErrors('endsAt')}"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input id="valideRange" required
+                                       th:class="'form-control' + ${#fields.hasErrors('validRange') ? ' is-invalid':''}"
+                                       th:field="*{validRange}"
+                                       type="hidden">
+                                <div class="invalid-feedback"
+                                     th:errors="*{validRange}"
+                                     th:if="${#fields.hasErrors('validRange')}">
                                 </div>
                             </div>
 
@@ -103,10 +112,14 @@
                                             required
                                             th:class="'form-control ' + ${#fields.hasErrors('status') ? 'is-invalid':''}"
                                             th:field="*{status}">
-                                        <option selected th:text="#{form.status.in_progress}" value="1"></option>
-                                        <option th:text="#{form.status.saved}" value="2"></option>
-                                        <option th:text="#{form.status.finished}" value="3"></option>
-                                        <option th:text="#{form.status.canceled}" value="3"></option>
+                                        <option selected th:text="#{form.status.in_progress}"
+                                                th:value="${T(com.storactive.stg.model.enums.InternshipStatus).IN_PROGRESS.value}"></option>
+                                        <option th:text="#{form.status.saved}"
+                                                th:value="${T(com.storactive.stg.model.enums.InternshipStatus).SAVED.value}"></option>
+                                        <option th:text="#{form.status.finished}"
+                                                th:value="${T(com.storactive.stg.model.enums.InternshipStatus).FINISHED.value}"></option>
+                                        <option th:text="#{form.status.canceled}"
+                                                th:value="${T(com.storactive.stg.model.enums.InternshipStatus).CANCELED.value}"></option>
                                     </select>
                                     <div class="invalid-feedback"
                                          th:errors="*{status}"
@@ -184,6 +197,23 @@
 
 <!-- replace with global scripts @#@ -->
 <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+<script>
+    $(document).ready(function () {
+        Date.prototype.addDays = function (days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
+
+
+        $('#start').on('change', function () {
+            let date = $(this).val();
+            date = new Date(date).addDays(1).toISOString().slice(0, 10);
+            $('#ends').prop('min', date);
+        });
+    });
+</script>
 
 </body>
 

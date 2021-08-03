@@ -21,12 +21,13 @@ public class Piece {
     private Integer id;
 
     @Column(nullable = false)
-    @NotNull
-    @NotEmpty
-    @NotBlank
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String label;
 
 
+    @Transient
     public int getSpcCount() {
         return stagePieces.size();
     }

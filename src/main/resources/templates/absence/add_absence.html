@@ -46,7 +46,7 @@
                             <label for="start" th:text="#{form.starts_at}">starts at</label>
                             <input id="start"
                                    required
-                                   th:class="'form-control' + ${#fields.hasErrors('startsAt') ? ' is-invalid':''}"
+                                   th:class="'form-control startDate' + ${#fields.hasErrors('startsAt') or #fields.hasErrors('validRange') ? ' is-invalid':''}"
                                    th:field="*{startsAt}"
                                    type="date">
                             <div class="invalid-feedback"
@@ -55,9 +55,8 @@
                         </div>
                         <div class="form-group date">
                             <label for="ends" th:text="#{form.ends_at}">ends at</label>
-                            <input id="ends"
-                                   required
-                                   th:class="'form-control ' + ${#fields.hasErrors('endsAt') ? 'is-invalid':''}"
+                            <input id="ends" required
+                                   th:class="'form-control endDate' + ${#fields.hasErrors('endsAt') or #fields.hasErrors('validRange') ? ' is-invalid':''}"
                                    th:field="*{endsAt}"
                                    type="date">
                             <div class="invalid-feedback"
@@ -66,11 +65,19 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <input id="valideRange" required
+                               th:class="'form-control' + ${#fields.hasErrors('validRange') ? ' is-invalid':''}"
+                               th:field="*{validRange}"
+                               type="hidden">
+                        <div class="invalid-feedback"
+                             th:errors="*{validRange}"
+                             th:if="${#fields.hasErrors('validRange')}">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="nbr_jours" th:text="#{form.nbr_jours}"></label>
                         <div class="input-group">
-                            <input id="nbr_jours"
-                                   min="1"
-                                   required
+                            <input id="nbr_jours" min="1" required
                                    th:class="'form-control ' + ${#fields.hasErrors('nbrDays') ? 'is-invalid':''}"
                                    th:field="*{nbrDays}"
                                    type="number">
@@ -109,8 +116,20 @@
 
     <script>
         $(document).ready(function () {
+            Date.prototype.addDays = function (days) {
+                var date = new Date(this.valueOf());
+                date.setDate(date.getDate() + days);
+                return date;
+            }
+
             if ($('#add_absence_form').hasClass('was-validated'))
                 $("#add_absence_modal_button").click()
+
+            $('#start').on('change', function () {
+                let date = $(this).val();
+                date = new Date(date).addDays(1).toISOString().slice(0, 10);
+                $('#ends').prop('min', date);
+            });
         });
     </script>
 

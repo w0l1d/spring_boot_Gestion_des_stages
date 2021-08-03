@@ -10,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,16 +22,18 @@ import java.util.List;
 public class Interner extends User {
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "{validation.required}")
     private Gender gender;
 
     private String address;
 
 
     @Size(min = 10, max = 13)
-    @NotBlank
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     @Pattern(regexp = "^(\\+[0-9]{1,3}|0)([ \\-_/]*)(\\d[ \\-_/]*){9}$",
-            message = "phone format: '*# ## ## ## ##' (#: number || *: 0 or '+'country code)")
+            message = "{validation.format.phone}")
     private String phone;
 
     @ColumnDefault("false")

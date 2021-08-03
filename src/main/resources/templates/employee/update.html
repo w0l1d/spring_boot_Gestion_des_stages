@@ -102,10 +102,9 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="password" th:text="#{form.password}">Password</label>
-                                <input id="password" min="8" required
+                                <input id="password" minlength="8"
                                        th:class="'form-control ' + ${#fields.hasErrors('password') ? 'is-invalid':''}"
-                                       th:field="*{password}"
-                                       type="password"/>
+                                       required th:field="*{password}" type="password"/>
                                 <div class="invalid-feedback"
                                      th:errors="*{password}"
                                      th:if="${#fields.hasErrors('password')}"></div>

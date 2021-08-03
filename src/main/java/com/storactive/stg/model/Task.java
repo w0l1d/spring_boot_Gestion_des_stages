@@ -5,9 +5,9 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -20,14 +20,14 @@ public class Task {
     private Integer id;
 
     @Column(name = "task", nullable = false)
-    @NotBlank
-    @NotEmpty
+    @NotBlank(message = "{validation.required}")
+    @NotEmpty(message = "{validation.required}")
     private String txtTask;
 
     @Column(name = "date_task",
             nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @FutureOrPresent
+    @NotNull(message = "{validation.required}")
     private Date dateTask;
 
     @ManyToOne(optional = false)

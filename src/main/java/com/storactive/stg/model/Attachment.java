@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -15,16 +17,23 @@ public class Attachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
+
     @Column(nullable = false, name = "piece_jointe")
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String pieceJoint;
 
-    @NotBlank
     @Column(nullable = false, name = "type_piece_jointe")
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String type;
 
-    @NotBlank
     @Column(nullable = false)
+    @NotEmpty(message = "{validation.required}")
+    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     private String path;
 
 

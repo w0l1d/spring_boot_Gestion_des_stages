@@ -150,6 +150,7 @@
                         <div class="replace-fragment"
                              id="add-task-dialog-button" sec:authorize="hasRole('ROLE_ADMIN')"
                              th:replace="~{fragments/add_task.html :: #add_task_modal_button}"></div>
+
                     </div>
                     <div class="card-body">
                         <table class="display responsive nowrap"
@@ -201,9 +202,16 @@
                         </h4>
 
                         <!-- Add Absence Modal Button @#@-->
-                        <div class="replace-fragment"
-                             id="add-absence-dialog-button"
-                             th:replace="~{fragments/add_absence.html :: #add_absence_modal_button}"></div>
+                        <!--                        <div class="replace-fragment"-->
+                        <!--                             id="add-absence-dialog-button"-->
+                        <!--                             th:replace="~{fragments/add_absence.html :: #add_absence_modal_button}"></div>-->
+
+                        <a class="btn btn-primary float-right px-4 d-inline-block"
+                           id="add_absence_page_button"
+                           th:href="@{{curr}/absence/create(curr=${#httpServletRequest.requestURI})}"
+                           th:text="#{action.add}" type="button">
+                            Add
+                        </a>
 
                     </div>
                     <div class="card-body">
@@ -357,8 +365,8 @@
 
 
 <!-- Add Absence Modal @#@-->
-<div class="replace-fragment" id="add-absence-dialog"
-     th:replace="~{fragments/add_absence.html :: #add_absence_form}"></div>
+<!--<div class="replace-fragment" id="add-absence-dialog"-->
+<!--     th:replace="~{fragments/add_absence.html :: #add_absence_form}"></div>-->
 
 <!-- Add internship Modal @#@-->
 <div class="replace-fragment" id="add-file-dialog" sec:authorize="hasRole('ROLE_ADMIN')"
