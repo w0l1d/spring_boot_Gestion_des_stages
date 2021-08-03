@@ -37,6 +37,13 @@ public class InternshipsController {
 
         if (request.getParameter("inserted") != null)
             model.addAttribute("msg_inserted", true);
+
+        if (model.getAttribute("msg_updated") != null) {
+            model.addAttribute("msg_updated", true);
+            System.out.println("******update is in model");
+
+        }
+
         model.addAttribute("internship", new Internship());
         return "internship/index";
     }
@@ -46,7 +53,8 @@ public class InternshipsController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String postInternship(@NotNull @RequestParam("interner-select") Integer internerId,
                                  @ModelAttribute @Valid Internship internship,
-                                 BindingResult result) {
+                                 BindingResult result,
+                                 Model model) {
         if (result.hasErrors())
             return "internship/index";
 
@@ -56,6 +64,8 @@ public class InternshipsController {
         internship = stageSer.create(internship);
 
         interner.getInternships().add(internship);
+
+        model.addAttribute("msg_inserted", true);
 
         return "internship/index";
     }
@@ -104,7 +114,7 @@ public class InternshipsController {
         internship.setId(id);
         stageSer.update(internship);
         model.addAttribute("msg_updated", true);
-        return "internship/index";
+        return "redirect:/internships?updated";
     }
 
     @GetMapping("/{id}/delete")

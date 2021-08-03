@@ -123,7 +123,14 @@
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
 
-        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+        const dateOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false
+        };
 
         const columns = [
             {data: 'id'},

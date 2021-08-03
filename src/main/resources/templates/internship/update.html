@@ -99,10 +99,14 @@
                   <select id="status"
                           required th:class="'form-control ' + ${#fields.hasErrors('status') ? 'is-invalid':''}"
                           th:field="*{status}">
-                    <option selected th:text="#{form.status.in_progress}" value="1"></option>
-                    <option th:text="#{form.status.saved}" value="2"></option>
-                    <option th:text="#{form.status.finished}" value="3"></option>
-                    <option th:text="#{form.status.canceled}" value="3"></option>
+                    <option selected th:text="#{form.status.in_progress}"
+                            th:value="${T(com.storactive.stg.model.enums.InternshipStatus).IN_PROGRESS.value}"></option>
+                    <option th:text="#{form.status.saved}"
+                            th:value="${T(com.storactive.stg.model.enums.InternshipStatus).SAVED.value}"></option>
+                    <option th:text="#{form.status.finished}"
+                            th:value="${T(com.storactive.stg.model.enums.InternshipStatus).FINISHED.value}"></option>
+                    <option th:text="#{form.status.canceled}"
+                            th:value="${T(com.storactive.stg.model.enums.InternshipStatus).CANCELED.value}"></option>
                   </select>
                   <div class="invalid-feedback"
                        th:errors="*{status}"
