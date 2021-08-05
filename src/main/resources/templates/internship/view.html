@@ -372,16 +372,6 @@
 <div class="replace-fragment" id="add-file-dialog" sec:authorize="hasRole('ROLE_ADMIN')"
      th:replace="~{fragments/add_file.html :: #add_file_form}"></div>
 
-<script sec:authorize="hasRole('ROLE_ADMIN')">
-    $(document).ready(function () {
-        $('#file').on('change', function () {
-            let numb = $(this)[0].files[0].size / 1024 / 1024;
-            numb = numb.toFixed(2);
-            if (numb > 5)
-                alert('to big, maximum is 2MiB. You file size is: ' + numb + ' MiB');
-        });
-    })
-</script>
 
 <script>
     // Call the dataTables jQuery plugin

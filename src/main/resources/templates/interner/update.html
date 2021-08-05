@@ -44,7 +44,7 @@
             <!-- Page Heading -->
             <h1 class="h3 mb-4 text-gray-800" th:text="#{title.add_stagiaire}">Stagiaires</h1>
             <form id="add_stagiaire_form" method="post"
-                  th:action="@{${#httpServletRequest.requestURI}}"
+                  th:action="${#httpServletRequest.requestURI}"
                   th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
                   th:object="${interner}">
                 <div class="card shadow mb-4">

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:lang="${#locale.language}">
 
 <head>
@@ -45,7 +46,7 @@
             <h1 class="h3 mb-4 text-gray-800"
                 th:text="${isProfile}? #{page.title.profile}:#{title.update_user}">Stagiaires</h1>
             <form id="add_user_form" method="post"
-                  th:action="@{${#httpServletRequest.requestURI}}"
+                  th:action="${#httpServletRequest.requestURI}"
                   th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
                   th:object="${employee}">
                 <div class="card shadow mb-4">
@@ -92,8 +93,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="username" th:text="#{form.username}">Username</label>
-                                <input id="username" min="4"
-                                       required
+                                <input id="username" minlength="4" required
                                        th:class="'form-control ' + ${#fields.hasErrors('username') ? 'is-invalid':''}"
                                        th:field="*{username}" type="text">
                                 <div class="invalid-feedback"

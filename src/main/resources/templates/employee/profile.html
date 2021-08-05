@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="w0l1d" name="author">
+
+
+    <title th:text="#{page.title.profile}">Gestion des Stagiaires - Stagiares</title>
+
+    <!-- replace with global stylesheets-->
+    <div class="replace-fragment" th:replace="~{fragments/all_assets.html :: link}"></div>
+
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar @#@ -->
+    <div class="replace-fragment" id="sidebar" th:replace="~{fragments/sidebar.html :: #sidebar}"></div>
+
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div class="d-flex flex-column" id="content-wrapper">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar @#@-->
+            <div class="replace-fragment" id="navbar" th:replace="~{fragments/navbar.html :: #navbar}"></div>
+            <!-- End of Topbar -->
+
+            <!-- Alerts -->
+            <div class="replace-fragment" id="alerts"
+                 th:replace="~{fragments/alerts.html :: #employee-alerts}"></div>
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800"
+                    th:text="#{page.title.profile}">Stagiaires</h1>
+                <form id="add_user_form" method="post"
+                      th:action="@{/admin-profile}"
+                      th:class="${#fields.hasAnyErrors()? 'was-validated':''}"
+                      th:object="${employee}">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="d-inline m-0 font-weight-bold text-primary">
+                            </h6>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="name" th:text="#{form.name}">Name</label>
+                                <input id="name" min="4"
+                                       required
+                                       th:class="'form-control ' + ${#fields.hasErrors('name') ? 'is-invalid':''}"
+                                       th:field="*{name}" type="text">
+                                <div class="invalid-feedback"
+                                     th:errors="*{name}"
+                                     th:if="${#fields.hasErrors('name')}"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="cin" th:text="#{form.cin}">CIN</label>
+                                    <input id="cin" pattern="^[A-Za-z]{1,2}[0-9]{4,8}$"
+                                           placeholder="AB12345678 A1234 A12345678" required
+                                           th:class="'form-control ' + ${#fields.hasErrors('cin') ? 'is-invalid':''}"
+                                           th:field="*{cin}"
+                                           type="text">
+                                    <small class="form-text text-muted text-gray-500">1-2 letters + 4 to 8
+                                        digits</small>
+                                    <div class="invalid-feedback"
+                                         th:errors="*{cin}"
+                                         th:if="${#fields.hasErrors('cin')}"></div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="email" th:text="#{form.email}">Email</label>
+                                    <input id="email" required
+                                           th:class="'form-control ' + ${#fields.hasErrors('email') ? 'is-invalid':''}"
+                                           th:field="*{email}" type="email">
+                                    <div class="invalid-feedback"
+                                         th:errors="*{email}"
+                                         th:if="${#fields.hasErrors('email')}"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="username" th:text="#{form.username}">Username</label>
+                                    <input id="username" minlength="4" required
+                                           th:class="'form-control ' + ${#fields.hasErrors('username') ? 'is-invalid':''}"
+                                           th:field="*{username}" type="text">
+                                    <div class="invalid-feedback"
+                                         th:errors="*{username}"
+                                         th:if="${#fields.hasErrors('username')}"></div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="password" th:text="#{form.password}">Password</label>
+                                    <input id="password" minlength="8"
+                                           required
+                                           th:class="'form-control ' + ${#fields.hasErrors('password') ? 'is-invalid':''}"
+                                           th:field="*{password}" type="password"/>
+                                    <div class="invalid-feedback"
+                                         th:errors="*{password}"
+                                         th:if="${#fields.hasErrors('password')}"></div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block" th:text="#{action.update}" type="submit">Update
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer  @#@-->
+        <div class="replace-fragment" id="footer" th:replace="~{fragments/footer.html :: #footer}"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+
+<!-- Logout Modal @#@-->
+<div class="replace-fragment" id="logout-dialog" th:replace="~{fragments/logout_modal.html :: #logoutModal}"></div>
+
+
+<!-- replace with global scripts @#@ -->
+<div class="replace-fragment" th:replace="~{fragments/all_assets.html :: script}"></div>
+
+</body>
+
+</html>

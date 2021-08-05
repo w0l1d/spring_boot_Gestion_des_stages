@@ -6,13 +6,22 @@ import com.storactive.stg.model.enums.Gender;
 import com.storactive.stg.service.EmployeeService;
 import com.storactive.stg.service.InternerService;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.implementation.bytecode.Throw;
+import org.springframework.data.util.CastUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/")
@@ -129,52 +138,71 @@ public class DashboardController {
         return "internship/add_internship";
     }
 
-    @GetMapping("profile")
+    @GetMapping({"profile", "admin-profile"})
     public String getProfile(HttpServletRequest request, Model model) {
-        model.addAttribute("isProfile", true);
         if (request.isUserInRole("ROLE_ADMIN")) {
             model.addAttribute("employee", (Employee) Utils.getCurrUser());
-            return "employee/update";
+            return "employee/profile";
         }
 
-        Interner interner = (Interner) Utils.getCurrUser();
-        model.addAttribute("employee", interner);
-        return "interner/update";
+        model.addAttribute("interner", (Interner) Utils.getCurrUser());
+        return "interner/profile";
+    }
 
+    @PostMapping("profile")
+    @PreAuthorize("hasRole('ROLE_INTERNER')")
+    public String postProfile(@ModelAttribute @Valid Interner interner,
+                              BindingResult bindingResult,
+                              Model model) {
+
+        if (bindingResult.hasErrors())
+            return "interner/profile";
+
+        interner.setId(Utils.getCurrUser().getId());
+        internerSer.update(interner);
+
+        model.addAttribute("msg_updated", true);
+        return "interner/profile";
+
+    }
+
+    @PostMapping("admin-profile")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String postAdminProfile(@ModelAttribute @Valid Employee employee,
+                                   BindingResult bindingResult,
+                                   Model model) {
+
+        if (bindingResult.hasErrors())
+            return "employee/profile";
+
+        employee.setId(Utils.getCurrUser().getId());
+        employeeSer.update(employee);
+
+        model.addAttribute("msg_updated", true);
+        return "employee/profile";
 
     }
 
 
-
-
-
-
-/*
-    @GetMapping("stages")
-    public String getStage(Model model) {
-        return "stage";
-    }
-
-    @GetMapping("historiques")
-    public String getHistory(Model model) {
-        return "history";
-    }
-
-    @GetMapping("taches")
-    public String getTache(Model model) {
-        return "tache";
-    }
-
-    @GetMapping("utilisateurs")
-    public String getUser(Model model) {
-        return "user";
-    }
-
-    @GetMapping("stages")
-    public String getArchive(Model model) {
-        return "archive";
-    }
-*/
+//    @PostMapping("admin-profile")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public String postAdminProfile(@ModelAttribute @Valid Employee employee,
+//                              BindingResult bindingResult,
+//                              RedirectAttributes attr,
+//                              Model model) {
+//        model.addAttribute("isProfile", true);
+//        if (bindingResult.hasErrors()) {
+//            attr.addFlashAttribute("org.springframework.validation.BindingResult.employee", bindingResult);
+//            attr.addFlashAttribute("employee",employee);
+//            return "redirect:/profile";
+//        }
+//
+//        employee.setId(Utils.getCurrUser().getId());
+//        employeeSer.update(employee);
+//
+//        model.addAttribute("msg_updated", true);
+//        return "employee/update";
+//    }
 
 
 }
