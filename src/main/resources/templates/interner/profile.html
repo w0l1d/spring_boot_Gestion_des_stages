@@ -131,7 +131,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="phone" th:text="#{form.phone}">Phone</label>
                                     <input id="phone" placeholder="0123456789 | +212 123456789 | +1 123456789"
-                                           required
+                                           pattern="^(\+[0-9]{1,3}|0)([ \-_/]*)(\d[ \-_/]*){9}$" required
                                            th:class="'form-control ' + ${#fields.hasErrors('phone') ? 'is-invalid':''}"
                                            th:field="*{phone}" type="text">
                                     <small class="form-text text-muted text-gray-500">

@@ -100,7 +100,7 @@
                             <hr class="col-12">
 
                             <dt class="col-4" th:text="#{internshiper}"></dt>
-                            <dd class="col-8">
+                            <dd class="col-8" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <p>
                                     <a th:href="@{/interners/{id}(id=${interner?.id})}"
                                        th:text="${interner?.id} + ', ' + ${interner?.name}">
@@ -147,8 +147,7 @@
                             th:text="#{sidebar.tasks}">
                         </h4>
                         <!-- Add Tasks Modal Button @#@-->
-                        <div class="replace-fragment"
-                             id="add-task-dialog-button" sec:authorize="hasRole('ROLE_ADMIN')"
+                        <div class="replace-fragment" id="add-task-dialog-button"
                              th:replace="~{fragments/add_task.html :: #add_task_modal_button}"></div>
 
                     </div>
@@ -161,7 +160,9 @@
                                 <th class="all" th:text="#{form.id}">Id</th>
                                 <th th:text="#{form.task}">task text</th>
                                 <th th:text="#{form.task_date}">task date</th>
-                                <th class="all" th:text="#{action.action}">Action</th>
+                                <th class="all" sec:authorize="hasRole('ROLE_ADMIN')"
+                                    th:text="#{action.action}">Action
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -169,7 +170,7 @@
                                 <td th:text="${sat?.id}"></td>
                                 <td th:text="${sat?.txtTask}"></td>
                                 <td th:text="${#dates.format(sat?.getDateTask, format)}"></td>
-                                <td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
                                     <div class="row">
                                         <div class="col-auto col-lg">
                                             <a class="btn btn-danger btn-circle btn-sm"
@@ -360,7 +361,7 @@
 <div class="replace-fragment" th:replace="~{fragments/local_assets.html :: #datatable/script}"></div>
 
 <!-- Add Task Modal @#@-->
-<div class="replace-fragment" id="add-task-dialog" sec:authorize="hasRole('ROLE_ADMIN')"
+<div class="replace-fragment" id="add-task-dialog"
      th:replace="~{fragments/add_task.html :: #add_task_form}"></div>
 
 

@@ -7,6 +7,7 @@ import com.storactive.stg.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -96,17 +98,16 @@ public class DocumentController {
     }
 
     @GetMapping("/{id}/download")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Resource> downloadStagePiece(@PathVariable Integer id) throws IOException {
         StagePiece stagePiece = stagePieceSer.findById(id);
         Resource resource = storageSer.load(stagePiece.getAttachment().getPath());
 
         if (!resource.exists())
-            throw new RuntimeException("File is not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File is not found");
         if (!resource.isReadable())
-            throw new RuntimeException("File not Readable");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "File not Readable");
         if (!resource.isFile())
-            throw new RuntimeException("Resource is not a file");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Resource is not a file");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,

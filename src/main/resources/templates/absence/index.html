@@ -134,18 +134,17 @@
 
 
 <!-- Add task Modal @#@-->
-<div class="replace-fragment"
-     id="add-absence-dialog" th:replace="~{absence/add_absence.html :: #add_absence_form}"></div>
+<div class="replace-fragment" id="add-absence-dialog"
+     th:replace="~{absence/add_absence.html :: #add_absence_form}"></div>
 
 
 <!-- Select2 script @#@-->
-<div class="replace-fragment"
-     id="select2-script" th:replace="~{absence/add_absence.html :: select2-script}"></div>
+<div class="replace-fragment" id="select2-script"
+     th:replace="~{absence/add_absence.html :: select2-script}"></div>
 
 
 <!-- Datatable Actions  @#@-->
-<div class="d-none replace-fragment"
-     id="actions"
+<div class="d-none replace-fragment" id="actions"
      th:insert="~{fragments/datatable_fragments.html :: dt-actions (msg=#{msg.confirm_delete.absence})}"></div>
 
 

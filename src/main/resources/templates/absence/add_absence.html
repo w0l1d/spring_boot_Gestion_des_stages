@@ -44,8 +44,7 @@
                     <div class="form-row row-cols-1 row-cols-xl-2 row-cols-lg-2">
                         <div class="form-group date">
                             <label for="start" th:text="#{form.starts_at}">starts at</label>
-                            <input id="start"
-                                   required
+                            <input id="start" required
                                    th:class="'form-control startDate' + ${#fields.hasErrors('startsAt') or #fields.hasErrors('validRange') ? ' is-invalid':''}"
                                    th:field="*{startsAt}"
                                    type="date">
